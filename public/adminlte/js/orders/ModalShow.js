@@ -21,7 +21,6 @@ function ShowOrderModal(id) {
             contentType: "application/json"
         },
         success: function(r) {
-            console.log(r);
 
             order = r[0];
             client = r[0].client;
