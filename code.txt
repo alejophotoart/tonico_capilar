@@ -1,0 +1,58 @@
+Codigo que lee el dia en que esta actualmente
+    /*var weekday = new Array(7);
+    weekday[0] = "Domingo";
+    weekday[1] = "Lunes";
+    weekday[2] = "Martes";
+    weekday[3] = "Miercoles";
+    weekday[4] = "Jueves";
+    weekday[5] = "Viernes";
+    weekday[6] = "Sabado";
+    var n = weekday[now.getDay()];*/
+
+    /*var now = new Date();
+    var day = ("0" + (now.getDate() + 1)).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var today = now.getFullYear() + "-" + month + "-" + day;
+    $("#delivery_date").val(today);*/
+
+    for($i = 0; $i < $request['products_copy']; $i++){
+            $product_price = Product::where('id', $request['products_copy'])->get();
+        }
+
+        $product_price = Product::where('id', $request['products_copy'])->get();
+        foreach ($product_price as $price) {
+            $array = array('price' => $price);
+        }
+        dd($array);
+
+                //dd($request->all());
+
+        /*for($i = 0; $i < $request['products_copy']; $i++){
+            return array(Product::where('id', $request['products_copy'])->get());
+        }*/
+        /*$product_price = Product::where('id', $request['products_copy'])->get();
+        foreach ($product_price as $value) {
+
+        }
+        dd($product_price);*/
+
+                                                    if (result.isConfirmed) {
+                                                if (role == 1 || role == 2) {
+                                                    $(location).attr(
+                                                        "href",
+                                                        url + "/resumen"
+                                                    );
+                                                } else {
+                                                    if (
+                                                        role == 3 ||
+                                                        role == 4
+                                                    ) {
+                                                        $(location).attr(
+                                                            "href",
+                                                            url + "/pedidos"
+                                                        );
+                                                    }
+                                                }
+                                            }
