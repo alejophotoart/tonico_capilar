@@ -87,15 +87,70 @@ $(function () {
             contentType: "application/json"
         },
         success: function(r) {
+            let sales = 0;
+            var orders = r.orders
+            console.log(orders);
+            let dates = [];
+            let total =[];
+            var maxtotal = 0;
+            var mintotal = 0;
+            var subtotal = 0;
+            const options = {
+                style: "currency",
+                currency: "USD",
+                maximumSignificantDigits: 3
+            };
+            const numberFormat = new Intl.NumberFormat("en-US", options);
+
+            for (var i = 0; i < orders.length; i++) {
+                if (orders.length != 0) {
+                    sales = i + 1;
+                } else {
+                    sales = 0;
+                }
+            }
+            $("#quantity_sales").text(sales);
+            /*for para calcular ventas totales
+            quantity_sales refleja la cantidad de las ventas*/
+
+            for(var i = 0; i < orders.length; i++){
+                var fecha = new Date(orders[i].delivery_date);
+                let options = { month: 'long', day: 'numeric' };
+                dates.push(fecha.toLocaleString('es', options));
+            }
+            /*for para obtener la fecha de los envios
+            let option: es para dar el formato a la fecha*/
+
+            for(var i = 0; i < orders.length; i++){
+                subtotal = parseFloat(orders[i].total);
+                total.push(subtotal);
+            }
+            // for para recorrer los valores totales de las ventas
+
+            maxtotal = total.reduce((n,m) => Math.max(n,m), -Number.POSITIVE_INFINITY)
+            mintotal = total.reduce((n,m) => Math.min(n,m), Number.POSITIVE_INFINITY)
+            /*math.max: es para sacar el valor max de un array
+            math.min: es para sacar el valor min de un array*/
+
+
+            var fechas = [];
+            for(let i = 7; i > 0; i--){
+                var date = new Date();
+                date.setDate(date.getDate() - i);
+                var finalDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
+                fechas.push(finalDate);
+            }
+
+            console.log(fechas);
 
             var $visitorsChart = $('#visitors-chart')
             // eslint-disable-next-line no-unused-vars
             var visitorsChart = new Chart($visitorsChart, {
             data: {
-            labels: ['25 jul', '20th', '22nd', '24th', '26th', '28th', '30th'],
+            labels: dates,
             datasets: [{
                 type: 'line',
-                data: [25000000, 120, 170, 167, 180, 177, 160],
+                data: total,
                 backgroundColor: 'transparent',
                 borderColor: '#007bff',
                 pointBorderColor: '#007bff',
@@ -140,7 +195,7 @@ $(function () {
                     },
                     ticks: $.extend({
                         beginAtZero: true,
-                        suggestedMax: 50000000
+                        suggestedMax:""
                     }, ticksStyle)
                     }],
                     xAxes: [{

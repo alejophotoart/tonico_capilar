@@ -103,7 +103,6 @@ function showVoucherCheck(id) {
             contentType: "application/json"
         },
         success: function(r) {
-            console.log(r);
             order = r[0];
 
             if (r) {

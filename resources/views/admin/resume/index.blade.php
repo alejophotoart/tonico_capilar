@@ -8,15 +8,15 @@ __('Resumen')) @section('content')
                     <div class="card-header border-0">
                         <div class="d-flex justify-content-between">
                             <h3 class="card-title">
-                                Visitantes de la tienda online
+                                Estadisticas de ventas
                             </h3>
                         </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex">
                             <p class="d-flex flex-column">
-                                <span class="text-bold text-lg">820</span>
-                                <span>Visitantes a lo largo del tiempo</span>
+                                <span class="text-bold text-lg" id="quantity_sales"></span>
+                                <span>Ventas a lo largo del tiempo</span>
                             </p>
                             <p class="ml-auto d-flex flex-column text-right">
                                 <span class="text-success">

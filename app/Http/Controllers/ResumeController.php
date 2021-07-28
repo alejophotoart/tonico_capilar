@@ -17,6 +17,6 @@ class ResumeController extends Controller
     public function salesTable()
     {
         $orders = Order::where('active', 1)->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-        return view('admin.resume.index')->with('order', $orders);
+        return response(array('status' => 200, 'orders' => $orders));
     }
 }
