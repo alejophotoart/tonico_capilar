@@ -1,5 +1,68 @@
 @extends('admin.layout') @section('title', __('Resumen')) @section('titleSup',
 __('Resumen')) @section('content')
+<div class="row">
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-info">
+        <div class="inner">
+          <h3 id="toggleNewOrder"></h3>
+
+          <p>{{__('Pedidos Nuevos')}}</p>
+        </div>
+        <div class="icon">
+            <i class="fas fa-list-ol"></i>
+        </div>
+        <a href="{{ route('orders.index') }}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-success">
+        <div class="inner">
+          <h3 id="toggleDeliveredOrder"></h3>
+
+          <p>Pedidos Entregados</p>
+        </div>
+        <div class="icon">
+            <i class="fas fa-shopping-bag"></i>
+        </div>
+        <a href="{{ route('orders.tables.delivered') }}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-warning">
+        <div class="inner">
+          <h3 id="toggleProcessOrder"></h3>
+
+          <p>Pedidos en Proceso</p>
+        </div>
+        <div class="icon">
+            <i class="fas fa-truck"></i>
+        </div>
+        <a href="{{ route('orders.tables.in-progress') }}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      <div class="small-box bg-danger">
+        <div class="inner">
+          <h3 id="toggleCancelOrder"></h3>
+
+          <p>Pedidos Cancelados</p>
+        </div>
+        <div class="icon">
+            <i class="fas fa-ban"></i>
+        </div>
+        <a href="{{ route('orders.tables.canceled') }}" class="small-box-footer">Más info <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>
+    <!-- ./col -->
+  </div>
+  <!-- /.row -->
 <div class="content">
     <div class="container-fluid">
         <div class="row">

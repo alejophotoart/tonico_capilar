@@ -125,7 +125,6 @@ function CreateOrder(id) {
                 willClose: () => {
                     clearInterval(timerInterval);
                 };
-                console.log(r);
                 if (r["status"] == 200) {
                     Swal.fire({
                         title: "Cliente existente",

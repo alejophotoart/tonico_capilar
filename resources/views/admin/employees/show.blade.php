@@ -245,35 +245,35 @@
                 if (r) {
                     for (var i = 0; i < salesReg.length; i++) {
                         if (salesReg.length != 0) {
-                            saleReg = i + 1;
+                            saleReg++;
                         } else {
                             saleReg = 0;
                         }
                     }
                     for (var i = 0; i < salesRea.length; i++) {
                         if (salesRea.length != 0) {
-                            saleRea = i + 1;
+                            saleRea++;
                         } else {
                             saleRea = 0;
                         }
                     }
                     for (var i = 0; i < salesCan.length; i++) {
                         if (salesCan.length != 0) {
-                            saleCan = i + 1;
+                            saleCan++;
                         } else {
                             saleCan = 0;
                         }
                     }
                     for (var i = 0; i < salesPen.length; i++) {
                         if (salesPen.length != 0) {
-                            salePen = i + 1;
+                            salePen++;
                         } else {
                             salePen = 0;
                         }
                     }
                     for (var i = 0; i < salesTot.length; i++) {
                         if (salesTot.length != 0) {
-                            saleTot = i + 1;
+                            saleTot++;
                         } else {
                             saleTot = 0;
                         }

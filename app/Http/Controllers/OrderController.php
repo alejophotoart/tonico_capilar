@@ -96,20 +96,34 @@ class OrderController extends Controller
         }
     }
 
-    public function pending()
+    public function deposit()
     {
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
-            $orders = Order::where([['state_order_id', 5],['payment_type_id', 2],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-            return view('admin.orders.tables.pending')->with('orders', $orders);
+            $orders = Order::where([['state_order_id', 7],['payment_type_id', 2],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
+            return view('admin.orders.tables.deposit')->with('orders', $orders);
         }else{
             if(Auth::user()->role_id == 3){
                 $orders = Order::where([['state_order_id', 6],['payment_type_id', 2],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-                return view('admin.orders.tables.pending')->with('orders', $orders);
+                return view('admin.orders.tables.deposit')->with('orders', $orders);
             }else{
                 if(Auth::user()->role_id == 4){
-                    $orders = Order::where([['user_id',auth::user()->id],['state_order_id', 5],['payment_type_id', 2],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-                    return view('admin.orders.tables.pending')->with('orders', $orders);
+                    $orders = Order::where([['user_id',auth::user()->id],['state_order_id', 7],['payment_type_id', 2],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
+                    return view('admin.orders.tables.deposit')->with('orders', $orders);
                 }
+            }
+
+        }
+    }
+
+    public function pending()
+    {
+        if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2 || Auth::user()->role_id == 3){
+            $orders = Order::where([['state_order_id', 5],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
+            return view('admin.orders.tables.pending')->with('orders', $orders);
+        }else{
+            if(Auth::user()->role_id == 4){
+                $orders = Order::where([['user_id',auth::user()->id],['state_order_id', 5],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
+                return view('admin.orders.tables.pending')->with('orders', $orders);
             }
 
         }
@@ -187,7 +201,7 @@ class OrderController extends Controller
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
-                        'state_order_id'    => 5,
+                        'state_order_id'    => 7,
                         'client_id'         => $request['tramp'],
                         'user_id'           => $request['id'],
                         'address_id'        => $address['id'],
@@ -244,7 +258,7 @@ class OrderController extends Controller
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
-                        'state_order_id'    => 5,
+                        'state_order_id'    => 7,
                         'client_id'         => $client['id'],
                         'user_id'           => $request['id'],
                         'address_id'        => $address['id'],
@@ -336,7 +350,67 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($id);
+        if(Order::where('id', $id)->first()){
+
+                if($request['payment_type_id'] == 1){
+                    $order = Order::where('id', $id)->update([
+                        'delivery_date'     => $request['delivery_date'],
+                        'reason'            => $request['reason'],
+                        'delivery_price'    => 10000,
+                        'total'             => $request['total'],
+                        'notes'             => $request['notes'],
+                        'payment_type_id'   => $request['payment_type_id'],
+                        'state_order_id'    => 1,
+                        'client_id'         => $request['client_id'],
+                        'user_id'           => $request['user_id'],
+                        'address_id'        => $request['address_id'],
+                        'city_id'           => $request['city_id'],
+                        'active'            => 1,
+                    ]);
+                }else{
+                    if($request['payment_type_id'] == 2){
+                        $order = Order::where('id', $id)->update([
+                            'delivery_date'     => $request['delivery_date'],
+                            'reason'            => $request['reason'],
+                            'delivery_price'    => 10000,
+                            'total'             => $request['total'],
+                            'notes'             => $request['notes'],
+                            'payment_type_id'   => $request['payment_type_id'],
+                            'state_order_id'    => 7,
+                            'client_id'         => $request['client_id'],
+                            'user_id'           => $request['user_id'],
+                            'address_id'        => $request['address_id'],
+                            'city_id'           => $request['city_id'],
+                            'active'            => 1,
+                        ]);
+                    }
+                }
+
+                $prod_quan = count($request['prod_quan'][0]);
+                for($i = 0; $i < $prod_quan; $i++){
+                    $order_item             = new OrderItem;
+                    $order_item->price      = null;
+                    $order_item->quantity   = $request['prod_quan'][0][$i]; //posicion de las cantidades
+                    $order_item->product_id = $request['prod_quan'][1][$i]; //posicion de los id del producto
+                    $order_item->order_id   = $request['id'];
+                    $order_item->save();
+                }
+        }
+
+        $client = Client::where('id', $request->client_id)->update([
+            'identification'    => $request['identification'],
+            'name'              => $request['name'],
+            'phone'             => $request['phone'],
+            'whatsapp'          => $request['whatsapp'],
+        ]);
+
+        $address = Address::where('id', $request->address_id)->update([
+            'address'           => $request['address'],
+            'neighborhood'      => $request['neighborhood'],
+            'client_id'         => $request['client_id'],
+            'city_id'           => $request['city_id'],
+        ]);
     }
 
     /**
@@ -393,7 +467,7 @@ class OrderController extends Controller
         //dd($id,$note);
         $order = Order::where('id', $id)->update([
             'state_order_id'    => 4,
-            'notes'             => $note
+            'reason'             => $note
         ]);
         return array('status' => 200, 'title' => 'Pedido cancelado' ,'message' => 'Cancelaste el pedido', 'space' => ' ' ,'id' => $id, 'icon' => "success");
     }

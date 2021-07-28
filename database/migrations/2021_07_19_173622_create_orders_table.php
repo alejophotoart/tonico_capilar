@@ -22,6 +22,7 @@ class CreateOrdersTable extends Migration
             $table->binary('img')->nullable();
             $table->string('link', 255)->nullable();
             $table->string('notes',250)->nullable();
+            $table->string('reason',250)->nullable();
 
             $table->bigInteger('state_order_id')->unsigned()->default(1);;
             $table->foreign('state_order_id')->references('id')->on('state_orders');

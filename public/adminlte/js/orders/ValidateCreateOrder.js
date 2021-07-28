@@ -137,7 +137,7 @@ function checkPassedOrder(id) {
         if (result.isConfirmed) {
             let timerInterval;
             Swal.fire({
-                title: "Aprobando deposito del Pedido",
+                title: "Aprobando deposito del Pedido " + id,
                 didOpen: () => {
                     Swal.showLoading();
 
@@ -180,7 +180,7 @@ function checkPassedOrder(id) {
                             confirmButtonColor: "#343a40",
                             showConfirmButton: true
                         }).then(val => {
-                            $(location).attr("href", "/pedidos/pendientes");
+                            $(location).attr("href", "/pedidos/depositos");
                         });
                     } else {
                         Swal.fire({
@@ -256,7 +256,7 @@ function checkProcessOrder(id){
                             confirmButtonColor: "#343a40",
                             showConfirmButton: true
                         }).then(val => {
-                            $(location).attr("href", "/pedidos/pendientes");
+                            $(location).attr("href", "/pedidos/depositos");
                         });
                     } else {
                         Swal.fire({
@@ -332,7 +332,7 @@ function checkDeliveredOrder(id){
                             confirmButtonColor: "#343a40",
                             showConfirmButton: true
                         }).then(val => {
-                            $(location).attr("href", "/pedidos/pendientes");
+                            $(location).attr("href", "/pedidos/proceso");
                         });
                     } else {
                         Swal.fire({

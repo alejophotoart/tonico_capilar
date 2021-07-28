@@ -5,6 +5,9 @@ function trashProduct(evt){
     $("." + evt).remove();
 }
 $(document).ready(function() {
+    document.getElementById("identification").readOnly = true;
+    document.getElementById("notes").readOnly = true;
+    document.getElementById("delivery_date_info").readOnly = true;
 
     $("#addProduct").click(function(e) {
         e.preventDefault(); //eliminamos el evento por defecto
@@ -42,7 +45,7 @@ function minTwoDigits(n) {
     return (n < 10 ? "0" : "") + n;
 }
 
-function EditOrder(id){
+function EditOrder(id, client_id, address_id, user_id){
     let identification = document.getElementById("identification").value;
     let name = document.getElementById("name").value;
     let address = document.getElementById("address").value;
@@ -53,7 +56,12 @@ function EditOrder(id){
     let state_id = document.getElementById("state_id").value;
     let city_id = document.getElementById("city_id").value;
     let payment_type_id = document.getElementById("payment_type_id").value;
-    let delivery_date = document.getElementById("delivery_date").value;
+    if($("#delivery_date").val() == "" || $("#delivery_date").val() == null || $("#delivery_date").val() == undefined){
+        var delivery_date = document.getElementById("delivery_date_info").value;
+    }else{
+        var delivery_date = document.getElementById("delivery_date").value;
+        var reason = document.getElementById("reason").value;
+    }
     let notes = document.getElementById("notes").value;
     let total2 = document.getElementById("total").value;
     // let delivery_price2 = document.getElementById("delivery_price").value;
@@ -67,10 +75,242 @@ function EditOrder(id){
         product.push($(".copy")[i].value);
     }
     var prod_quan = [quantity, product];
-    console.log(prod_quan);
-
     let total1 = total2.replace(/\$/g, "");
     let total = total1.replace(/\./g, "");
+    console.log(prod_quan);
+    console.log(delivery_date);
     // let delivery_price1 = delivery_price2.replace(/\$/g, "");
     // let delivery_price = delivery_price1.replace(/\./g, "");
+
+    if ($("select[name='payment_type_id']").val() == 2) {
+        if (img == null || img == "") {
+            Swal.fire({
+                icon: "warning",
+                title: "Comprobante de pago",
+                text: "por favor adjunte el comprobrante del deposito",
+                confirmButtonColor: "#343a40"
+            });
+            return false;
+        }
+    }
+
+    for (var c = 0; c < $(".copy_quantity").length; c++) {
+        if (
+            $(".copy_quantity")[c].value <= 0 ||
+            $(".copy_quantity")[c].value == ""
+        ) {
+            Swal.fire({
+                icon: "warning",
+                title: "Cantidad",
+                text: "La cantidad digitada no es valida",
+                confirmButtonColor: "#343a40"
+            });
+            return false;
+        }
+    }
+
+    for (let i = 0; i < product.length; i++) {
+        if (
+            product[i].length <= 0 ||
+            product[i].length == ""
+        ) {
+            Swal.fire({
+                icon: "warning",
+                title: "Productos",
+                text: "Debes agregar como minimo 1 producto",
+                confirmButtonColor: "#343a40"
+            });
+            return false;
+        }
+    }
+
+    if (
+        identification == 0 ||
+        identification == "" ||
+        name == 0 ||
+        name == "" ||
+        address == 0 ||
+        address == "" ||
+        phone == 0 ||
+        phone == "" ||
+        neighborhood == 0 ||
+        neighborhood == "" ||
+        whatsapp == 0 ||
+        whatsapp == "" ||
+        delivery_date == 0 ||
+        delivery_date == "" ||
+        total == 0 ||
+        total == "" ||
+        payment_type_id == 0 ||
+        payment_type_id == "" ||
+        country_id == 0 ||
+        country_id == "" ||
+        state_id == 0 ||
+        state_id == "" ||
+        city_id == 0 ||
+        city_id == ""
+    ) {
+        console.log();
+        Swal.fire({
+            icon: "info",
+            title: "Campos vacios",
+            text: "Existen campos vacios, por favor llenelos",
+            confirmButtonColor: "#343a40",
+            showConfirmButton: true
+        });
+        return false;
+    } else {
+        Swal.fire({
+            title: "Estas seguro?",
+            text: "Deseas actualizar este nuevo pedido",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#343a40",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Si, Crearlo!",
+            cancelButtonText: "Cancelar"
+        }).then(result => {
+            if (result.isConfirmed) {
+                let data = {
+                    id,
+                    client_id,
+                    address_id,
+                    user_id,
+                    identification,
+                    name,
+                    address,
+                    neighborhood,
+                    phone,
+                    whatsapp,
+                    payment_type_id,
+                    delivery_date,
+                    reason,
+                    notes,
+                    prod_quan,
+                    total,
+                    city_id
+                };
+                console.log(data);
+                let timerInterval;
+                Swal.fire({
+                    title: "Actualizando Pedido",
+                    didOpen: () => {
+                        Swal.showLoading();
+
+                        timerInterval = setInterval(() => {
+                            const content = Swal.getHtmlContainer();
+                            if (content) {
+                                const b = content.querySelector(
+                                    "b"
+                                );
+                                if (b) {
+                                    b.textContent = Swal.getTimerLeft();
+                                }
+                            }
+                        }, 100);
+                    }
+                });
+                $.ajax({
+                    url: "/pedidos/editar/" + id,
+                    type: "PUT",
+                    data: JSON.stringify(data),
+                    contentType: "application/json",
+                    dataType: "json",
+                    headers: {
+                        "X-CSRF-TOKEN": $(
+                            'meta[name="csrf-token"]'
+                        ).attr("content")
+                    },
+                    //data: obj.json.strin,
+                    success: function(r) {
+                        willClose: () => {
+                            clearInterval(timerInterval);
+                        };
+                        if (r["status"] == 400) {
+                            Swal.fire({
+                                icon: r["icon"],
+                                title: r["title"],
+                                text: r["message"],
+                                confirmButtonColor: "#343a40",
+                                showConfirmButton: true
+                            });
+                            return false;
+                        } else {
+                            var image = document.getElementById("formFileSm");
+                            image = image.files[0];
+                            if (image) {
+                                var id_order = r.d.id;
+                                var name_client = r.name;
+                                saveImage(id_order, name_client);
+                            } else {
+                                if (r["status"] == 200) {
+                                    Swal.fire({
+                                        icon: r["icon"],
+                                        title: r["title"],
+                                        text:
+                                            r["message"] +
+                                            r["space"] +
+                                            r["name"],
+                                        confirmButtonColor:
+                                            "#343a40",
+                                        showConfirmButton: true
+                                    }).then(val => {
+                                        $(location).attr(
+                                            "href",
+                                            "/pedidos"
+                                        );
+                                    });
+                                } else {
+                                    if (r["status"] == 100) {
+                                        Swal.fire({
+                                            icon: r["icon"],
+                                            title: r["title"],
+                                            text: r["message"],
+                                            confirmButtonColor:
+                                                "#343a40"
+                                        });
+                                        return false;
+                                    } else {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Ops...",
+                                            text:
+                                                "Ocurrio un error inesperado",
+                                            confirmButtonColor:
+                                                "#343a40"
+                                        });
+                                        return false;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+}
+
+function limitar(e, contenido, caracteres) {
+    var unicode = e.keyCode ? e.keyCode : e.charCode;
+    if (
+        unicode == 8 ||
+        unicode == 46 ||
+        unicode == 37 ||
+        unicode == 39 ||
+        unicode == 38 ||
+        unicode == 40
+    ) {
+        return true;
+    } // Si ha superado el limite de caracteres devolvemos false
+    if (contenido.length >= caracteres) {
+        Swal.fire({
+            icon: "error",
+            title: "Ops...",
+            text: "Supero el limite de caracteres",
+            confirmButtonColor: "#343a40"
+        });
+
+        return false;
+    }
 }

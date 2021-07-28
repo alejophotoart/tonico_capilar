@@ -10,7 +10,7 @@ __('Orders')) @section('explorer')
             <li class="nav-item">
                 <a
                     href="{{ route('orders.index') }}"
-                    class="nav-link active"
+                    class="nav-link"
                     aria-current="true"
                     style="color: black;"
                     >{{ __("News") }}</a
@@ -47,7 +47,7 @@ __('Orders')) @section('explorer')
             <li class="nav-item">
                 <a
                     href="{{ route('orders.tables.deposit') }}"
-                    class="nav-link"
+                    class="nav-link active"
                     href="#"
                     style="color: black;"
                     >{{ __("Deposito Aprobado") }}</a
@@ -58,7 +58,7 @@ __('Orders')) @section('explorer')
             <li class="nav-item">
                 <a
                     href="{{ route('orders.tables.deposit') }}"
-                    class="nav-link"
+                    class="nav-link active"
                     href="#"
                     style="color: black;">
                     {{ __("Deposito Pendiente") }}
@@ -68,7 +68,7 @@ __('Orders')) @section('explorer')
                     <li class="nav-item">
                         <a
                             href="{{ route('orders.tables.deposit') }}"
-                            class="nav-link"
+                            class="nav-link active"
                             href="#"
                             style="color: black;">
                             {{ __("Depositos") }}
@@ -93,10 +93,10 @@ __('Orders')) @section('explorer')
                 <div class="card-header">
                     <h1 class="card-title">
                         <i
-                            class="fas fa-list-ol"
+                        class="far fa-credit-card"
                             style="margin-right: 5px; font-size: 1.5em;"
-                        ></i
-                        >{{ __("Pedidos Nuevos") }}
+                        ></i>
+                        {{ __("Pedidos Pendientes (Deposito)") }}
                     </h1>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                         <a
@@ -114,6 +114,15 @@ __('Orders')) @section('explorer')
                     >
                         <thead>
                             <tr>
+                                @if(auth()->user()->role_id == 1 ||
+                                auth()->user()->role_id == 2 ||
+                                auth()->user()->role_id == 3)
+                                <th>
+                                    <i
+                                        class="fas fa-truck"
+                                    ></i>
+                                </th>
+                                @endif
                                 <th>
                                     <i
                                         class="fas fa-key"
@@ -130,7 +139,10 @@ __('Orders')) @section('explorer')
                                     {{ __("Client") }}
                                 </th>
                                 <th>
-                                    {{ __("Fecha entrega") }}
+                                    {{ __("Fecha") }}
+                                </th>
+                                <th>
+                                    {{ __("Phone") }}
                                 </th>
                                 <th>
                                     {{ __("Total") }}
@@ -147,13 +159,46 @@ __('Orders')) @section('explorer')
                         <tbody>
                             @foreach($orders as $o)
                             <tr>
-                                <td>{{ $o->id }}</td>
-                                <td style="width: 90px;">
+                                @if(auth()->user()->role_id == 1 ||
+                                auth()->user()->role_id == 2)
+                                <td style="padding: 6px 0px 0px 0px;">
+                                    <div class="form-check" id="formId">
+                                        <input
+                                            class="form-check-input checkOrder"
+                                            type="checkbox"
+                                            value="{{ $o->id }}"
+                                            name="checkProgressOrder"
+                                        />
+                                    </div>
+                                </td>
+                                @else
+                                    @if(auth()->user()->role_id == 3)
+                                    <td style="padding: 6px 0px 0px 0px;">
+                                        <div class="form-check" id="formPassed">
+                                            <input
+                                                class="form-check-input checkOrderPendingLogistic"
+                                                type="checkbox"
+                                                value="{{ $o->id }}"
+                                                name="checkOrderPendingLogistic"
+                                            />
+                                        </div>
+                                    </td>
+                                    @endif
+                                @endif
+                                <td style="padding: 6px 0px 0px 0px;">
+                                    {{ $o->id }}
+                                </td>
+                                <td style="width: 75px;">
                                     {{ $o->user->name }}
                                     <br />
                                     <p style="opacity: 0.6; font-size: 0.8em;">
                                         Creado
                                         {{ $o->created_at->diffForHumans() }}
+                                        @if(auth()->user()->role_id == 3)
+                                        <br>
+                                        Aprobado
+                                        {{ $o->updated_at->diffForHumans() }}
+                                        @endif
                                     </p>
                                 </td>
                                 <td>
@@ -161,24 +206,27 @@ __('Orders')) @section('explorer')
                                     {{ $o->city->state->name }} <br />
                                     {{ $o->city->name }}
                                 </td>
-                                <td style="width: 90px;">
+                                <td style="width: 75px;">
                                     {{ $o->client->name }}
                                 </td>
                                 <td>{{ $o->delivery_date }}</td>
                                 <td>
+                                    <i class="fas fa-mobile-alt"></i>
+                                    {{ $o->client->phone }} <br />
+                                    <i class="fab fa-whatsapp"></i>
+                                    {{ $o->client->whatsapp }}
+                                </td>
+                                <td>
                                     {{ "$" }}
                                     {{ number_format($o->total, 0, ',', '.') }}
                                 </td>
-                                <td>
+                                <td style="padding: 5px 5px 5px 0px;">
                                     @if(auth()->user()->role_id == 1 ||
-                                    auth()->user()->role_id == 2 ||
-                                    auth()->user()->role_id == 3)
-                                    <a type="button" class="mg-10"
-                                    href="{{ route('orders.edit', $o->id) }}">
+                                    auth()->user()->role_id == 2)
+                                    <a href="" class="mg-10">
                                         <i
                                             id="IconE"
                                             class="fas fa-pencil-alt"
-                                            style="left: 1px;"
                                         ></i>
                                     </a>
                                     <a
@@ -192,8 +240,20 @@ __('Orders')) @section('explorer')
                                         data-bs-toggle="modal"
                                         data-bs-whatever="@fat"
                                         class="mg-10-1"
+                                        style="padding: 7px 5px 7px 5px !important;"
                                     >
-                                        <i id="IconS" class="fas fa-eye"></i>
+                                        <i
+                                            id="IconS"
+                                            class="fas fa-eye"
+                                            style="position: relative; right: -2px;"
+                                        ></i>
+                                    </a>
+                                    <a
+                                        onclick="showVoucherCheck( '{{ $o->id }}' )"
+                                        type="button"
+                                        class="mg-10-1"
+                                    >
+                                        <i id="IconI" class="fas fa-image"></i>
                                     </a>
                                     @else
                                     <a
@@ -201,8 +261,20 @@ __('Orders')) @section('explorer')
                                         data-bs-toggle="modal"
                                         data-bs-whatever="@fat"
                                         class="mg-10-1"
+                                        style="padding: 7px 5px 7px 5px !important;"
                                     >
-                                        <i id="IconS" class="fas fa-eye"></i>
+                                        <i
+                                            id="IconS"
+                                            class="fas fa-eye"
+                                            style="position: relative; right: -2px;"
+                                        ></i>
+                                    </a>
+                                    <a
+                                        onclick="showVoucherCheck( '{{ $o->id }}' )"
+                                        type="button"
+                                        class="mg-10-1"
+                                    >
+                                        <i id="IconI" class="fas fa-image"></i>
                                     </a>
                                     @endif
                                 </td>

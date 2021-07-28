@@ -289,9 +289,8 @@
                     <p>{{ __("Fecha y hora") }}</p>
             </div>
                 <div class="card-body">
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 delivery_date_info">
                         <input
-                            disabled
                             type="text"
                             class="form-control"
                             placeholder="Fecha de entrega"
@@ -323,6 +322,21 @@
                             </div>
                         </div>
                     </div>
+                    <div class="input-group mb-3 reason" style="display: none">
+                        <textarea
+                            type="text"
+                            class="form-control"
+                            placeholder="Motivos..."
+                            onkeyup="return limitar(event,this.value,200);"
+                            onkeydown="return limitar(event,this.value,200);"
+                            id="reason"
+                            name="reason"></textarea>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="far fa-sticky-note"></span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="input-group mb-3">
                         <textarea
                             type="text"
@@ -343,13 +357,17 @@
 </form>
     <div class="row" style="display: flex; justify-content: center;">
         <div class="d-grid gap-2" style="width: 1000px">
+        @foreach ($address as $a)
+            @if($a->id == $order->id)
             <button
-                onclick="EditOrder('{{ $order->id }}');"
+                onclick="EditOrder({{ $order->id }}, {{ $order->client->id }}, {{ $a->id }}, {{ $order->user_id }});"
                 class="btn btn-dark"
                 type="button"
             >
                 {{ __("Editar pedido") }}
             </button>
+            @endif
+        @endforeach
         </div>
     </div>
 <script
@@ -367,8 +385,12 @@
                 element.style.setProperty("display", "flex");
             let element3 = document.querySelector("#close");
                 element3.style.setProperty("display", "flex");
+            let element2 = document.querySelector(".reason");
+                element2.style.setProperty("display", "flex");
             let element4 = document.querySelector("#renew");
                 element4.style.setProperty("display", "none");
+            let element5 = document.querySelector(".delivery_date_info");
+                element5.style.setProperty("display", "none");
         });
 
         $("#close").click(function(e) {
@@ -377,9 +399,14 @@
                 element.style.setProperty("display", "none");
             let element3 = document.querySelector("#close");
                 element3.style.setProperty("display", "none");
+            let element2 = document.querySelector(".reason");
+                element2.style.setProperty("display", "none");
             let element4 = document.querySelector("#renew");
                 element4.style.setProperty("display", "flex");
+            let element5 = document.querySelector(".delivery_date_info");
+                element5.style.setProperty("display", "flex");
             $("#delivery_date").val("");
+            $("#reason").val("");
         });
         var weekday = new Array(7);
         weekday[0] = "Domingo";
@@ -389,11 +416,11 @@
         weekday[4] = "Jueves";
         weekday[5] = "Viernes";
         weekday[6] = "Sabado";
-        var fecha = "{{ date('d/m/Y h:i', strtotime($order->delivery_date)) }}"
-        document.getElementById("delivery_date_info").value=fecha;
+        let fecha = new Date('{{ $order->delivery_date }}');
+        let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        $("#delivery_date_info").val(fecha.toLocaleString('es', options));
 
         payment_type = "{{ $order->payment_type_id }}"
-
         if (payment_type == 2) {
             $("#LoadVoucher").prop("hidden", false);
         } else {
@@ -443,7 +470,6 @@
                     url: "/optionCountry/state/" + country_code,
                     data: null,
                     success: function(r) {
-                        console.log(r);
                         if (!r) {
                             r = JSON.parse(r);
                         }
@@ -485,7 +511,6 @@
                     url: "/optionState/city/" + state_code,
                     data: null,
                     success: function(r) {
-                        console.log(r);
                         if (!r) {
                             r = JSON.parse(r);
                         }

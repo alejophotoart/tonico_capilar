@@ -44,5 +44,10 @@ class StateOrderSeeder extends Seeder
             "name" => "Orden pendiente logistica",
             "active" => 1
         ]);
+        StateOrder::create([
+            "code" => 7,
+            "name" => "Deposito pendiente aprobacion",
+            "active" => 1
+        ]);
     }
 }

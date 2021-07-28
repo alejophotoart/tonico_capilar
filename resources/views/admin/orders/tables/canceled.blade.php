@@ -46,7 +46,7 @@ __('Orders')) @section('explorer')
             @if(auth()->user()->role_id == 3)
             <li class="nav-item">
                 <a
-                    href="{{ route('orders.tables.pending') }}"
+                    href="{{ route('orders.tables.deposit') }}"
                     class="nav-link"
                     href="#"
                     style="color: black;"
@@ -57,7 +57,7 @@ __('Orders')) @section('explorer')
                 @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
             <li class="nav-item">
                 <a
-                    href="{{ route('orders.tables.pending') }}"
+                    href="{{ route('orders.tables.deposit') }}"
                     class="nav-link"
                     href="#"
                     style="color: black;">
@@ -67,7 +67,7 @@ __('Orders')) @section('explorer')
                 @else
                     <li class="nav-item">
                         <a
-                            href="{{ route('orders.tables.pending') }}"
+                            href="{{ route('orders.tables.deposit') }}"
                             class="nav-link"
                             href="#"
                             style="color: black;">
@@ -76,6 +76,15 @@ __('Orders')) @section('explorer')
                     </li>
                 @endif
             @endif
+            <li class="nav-item">
+                <a
+                    href="{{ route('orders.tables.pending') }}"
+                    class="nav-link"
+                    href="#"
+                    style="color: black;">
+                    {{ __("Reagendados") }}
+                </a>
+            </li>
         </ul>
     </div>
     <div class="card-body">
@@ -160,7 +169,7 @@ __('Orders')) @section('explorer')
                                     <i class="fab fa-whatsapp"></i>
                                     {{ $o->client->whatsapp }}
                                 </td>
-                                <td>{{ $o->notes }}</td>
+                                <td>{{ $o->reason }}</td>
                                 <td>
                                     @for($i = 0; $i < count($o->order_items); $i++)
                                         @for($p = 0; $p < count($products); $p++)

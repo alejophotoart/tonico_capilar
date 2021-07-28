@@ -2,7 +2,6 @@
 use Illuminate\Support\Facades\App;
 App::setLocale('es');
 
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
@@ -71,12 +70,14 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/pedidos/proceso', [OrderController::class, 'progress'])->name('orders.tables.in-progress');//vista de los pedidos en proceso
       Route::get('/pedidos/entregados', [OrderController::class, 'delivered'])->name('orders.tables.delivered');//vista de los pedidos entregados
       Route::get('/pedidos/cancelados', [OrderController::class, 'canceled'])->name('orders.tables.canceled');//vista de los pedidos cancelados
-      Route::get('/pedidos/pendientes', [OrderController::class, 'pending'])->name('orders.tables.pending');//vista de los pedidos pendientes
+      Route::get('/pedidos/pendientes', [OrderController::class, 'pending'])->name('orders.tables.pending');//vista de los pedidos reagendados o pendientes
+      Route::get('/pedidos/depositos', [OrderController::class, 'deposit'])->name('orders.tables.deposit');//vista de los pedidos en pago de deposito
       Route::get('/pedidos/{id}/search', [OrderController::class, 'search']);//consulta si el cliente existe y si exite rellena los campos
       Route::get('/pedidos/mostrar/{id}', [OrderController::class, 'show']);//llama a el modal de crear pedido
       Route::get('/pedidos/{id}', [OrderController::class, 'create']);//llama a el modal de crear pedido
       Route::post('/pedidos/create', [OrderController::class, 'store']);//crea un pedido nuevo
       Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
+      Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda
       Route::post('/order/saveImage', [OrderController::class, 'saveImage']);//guarda imagen del pedido
       Route::put('/pedidos/aprobados/{id}', [OrderController::class, 'passedOrder']);//Aprueba las ordenes con pago tipo deposito
       Route::put('/pedidos/proceso/{id}', [OrderController::class, 'processOrder']);//pone en proceso las ordenes con pago tipo deposito
