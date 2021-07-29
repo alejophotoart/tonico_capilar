@@ -86,19 +86,19 @@ $(function () {
         },
         success: function(r) {
             var orders = r.orders //orders: recibe todas las ordenes
-            console.log(orders);
+            var dates = r.dates;// dates: recibe de la base de datos la consulta donde solo me trae los registros de los ultimos 7 dias
+            console.log(dates);
             let sales = 0; //recibe las ventas totales en tabla ventas
             let NewOrders = 0; //recibe los pedidos nuevas y las muestra en el toggle
             let ProcessOrder = 0; //recibe los pedidos en proceso y las muestra en el toggle
             let CancelOrder = 0; //recibe los pedidos cancelados y los muestra en el toggle
             let DeliveredOrder = 0; //recibe los pedidos pendientes de aprobacion de deposito y los muestra en el toggle
-            var maxtotal = 0;
-            var mintotal = 0;
-            var subtotal = 0;
-            var sumArray = 0;
-            let dates = [];
-            let total =[];
+            var maxtotal = 0;// recibe el maximo valor de los valores del total
+            var subtotal = 0; //recibe los valores en el for
+            var sumArray = 0; //suma los valores
+            let total = 0;
             var fechas = [];
+            var returnTotal = {};
             const options = {
                 style: "currency",
                 currency: "USD",
@@ -117,43 +117,22 @@ $(function () {
 
             }
             $("#quantity_sales").text(sales);
-            /*for para calcular ventas totales
-            quantity_sales refleja la cantidad de las ventas*/
-            for(var i = 0; i < orders.length; i++){
+            /**
+             * for para calcular ventas totales
+             * quantity_sales refleja la cantidad de las ventas
+             */
+
+            /**for(var i = 0; i < orders.length; i++){
                 var fecha = new Date(orders[i].delivery_date);
                 let options = { month: 'long', day: 'numeric' };
                 dates.push(fecha.toLocaleString('es', options));
             }
-            /**
+
              * for para obtener la fecha de los envios
              * let option: es para dar el formato a la fecha
              */
 
-            for(var i = 0; i < orders.length; i++){
-                let date = new Date();
-                let dia = ("0" + date.getDate()).slice(-2);
-                let created = new Date(orders[i].created_at);
-                let options = { day: 'numeric' };
-                let created_day = created.toLocaleString('es', options);
-
-                if(created_day == dia){
-                    if(orders[i].state_order_id == 3){
-                        subtotal = parseFloat(orders[i].total);
-                        sumArray += subtotal;
-                        total.push(sumArray)
-                    }
-                }
-            }
-
-            /**
-             * for para recorrer los valores totales de las ventas
-             */
-
-            maxtotal = total.reduce((n,m) => Math.max(n,m), -Number.POSITIVE_INFINITY)
-            mintotal = total.reduce((n,m) => Math.min(n,m), Number.POSITIVE_INFINITY)
-            /*math.max: es para sacar el valor max de un array
-            math.min: es para sacar el valor min de un array*/
-            for(let i = 0; i < 7; i++){
+             for(let i = 0; i < 7; i++){
                 let date = new Date();
                 date.setDate(date.getDate() - i);
                 let finalDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
@@ -164,6 +143,29 @@ $(function () {
              * for que calcula la fecha actual hasta 7 dias atras
              * Se usa en la frafica de ventas x dia
             */
+            for(let f = 0; f < fechas.length; f++){
+                for(let d = 0; d < dates.length; d++){
+                    let date = new Date(dates[d].fecha);
+                    date.setDate(date.getDate());
+                    let endDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
+                    if(fechas[f] == endDate){
+                        let subtotal = parseFloat(dates[d].total);
+                        total = total + subtotal;
+                        returnTotal[endDate] = total;
+                    }
+                }
+                total = 0;
+            }
+            /**
+             * for para recorrer los valores totales de las ventas
+             */
+
+            // maxtotal = returnTotal.reduce((n,m) => Math.max(n,m), -Number.POSITIVE_INFINITY)
+            /**
+             * math.max: es para sacar el valor max de un array
+             * math.min: es para sacar el valor min de un arrays
+             */
+
             for(var i = 0; i < orders.length; i++){
                 if(orders[i].state_order_id == 1 || orders[i].state_order_id == 7){
                     NewOrders++;

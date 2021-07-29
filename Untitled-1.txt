@@ -1,0 +1,22 @@
+var fechas = <Lsd 7 fevhas de comparacio>
+var pedidos = <Pedidos en ese rango>
+var retorno = {} -> Cada uno de los totales por fechas
+
+
+N2
+for fechas as f: then
+    for pedidos as p: then
+        if f = p.fecha
+            retorno[fecha] += p.total
+
+
+for pedidos as p: then
+   retorno.fecha += p.total
+
+
+
+carbon
+retorno = {
+    "26/jul": 1500,
+    "27/jul#: 2000
+}
