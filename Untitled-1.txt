@@ -20,3 +20,35 @@ retorno = {
     "26/jul": 1500,
     "27/jul#: 2000
 }
+
+/**
+             * for para calcular ventas totales
+             * quantity_sales refleja la cantidad de las ventas
+             */
+
+            /**for(var i = 0; i < orders.length; i++){
+                var fecha = new Date(orders[i].delivery_date);
+                let options = { month: 'long', day: 'numeric' };
+                dates.push(fecha.toLocaleString('es', options));
+            }
+
+             * for para obtener la fecha de los envios
+             * let option: es para dar el formato a la fecha
+             */
+
+Como convertir valores de obejto Json en Array(Javascript)
+
+    var result = [];
+    /*  for(var i in json){
+        result.push([i, json [i]]);
+    } */
+
+    /* var keys = Object.keys(json);
+    keys.forEach(function(key){
+        result.push(json[key]);
+    }); */
+como saber que nombres de dominio estan disponibles (namecheap.com, godaddy.com)
+
+para inventario por bodegas:
+* agregar tabla de bodegas donde le almacenaran la bodegas y dira si esta activa o no
+*

@@ -114,15 +114,11 @@ __('Orders')) @section('explorer')
                     >
                         <thead>
                             <tr>
-                                @if(auth()->user()->role_id == 1 ||
-                                auth()->user()->role_id == 2 ||
-                                auth()->user()->role_id == 3)
                                 <th>
                                     <i
                                         class="fas fa-truck"
                                     ></i>
                                 </th>
-                                @endif
                                 <th>
                                     <i
                                         class="fas fa-key"
@@ -158,8 +154,9 @@ __('Orders')) @section('explorer')
                             <tr>
                                 @if(auth()->user()->role_id == 1 ||
                                 auth()->user()->role_id == 2)
+                                @if($o->payment_type_id == 2)
                                 <td style="padding: 6px 0px 0px 0px;">
-                                    <div class="form-check" id="formId">
+                                    <div class="form-check" id="formIdPending">
                                         <input
                                             class="form-check-input checkOrder"
                                             type="checkbox"
@@ -168,20 +165,15 @@ __('Orders')) @section('explorer')
                                         />
                                     </div>
                                 </td>
+                                    @else
+                                    <td></td>
+                                    @endif
                                 @else
-                                    @if(auth()->user()->role_id == 3)
-                                    <td style="padding: 6px 0px 0px 0px;">
-                                        <div class="form-check" id="formPassed">
-                                            <input
-                                                class="form-check-input checkOrderPendingLogistic"
-                                                type="checkbox"
-                                                value="{{ $o->id }}"
-                                                name="checkOrderPendingLogistic"
-                                            />
-                                        </div>
-                                    </td>
+                                    @if(auth()->user()->role_id == 3 || auth()->user()->role_id == 4)
+                                        <td></td>
                                     @endif
                                 @endif
+
                                 <td style="padding: 6px 0px 0px 0px;">
                                     {{ $o->id }}
                                 </td>
@@ -211,7 +203,8 @@ __('Orders')) @section('explorer')
                                 <td style="padding: 5px 5px 5px 0px;">
                                     @if(auth()->user()->role_id == 1 ||
                                     auth()->user()->role_id == 2)
-                                    <a href="" class="mg-10">
+                                    <a class="mg-10"
+                                    href="{{ route('orders.edit', $o->id) }}">
                                         <i
                                             id="IconE"
                                             class="fas fa-pencil-alt"
@@ -236,6 +229,15 @@ __('Orders')) @section('explorer')
                                             style="position: relative; right: -2px;"
                                         ></i>
                                     </a>
+                                        @if($o->payment_type_id == 2)
+                                            <a
+                                            onclick="showVoucherCheck( '{{ $o->id }}' )"
+                                            type="button"
+                                            class="mg-10-1"
+                                            >
+                                                <i id="IconI" class="fas fa-image"></i>
+                                            </a>
+                                        @endif
                                     @else
                                     <a
                                         onclick="ShowOrderModal( '{{ $o->id }}' )"
@@ -250,6 +252,15 @@ __('Orders')) @section('explorer')
                                             style="position: relative; right: -2px;"
                                         ></i>
                                     </a>
+                                        @if($o->payment_type_id == 2)
+                                            <a
+                                            onclick="showVoucherCheck( '{{ $o->id }}' )"
+                                            type="button"
+                                            class="mg-10-1"
+                                            >
+                                                <i id="IconI" class="fas fa-image"></i>
+                                            </a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>

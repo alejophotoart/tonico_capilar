@@ -211,11 +211,11 @@ __('Orders')) @section('explorer')
                                     {{ "$" }}
                                     {{ number_format($o->total, 0, ',', '.') }}
                                 </td>
-                                @if(auth()->user()->role_id == 1 ||
-                                auth()->user()->role_id == 2 ||
-                                auth()->user()->role_id == 3)
+
                                 <td>
-                                    <a href="" class="mg-10">
+                                @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
+                                    <a class="mg-10"
+                                    href="{{ route('orders.edit', $o->id) }}">
                                         <i
                                             id="IconE"
                                             class="fas fa-pencil-alt"
@@ -235,8 +235,17 @@ __('Orders')) @section('explorer')
                                     >
                                         <i id="IconS" class="fas fa-eye"></i>
                                     </a>
+                                @else
+                                    <a
+                                        onclick="ShowOrderModal( '{{ $o->id }}' )"
+                                        data-bs-toggle="modal"
+                                        data-bs-whatever="@fat"
+                                        class="mg-10-1"
+                                    >
+                                        <i id="IconS" class="fas fa-eye"></i>
+                                    </a>
+                                    @endif
                                 </td>
-                                @endif
                             </tr>
                             @endforeach
                         </tbody>

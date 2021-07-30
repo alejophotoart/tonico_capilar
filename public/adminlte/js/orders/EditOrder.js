@@ -45,7 +45,8 @@ function minTwoDigits(n) {
     return (n < 10 ? "0" : "") + n;
 }
 
-function EditOrder(id, client_id, address_id, user_id){
+function EditOrder(id, client_id, address_id, user_id, delivery_d){
+
     let identification = document.getElementById("identification").value;
     let name = document.getElementById("name").value;
     let address = document.getElementById("address").value;
@@ -57,7 +58,7 @@ function EditOrder(id, client_id, address_id, user_id){
     let city_id = document.getElementById("city_id").value;
     let payment_type_id = document.getElementById("payment_type_id").value;
     if($("#delivery_date").val() == "" || $("#delivery_date").val() == null || $("#delivery_date").val() == undefined){
-        var delivery_date = document.getElementById("delivery_date_info").value;
+        var delivery_date = delivery_d;
     }else{
         var delivery_date = document.getElementById("delivery_date").value;
         var reason = document.getElementById("reason").value;
@@ -68,6 +69,7 @@ function EditOrder(id, client_id, address_id, user_id){
     let img = document.getElementById("LoadVoucher").value;
     let quantity = [];
     let product = [];
+
     for (var i = 0; i < $(".copy_quantity").length; i++) {
         quantity.push($(".copy_quantity")[i].value);
     }
@@ -78,21 +80,8 @@ function EditOrder(id, client_id, address_id, user_id){
     let total1 = total2.replace(/\$/g, "");
     let total = total1.replace(/\./g, "");
     console.log(prod_quan);
-    console.log(delivery_date);
     // let delivery_price1 = delivery_price2.replace(/\$/g, "");
     // let delivery_price = delivery_price1.replace(/\./g, "");
-
-    if ($("select[name='payment_type_id']").val() == 2) {
-        if (img == null || img == "") {
-            Swal.fire({
-                icon: "warning",
-                title: "Comprobante de pago",
-                text: "por favor adjunte el comprobrante del deposito",
-                confirmButtonColor: "#343a40"
-            });
-            return false;
-        }
-    }
 
     for (var c = 0; c < $(".copy_quantity").length; c++) {
         if (
@@ -167,7 +156,7 @@ function EditOrder(id, client_id, address_id, user_id){
             showCancelButton: true,
             confirmButtonColor: "#343a40",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Si, Crearlo!",
+            confirmButtonText: "Si, Actualizarlo!",
             cancelButtonText: "Cancelar"
         }).then(result => {
             if (result.isConfirmed) {
@@ -236,10 +225,10 @@ function EditOrder(id, client_id, address_id, user_id){
                             });
                             return false;
                         } else {
-                            var image = document.getElementById("formFileSm");
+                            var image = document.getElementById("LoadVoucher");
                             image = image.files[0];
                             if (image) {
-                                var id_order = r.d.id;
+                                var id_order = r.id;
                                 var name_client = r.name;
                                 saveImage(id_order, name_client);
                             } else {
@@ -290,6 +279,85 @@ function EditOrder(id, client_id, address_id, user_id){
         });
     }
 }
+
+function saveImage(id, name) {
+    var fImage = document.getElementById("LoadVoucher");
+    fImage = fImage.files[0];
+    let timerInterval;
+    Swal.fire({
+        title: "Validando comprobante",
+        didOpen: () => {
+            Swal.showLoading();
+
+            timerInterval = setInterval(() => {
+                const content = Swal.getHtmlContainer();
+                if (content) {
+                    const b = content.querySelector("b");
+                    if (b) {
+                        b.textContent = Swal.getTimerLeft();
+                    }
+                }
+            }, 100);
+        }
+    });
+    if (fImage) {
+        var formData = new FormData();
+        formData.append("id", id);
+        formData.append("name", name);
+        formData.append("image", fImage);
+
+        $.ajax({
+            type: "POST",
+            dataType: "json",
+            processData: false,
+            contentType: false,
+            headers: {
+                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            },
+            data: formData,
+            url: "/order/saveImage",
+            success: function(r) {
+                willClose: () => {
+                    clearInterval(timerInterval);
+                };
+                if (r["status"] == 200) {
+                    Swal.fire({
+                        icon: r["icon"],
+                        title: r["title"],
+                        text: r["message"] + r["space"] + r["name"],
+                        confirmButtonColor: "#343a40",
+                        showConfirmButton: true
+                    }).then(val => {
+                        if (val.value) {
+                            $(location).attr("href", "/pedidos");
+                        }
+                    });
+                } else {
+                    if (r["status"] == 100) {
+                        Swal.fire({
+                            icon: r["icon"],
+                            title: r["title"],
+                            text: r["message"],
+                            confirmButtonColor: "#343a40"
+                        });
+                        return false;
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Ops...",
+                            text: "Ocurrio un error inesperado",
+                            confirmButtonColor: "#343a40"
+                        });
+                        return false;
+                    }
+                }
+            }
+        });
+    } else {
+        alert("No hay archivo.");
+    }
+}
+
 
 function limitar(e, contenido, caracteres) {
     var unicode = e.keyCode ? e.keyCode : e.charCode;

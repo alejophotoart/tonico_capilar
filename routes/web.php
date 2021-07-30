@@ -54,11 +54,19 @@ Route::middleware(['auth'])->group(function () {
 // Rutas para el resumen
       Route::get('/resumen', [ResumeController::class, 'index'])->name('resume.index');//llama a la vista resumen
       Route::get('/resumen/sales', [ResumeController::class, 'salesTable'])->name('resume.index');
+// Rutas de pedido
+      Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
+      Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda
+      Route::post('/order/saveImage', [OrderController::class, 'saveImage']);//guarda imagen del pedido
     });
 
     Route::group(['middleware' => 'logistic'], function () {
       Route::get('/productos', [ProductController::class, 'index'])->name('products.index');//llama a la vista de productos
       Route::get('/productos/{id}', [ProductController::class, 'show']);//muestra info de los producto
+      Route::put('/pedidos/aprobados/{id}', [OrderController::class, 'passedOrder']);//Aprueba las ordenes con pago tipo deposito
+      Route::put('/pedidos/proceso/{id}', [OrderController::class, 'processOrder']);//pone en proceso las ordenes con pago tipo deposito
+      Route::put('/pedidos/entregados/{id}', [OrderController::class, 'deliveredOrder']);//pone en proceso las ordenes con pago tipo deposito
+      Route::put('/pedidos/{id}/{note}/delete', [OrderController::class, 'destroy']);//Cancelar producto
     });
  // Rutas para actualizar perfil
       Route::get('/profile/{id}', [UserController::class, 'editProfile']);//Muestra modal de actualizar perfil
@@ -76,13 +84,9 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/pedidos/mostrar/{id}', [OrderController::class, 'show']);//llama a el modal de crear pedido
       Route::get('/pedidos/{id}', [OrderController::class, 'create']);//llama a el modal de crear pedido
       Route::post('/pedidos/create', [OrderController::class, 'store']);//crea un pedido nuevo
-      Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
-      Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda
-      Route::post('/order/saveImage', [OrderController::class, 'saveImage']);//guarda imagen del pedido
-      Route::put('/pedidos/aprobados/{id}', [OrderController::class, 'passedOrder']);//Aprueba las ordenes con pago tipo deposito
-      Route::put('/pedidos/proceso/{id}', [OrderController::class, 'processOrder']);//pone en proceso las ordenes con pago tipo deposito
-      Route::put('/pedidos/entregados/{id}', [OrderController::class, 'deliveredOrder']);//pone en proceso las ordenes con pago tipo deposito
-      Route::put('/pedidos/{id}/{note}/delete', [OrderController::class, 'destroy']);//Cancelar producto
+    //prueba de envio de mensajes
+      Route::post('/message', [OrderController::class, 'sendMessage']);//crea un pedido nuevo
+
 // Rutas para filtrar ciudades y estados
       Route::get('/optionState/city/{state_code}', [CityController::class, 'allCities']);
       Route::get('/optionCountry/state/{country_code}', [StateController::class, 'allStates']);

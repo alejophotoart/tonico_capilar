@@ -171,8 +171,7 @@ __('Orders')) @section('explorer')
                                 </td>
                                 <td>
                                     @if(auth()->user()->role_id == 1 ||
-                                    auth()->user()->role_id == 2 ||
-                                    auth()->user()->role_id == 3)
+                                    auth()->user()->role_id == 2)
                                     <a type="button" class="mg-10"
                                     href="{{ route('orders.edit', $o->id) }}">
                                         <i

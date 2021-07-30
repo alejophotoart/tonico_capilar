@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+// use GuzzleHttp\Client;
 use App\Models\Address;
 use App\Models\Country;
 use App\Models\Client;
@@ -16,6 +17,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+
 
 class OrderController extends Controller
 {
@@ -70,9 +73,11 @@ class OrderController extends Controller
             if(Auth::user()->role_id == 4){
                 $orders = Order::where([['user_id',auth::user()->id],['state_order_id', 3],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
                 $products = Product::get();
+                $sum = Order::where("state_order_id", 3)->select(Order::raw("(delivery_price + total) as total, id"))->get();
                 return view('admin.orders.tables.delivered')
                 ->with('orders', $orders)
-                ->with('products', $products);
+                ->with('products', $products)
+                ->with('total', $sum);
             }
         }
     }
@@ -164,10 +169,10 @@ class OrderController extends Controller
     }
     public function store(Request $request)
     {
-        //dd($request->all());
-        if(Client::where('identification', $request->identification)->first())
+
+        if(Client::where('id', $request['client_id'])->first())
         {
-            $client = Client::where('identification', $request->identification)->update([
+            $client = Client::where('id', $request['client_id'])->update([
                 'identification'    => $request['identification'],
                 'name'              => $request['name'],
                 'phone'             => $request['phone'],
@@ -176,7 +181,7 @@ class OrderController extends Controller
             $address = Address::create([
                 'address'           => $request['address'],
                 'neighborhood'      => $request['neighborhood'],
-                'client_id'         => $request['tramp'],
+                'client_id'         => $request['client_id'],
                 'city_id'           => $request['city_id'],
             ]);
             if($request['payment_type_id'] == 1){
@@ -187,7 +192,7 @@ class OrderController extends Controller
                     'notes'             => $request['notes'],
                     'payment_type_id'   => $request['payment_type_id'],
                     'state_order_id'    => 1,
-                    'client_id'         => $request['tramp'],
+                    'client_id'         => $request['client_id'],
                     'user_id'           => $request['id'],
                     'address_id'        => $address['id'],
                     'city_id'           => $request['city_id'],
@@ -202,7 +207,7 @@ class OrderController extends Controller
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
                         'state_order_id'    => 7,
-                        'client_id'         => $request['tramp'],
+                        'client_id'         => $request['client_id'],
                         'user_id'           => $request['id'],
                         'address_id'        => $address['id'],
                         'city_id'           => $request['city_id'],
@@ -214,13 +219,12 @@ class OrderController extends Controller
             $prod_quan = count($request['prod_quan'][0]);
             for($i = 0; $i < $prod_quan; $i++){
                 $order_item             = new OrderItem;
-                $order_item->price      = null;
                 $order_item->quantity   = $request['prod_quan'][0][$i]; //posicion de las cantidades
                 $order_item->product_id = $request['prod_quan'][1][$i]; //posicion de los id del producto
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
-
+            $this->sendMessage($request);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }else{
             $client = Client::create([
@@ -270,14 +274,16 @@ class OrderController extends Controller
             $product_quan = count($request['prod_quan'][0]);
             for($i = 0; $i < $product_quan; $i++){
                 $order_item             = new OrderItem;
-                $order_item->price      = null;
                 $order_item->quantity   = $request['prod_quan'][0][$i]; //posicion de las cantidades
                 $order_item->product_id = $request['prod_quan'][1][$i]; //posicion de los id del producto
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
+            $this->sendMessage($request);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }
+
+
     }
 
     /**
@@ -286,6 +292,64 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    public function sendMessage($request)
+    {
+        $city = City::where('active', 1)->with('state')->get();
+        $state = 0;
+        $country = 0;
+        foreach ($city as $c) {
+           if($c->id == $request['city_id']){
+                $city = $c->name;
+                $state = $c->state->name;
+                $country = $c->state->country->name;
+           }
+        }
+
+        $product_name = [];
+        $products = Product::where('active', 1)->get();
+        foreach ($request['prod_quan'][1] as $pq) {
+            foreach ($products as $p) {
+                if($p->id == $pq){
+                    array_push($product_name,$p->name);
+                }
+            }
+        }
+        $guia= $request['id'];
+
+        $data = [
+            'phone' => '+573154709447', // Receivers phone
+            'body' =>   'Guia: '.$guia."\n",
+                        "País: .$country\n",
+                        'Departamento: '.$state."\n",
+                        'Ciudad: '.$city."\n",
+                        'Fecha de entrega: '.$request['delivery_date']."\n",
+                        'Nombre: '.$request['name']."\n",
+                        'Direccion: '.$request['address']."\n",
+                        'Barrio: '.$request['neighborhood']."\n",
+                        'Telefono: '.$request['phone']."\n",
+                        'WhatsApp: '.$request['whatsapp']."\n",
+                        'Productos: ' => [
+                                $product_name
+                            ],
+                        'Total: $'.$request['total']."\n",
+        ];
+        $json = json_encode($data);
+
+        $token = 'z0g622gpapksd8xo';
+        $instanceId = '312925';
+        $url = 'https://api.chat-api.com/instance'.$instanceId.'/message?token='.$token;
+
+        $options = stream_context_create(['http' => [
+            'method'  => 'POST',
+            'header'  => 'Content-type: application/json',
+            'content' => $json
+            ]
+        ]);
+        // Send a request
+        $result = file_get_contents($url, false, $options);
+
+
+    }
     public function saveImage(Request $request)
     {
         //dd($request);
@@ -330,6 +394,7 @@ class OrderController extends Controller
     {
         $order = Order::where('id', $id->id)->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->first();
         $payment_type = PaymentType::where('active', 1)->get();
+        $order_items = OrderItem::get(['id', 'order_id']);
         $address = Address::where('active', 1)->get();
         $country = Country::where('active', 1)->get();
         $products = Product::where('active', 1)->get();
@@ -338,7 +403,8 @@ class OrderController extends Controller
         ->with('address', $address)
         ->with('country', $country)
         ->with('payment_type', $payment_type)
-        ->with('products', $products);
+        ->with('products', $products)
+        ->with('order_items', $order_items);
     }
 
     /**
@@ -350,67 +416,104 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        dd($id);
+        //dd($request->all());
         if(Order::where('id', $id)->first()){
+                if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
+                'delivery_date'=> $request['delivery_date'],
+                // 'reason'            => $request['reason'],
+                'delivery_price'    => 10000,
+                'total'             => $request['total'],
+                'notes'             => $request['notes'],
+                'payment_type_id'   => $request['payment_type_id'],
+                'state_order_id'    => 1,
+                'client_id'         => $request['client_id'],
+                'user_id'           => $request['user_id'],
+                'address_id'        => $request['address_id'],
+                'city_id'           => $request['city_id'],
+                'active'            => 1,
+            ])){
 
-                if($request['payment_type_id'] == 1){
-                    $order = Order::where('id', $id)->update([
-                        'delivery_date'     => $request['delivery_date'],
-                        'reason'            => $request['reason'],
+                }else{
+                    if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date','<>',$request['delivery_date']]])->update([
+                    'delivery_date'     => $request['delivery_date'],
+                    // 'reason'            => $request['reason'],
+                    'delivery_price'    => 10000,
+                    'total'             => $request['total'],
+                    'notes'             => $request['notes'],
+                    'payment_type_id'   => $request['payment_type_id'],
+                    'state_order_id'    => 5,
+                    'client_id'         => $request['client_id'],
+                    'user_id'           => $request['user_id'],
+                    'address_id'        => $request['address_id'],
+                    'city_id'           => $request['city_id'],
+                    'active'            => 1,
+                ])){
+
+                }else{
+                    if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date', $request['delivery_date']]])->update([
+                        'delivery_date'=> $request['delivery_date'],
+                        // 'reason'            => $request['reason'],
                         'delivery_price'    => 10000,
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
-                        'state_order_id'    => 1,
+                        'state_order_id'    => 7,
                         'client_id'         => $request['client_id'],
                         'user_id'           => $request['user_id'],
                         'address_id'        => $request['address_id'],
                         'city_id'           => $request['city_id'],
                         'active'            => 1,
-                    ]);
-                }else{
-                    if($request['payment_type_id'] == 2){
-                        $order = Order::where('id', $id)->update([
+                    ])){
+
+                    }else{
+                        if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date','<>',$request['delivery_date']]])->update([
                             'delivery_date'     => $request['delivery_date'],
-                            'reason'            => $request['reason'],
+                            // 'reason'            => $request['reason'],
                             'delivery_price'    => 10000,
                             'total'             => $request['total'],
                             'notes'             => $request['notes'],
                             'payment_type_id'   => $request['payment_type_id'],
-                            'state_order_id'    => 7,
+                            'state_order_id'    => 5,
                             'client_id'         => $request['client_id'],
                             'user_id'           => $request['user_id'],
                             'address_id'        => $request['address_id'],
                             'city_id'           => $request['city_id'],
                             'active'            => 1,
-                        ]);
+                        ])){
+
+                        }
                     }
                 }
+            }
 
-                $prod_quan = count($request['prod_quan'][0]);
-                for($i = 0; $i < $prod_quan; $i++){
-                    $order_item             = new OrderItem;
-                    $order_item->price      = null;
-                    $order_item->quantity   = $request['prod_quan'][0][$i]; //posicion de las cantidades
-                    $order_item->product_id = $request['prod_quan'][1][$i]; //posicion de los id del producto
-                    $order_item->order_id   = $request['id'];
-                    $order_item->save();
-                }
         }
 
-        $client = Client::where('id', $request->client_id)->update([
-            'identification'    => $request['identification'],
-            'name'              => $request['name'],
-            'phone'             => $request['phone'],
-            'whatsapp'          => $request['whatsapp'],
-        ]);
+            $product_quan = count($request['prod_quan'][0]);
+            OrderItem::where('order_id', $id)->delete();
+            for($i = 0; $i < $product_quan; $i++){
+                $order_i       = new OrderItem;
+                $order_i->quantity   = $request['prod_quan'][0][$i]; //porder_isicion de las cantidades
+                $order_i->product_id = $request['prod_quan'][1][$i]; //posicion de los id del producto
+                $order_i->order_id   = $id;
+                $order_i->save();
+            }
 
-        $address = Address::where('id', $request->address_id)->update([
-            'address'           => $request['address'],
-            'neighborhood'      => $request['neighborhood'],
-            'client_id'         => $request['client_id'],
-            'city_id'           => $request['city_id'],
-        ]);
+
+            $client = Client::where('id', $request->client_id)->update([
+                'identification'    => $request['identification'],
+                'name'              => $request['name'],
+                'phone'             => $request['phone'],
+                'whatsapp'          => $request['whatsapp'],
+            ]);
+
+            $address = Address::where('id', $request->address_id)->update([
+                'address'           => $request['address'],
+                'neighborhood'      => $request['neighborhood'],
+                'client_id'         => $request['client_id'],
+                'city_id'           => $request['city_id'],
+            ]);
+            return response(array('status' => 200, 'id' => $id,'title' => 'Pedido Actualizado' ,'message' => 'Actualizaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
+
     }
 
     /**

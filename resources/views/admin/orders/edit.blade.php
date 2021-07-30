@@ -359,13 +359,12 @@
         <div class="d-grid gap-2" style="width: 1000px">
         @foreach ($address as $a)
             @if($a->id == $order->id)
-            <button
-                onclick="EditOrder({{ $order->id }}, {{ $order->client->id }}, {{ $a->id }}, {{ $order->user_id }});"
-                class="btn btn-dark"
-                type="button"
-            >
-                {{ __("Editar pedido") }}
-            </button>
+               <button
+                    onclick="EditOrder({{ $order->id }}, {{ $order->client->id }}, {{ $a->id }}, {{ $order->user_id }}, '{{$order->delivery_date}}');"
+                    class="btn btn-dark"
+                    type="button">
+                    {{ __("Editar pedido") }}
+                </button>
             @endif
         @endforeach
         </div>
@@ -408,14 +407,6 @@
             $("#delivery_date").val("");
             $("#reason").val("");
         });
-        var weekday = new Array(7);
-        weekday[0] = "Domingo";
-        weekday[1] = "Lunes";
-        weekday[2] = "Martes";
-        weekday[3] = "Miercoles";
-        weekday[4] = "Jueves";
-        weekday[5] = "Viernes";
-        weekday[6] = "Sabado";
         let fecha = new Date('{{ $order->delivery_date }}');
         let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         $("#delivery_date_info").val(fecha.toLocaleString('es', options));

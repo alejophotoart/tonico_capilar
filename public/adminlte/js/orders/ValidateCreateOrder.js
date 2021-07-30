@@ -15,18 +15,36 @@ $(document).ready(function() {
             checkPassedOrder($(this).val());
         }
     });
+    /**
+     * pasa las orden que tenga deposito a deposito pendiente para logistica
+     */
 
     $("#formPassed input[type=checkbox]").click(function() {
         if (this.checked) {
             checkProcessOrder($(this).val());
         }
     });
+    /**
+     * logistica pasa la ordenes de deposito aprobado a en proceso
+     */
 
     $("#formDelivered input[type=checkbox]").click(function() {
         if (this.checked) {
             checkDeliveredOrder($(this).val());
         }
     });
+    /**
+     * logistica y adminis pasan las ordenes de en proceso a entregado
+     */
+
+    $("#formIdPending input[type=checkbox]").click(function() {
+        if (this.checked) {
+            checkPassedOrderPending($(this).val());
+        }
+    });
+    /**
+     * pasa las ordenes reagendadas que tengan deposito a depositos aprobados de logistica
+     */
 
     $("#buttonVoucher").click(function(e) {
         e.preventDefault();
@@ -346,6 +364,82 @@ function checkDeliveredOrder(id){
         } else {
             if (result.dismiss) {
                 $("#formDelivered input[type=checkbox]").prop("checked", false);
+            }
+        }
+    });
+}
+
+function checkPassedOrderPending(id){
+    Swal.fire({
+        title: "Estas seguro?",
+        text: "Deseas aprobar este deposito",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#343a40",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, Aprobarlo!",
+        cancelButtonText: "Cancelar"
+    }).then(result => {
+        if (result.isConfirmed) {
+            let timerInterval;
+            Swal.fire({
+                title: "Aprobando deposito del Pedido " + id + " reagendado",
+                didOpen: () => {
+                    Swal.showLoading();
+
+                    timerInterval = setInterval(() => {
+                        const content = Swal.getHtmlContainer();
+                        if (content) {
+                            const b = content.querySelector("b");
+                            if (b) {
+                                b.textContent = Swal.getTimerLeft();
+                            }
+                        }
+                    }, 100);
+                }
+            });
+            $.ajax({
+                url: "/pedidos/aprobados/" + id,
+                type: "put",
+                contentType: "application/json",
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
+                        "content"
+                    ),
+                    contentType: "application/json"
+                },
+                data: null,
+                success: function(r) {
+                    willClose: () => {
+                        clearInterval(timerInterval);
+                    };
+                    if (r["status"] == 200) {
+                        Swal.fire({
+                            icon: r["icon"],
+                            title: r["title"],
+                            text:
+                                r["message"] +
+                                r["space"] +
+                                r["id"] +
+                                r["space"] +
+                                r["message2"],
+                            confirmButtonColor: "#343a40",
+                            showConfirmButton: true
+                        }).then(val => {
+                            $(location).attr("href", "/pedidos/pendientes");
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Ops...",
+                            text: "Ocurrio un error inesperado"
+                        });
+                    }
+                }
+            });
+        } else {
+            if (result.dismiss) {
+                $("#formIdPending input[type=checkbox]").prop("checked", false);
             }
         }
     });

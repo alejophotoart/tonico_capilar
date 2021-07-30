@@ -312,6 +312,7 @@
                     {{__('Close')}}
                 </button>
                 <button type="button" class="btn btn-dark"
+                {{-- onclick="message()" > --}}
                 onclick="CreateOrder('{{ auth()->user()->id }}')">
                     {{__('Generar pedido')}}
                 </button>

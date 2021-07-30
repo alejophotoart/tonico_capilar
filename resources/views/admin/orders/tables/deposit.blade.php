@@ -223,7 +223,8 @@ __('Orders')) @section('explorer')
                                 <td style="padding: 5px 5px 5px 0px;">
                                     @if(auth()->user()->role_id == 1 ||
                                     auth()->user()->role_id == 2)
-                                    <a href="" class="mg-10">
+                                    <a class="mg-10"
+                                    href="{{ route('orders.edit', $o->id) }}">
                                         <i
                                             id="IconE"
                                             class="fas fa-pencil-alt"

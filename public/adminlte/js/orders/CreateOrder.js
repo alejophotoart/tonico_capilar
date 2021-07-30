@@ -1,3 +1,18 @@
+function message ()
+{
+    $.ajax({
+        url: "/message",
+        type: "POST",
+        contentType: "application/json",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+            contentType: "application/json"
+        },
+        success: function(r) {
+        }
+    });
+}
+
 function CreateOrder(id) {
     //for (var i = 0; i < $(".product_copy")[i].value.length; i++) {}
 
@@ -125,7 +140,9 @@ function CreateOrder(id) {
                 willClose: () => {
                     clearInterval(timerInterval);
                 };
+
                 if (r["status"] == 200) {
+                    var client_id = r.d.client_data.id;
                     Swal.fire({
                         title: "Cliente existente",
                         text:
@@ -142,7 +159,6 @@ function CreateOrder(id) {
                                 $("#name").val(r.d.client_data.name);
                                 $("#phone").val(r.d.client_data.phone);
                                 $("#whatsapp").val(r.d.client_data.whatsapp);
-                                $("#trampId").val(r.d.client_data.id);
                             }
                             Swal.fire({
                                 title: "Estas seguro?",
@@ -157,7 +173,7 @@ function CreateOrder(id) {
                                 if (result.isConfirmed) {
                                     let data = {
                                         id,
-                                        tramp,
+                                        client_id,
                                         identification,
                                         name,
                                         address,
@@ -292,7 +308,7 @@ function CreateOrder(id) {
                             if (result.isConfirmed) {
                                 let data = {
                                     id,
-                                    tramp,
+                                    client_id,
                                     identification,
                                     name,
                                     address,

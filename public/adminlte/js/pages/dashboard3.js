@@ -104,7 +104,6 @@ $(function () {
                 currency: "USD",
                 maximumSignificantDigits: 3
             };
-            const numberFormat = new Intl.NumberFormat("en-US", options);
 
             for (var i = 0; i < orders.length; i++) {
                 if(orders[i].state_order_id == 3){
@@ -117,20 +116,6 @@ $(function () {
 
             }
             $("#quantity_sales").text(sales);
-            /**
-             * for para calcular ventas totales
-             * quantity_sales refleja la cantidad de las ventas
-             */
-
-            /**for(var i = 0; i < orders.length; i++){
-                var fecha = new Date(orders[i].delivery_date);
-                let options = { month: 'long', day: 'numeric' };
-                dates.push(fecha.toLocaleString('es', options));
-            }
-
-             * for para obtener la fecha de los envios
-             * let option: es para dar el formato a la fecha
-             */
 
              for(let i = 0; i < 7; i++){
                 let date = new Date();
@@ -138,7 +123,6 @@ $(function () {
                 let finalDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
                 fechas.push(finalDate);
             }
-            console.log(fechas);
             /**
              * for que calcula la fecha actual hasta 7 dias atras
              * Se usa en la frafica de ventas x dia
@@ -147,20 +131,24 @@ $(function () {
                 for(let d = 0; d < dates.length; d++){
                     let date = new Date(dates[d].fecha);
                     date.setDate(date.getDate());
-                    let endDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
+                    var endDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
                     if(fechas[f] == endDate){
-                        let subtotal = parseFloat(dates[d].total);
-                        total = total + subtotal;
-                        returnTotal[endDate] = total;
+                        if(dates[d].state_order_id == 3){
+                            let subtotal = parseFloat(dates[d].total);
+                            total = total + subtotal;
+                            returnTotal[endDate] = total;
+                        }
                     }
                 }
                 total = 0;
             }
+            var keys = Object.values(returnTotal);
+            console.log(returnTotal);
             /**
              * for para recorrer los valores totales de las ventas
              */
 
-            // maxtotal = returnTotal.reduce((n,m) => Math.max(n,m), -Number.POSITIVE_INFINITY)
+            maxtotal = keys.reduce((n,m) => Math.max(n,m), -Number.POSITIVE_INFINITY)
             /**
              * math.max: es para sacar el valor max de un array
              * math.min: es para sacar el valor min de un arrays
@@ -208,7 +196,7 @@ $(function () {
             labels: fechas,
             datasets: [{
                 type: 'line',
-                data: total,
+                data: keys,
                 backgroundColor: 'transparent',
                 borderColor: '#007bff',
                 pointBorderColor: '#007bff',
@@ -255,12 +243,12 @@ $(function () {
                         beginAtZero: true,
                             // Include a dollar sign in the ticks
                             callback: function (value) {
-                              if (value >= 1000) {
-                                value /= 1000
-                                value += 'k'
-                              }
+                                if(parseInt(value) >= 1000){
+                                    return '$' + value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                  } else {
+                                    return '$' + value;
+                                  }
 
-                              return '$' + value
                             },
 
                         suggestedMax:maxtotal
