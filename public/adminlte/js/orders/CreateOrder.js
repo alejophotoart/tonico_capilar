@@ -14,8 +14,6 @@ function message ()
 }
 
 function CreateOrder(id) {
-    //for (var i = 0; i < $(".product_copy")[i].value.length; i++) {}
-
     let identification = document.getElementById("identification").value;
     let name = document.getElementById("name").value;
     let address = document.getElementById("address").value;

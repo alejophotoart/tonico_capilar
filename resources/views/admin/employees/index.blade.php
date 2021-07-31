@@ -10,7 +10,7 @@ __('Employees')) @section('explorer')
             <h1 class="card-title">{{ __("Employees list") }}</h1>
             @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2 ||
             auth()->user()->role_id == 3)
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="float-end">
                 <a href="{{ route('employees.create') }}"
                     ><button class="btn btn-dark" type="button">
                         <i class="fas fa-user-plus"></i></button

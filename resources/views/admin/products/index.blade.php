@@ -9,7 +9,7 @@ __('Products')) @section('explorer')
         <div class="card-header">
             <h1 class="card-title">{{ __("Prodcuts list") }}</h1>
             @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <div class="float-end">
                 <a href="{{ route('products.create') }}"
                     ><button class="btn btn-dark" type="button">
                         <i class="fas fa-plus"></i></button

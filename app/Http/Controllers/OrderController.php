@@ -306,6 +306,7 @@ class OrderController extends Controller
         }
 
         $product_name = [];
+        // $text = "\nproductos: " . $product_name;
         $products = Product::where('active', 1)->get();
         foreach ($request['prod_quan'][1] as $pq) {
             foreach ($products as $p) {
@@ -315,23 +316,29 @@ class OrderController extends Controller
             }
         }
         $guia= $request['id'];
+        $delivery_date = $request['delivery_date'];
+        $name = $request['name'];
+        $address = $request['address'];
+        $neighborhood = $request['neighborhood'];
+        $phone = $request['phone'];
+        $whatsapp = $request['whatsapp'];
+        $total = $request['total'];
+
+
 
         $data = [
             'phone' => '+573154709447', // Receivers phone
-            'body' =>   'Guia: '.$guia."\n",
-                        "País: .$country\n",
-                        'Departamento: '.$state."\n",
-                        'Ciudad: '.$city."\n",
-                        'Fecha de entrega: '.$request['delivery_date']."\n",
-                        'Nombre: '.$request['name']."\n",
-                        'Direccion: '.$request['address']."\n",
-                        'Barrio: '.$request['neighborhood']."\n",
-                        'Telefono: '.$request['phone']."\n",
-                        'WhatsApp: '.$request['whatsapp']."\n",
-                        'Productos: ' => [
-                                $product_name
-                            ],
-                        'Total: $'.$request['total']."\n",
+            'body' =>   "GUIA: " . $guia .
+                        "\nPais: " . $country .
+                        "\nDepartamento: " . $state .
+                        "\nCiudad: " . $city .
+                        "\nFecha de entrega: " . $delivery_date .
+                        "\nNombre: " . $name .
+                        "\nDireccion: " . $address .
+                        "\nBarrio: " . $neighborhood .
+                        "\nTelefono: " . $phone .
+                        "\nWhatsapp: " . $whatsapp .
+                        "\nTotal: " . $total,
         ];
         $json = json_encode($data);
 
@@ -450,7 +457,7 @@ class OrderController extends Controller
                 ])){
 
                 }else{
-                    if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date', $request['delivery_date']]])->update([
+                    if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date', $request['delivery_date']]])->first()->update([
                         'delivery_date'=> $request['delivery_date'],
                         // 'reason'            => $request['reason'],
                         'delivery_price'    => 10000,

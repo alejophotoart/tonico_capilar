@@ -82,11 +82,11 @@ __('Resumen')) @section('content')
                                 <span>Ventas a lo largo del tiempo</span>
                             </p>
                             <p class="ml-auto d-flex flex-column text-right">
-                                <span class="text-success">
-                                    <i class="fas fa-arrow-up"></i> 12.5%
+                                <span class="percentage">
+
                                 </span>
                                 <span class="text-muted"
-                                    >Desde la semana pasada</span
+                                    >Comparacion de ayer</span
                                 >
                             </p>
                         </div>
@@ -98,13 +98,11 @@ __('Resumen')) @section('content')
 
                         <div class="d-flex flex-row justify-content-end">
                             <span class="mr-2">
-                                <i class="fas fa-square text-primary"></i> Esta
-                                semana
+                                <i class="fas fa-square text-primary"></i> Total de ventas
                             </span>
 
                             <span>
-                                <i class="fas fa-square text-gray"></i> Ultima
-                                semana
+                                <i class="fas fa-square text-gray"></i> Cantidad de ventas
                             </span>
                         </div>
                     </div>

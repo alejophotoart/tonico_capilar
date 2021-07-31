@@ -98,7 +98,7 @@ __('Orders')) @section('explorer')
                         ></i
                         >{{ __("Pedidos Nuevos") }}
                     </h1>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <div class="float-end">
                         <a
                             onclick="ShowCreateOrderModal('{{ auth()->user()->id }}')"
                             ><button class="btn btn-dark" type="button">
