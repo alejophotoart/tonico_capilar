@@ -13,6 +13,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <title>
             @yield('titleSup', __('Home')) | {{ auth()->user()->name }}
         </title>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
 
         <!-- Google Font: Source Sans Pro -->
         <link
@@ -438,16 +440,38 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     auth()->user()->role_id == 2 ||
                                     auth()->user()->role_id == 3)
                                     <li class="nav-item">
-                                        <a
-                                            href="{{ route('products.index') }}"
-                                            class="nav-link"
-                                        >
-                                            <i
-                                                class="fas fa-warehouse"
-                                                style="margin: 5px;"
-                                            ></i>
-                                            <p>{{ __("Products") }}</p>
+                                        <a href="#" class="nav-link">
+                                            <i class="fas fa-clipboard-check"
+                                            style="margin: 5px;"></i>
+                                            <p>
+                                                {{ __("Inventario") }}
+                                                <i class="right fas fa-angle-left"></i>
+                                            </p>
                                         </a>
+                                        <ul class="nav nav-treeview">
+                                            <li class="nav-item">
+                                                <a
+                                                href="{{ route('products.index') }}"
+                                                class="nav-link" style="padding-left: 35px;">
+                                                    <i
+                                                        class="fas fa-list-ul"
+                                                        style="margin: 5px;"
+                                                    ></i>
+                                                    <p>{{ __("Products") }}</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a
+                                                href="{{ route('warehouses.index') }}"
+                                                class="nav-link" style="padding-left: 35px;">
+                                                    <i
+                                                        class="fas fa-warehouse"
+                                                        style="margin: 5px;"
+                                                    ></i>
+                                                    <p>{{ __("Bodegas") }}</p>
+                                                </a>
+                                            </li>
+                                        </ul>
                                     </li>
                                     @endif @if(auth()->user()->role_id == 1 ||
                                     auth()->user()->role_id == 2)
@@ -599,6 +623,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- fullCalendar 2.2.5 -->
         <script src="/adminlte/plugins/moment/moment.min.js"></script>
         <script src="/adminlte/plugins/fullcalendar/main.js"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
         <!--Datatables-->
         <script
             type="text/javascript"

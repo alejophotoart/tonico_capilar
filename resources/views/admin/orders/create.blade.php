@@ -76,7 +76,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <input id ="trampId" hidden/>
                             <div class="input-group mb-3">
                                 <input
                                     type="text"

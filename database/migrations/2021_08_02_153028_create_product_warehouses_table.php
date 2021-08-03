@@ -17,7 +17,7 @@ class CreateProductWarehousesTable extends Migration
             $table->increments('id');
             $table->integer('quantity')->nullable();
 
-            $table->integer('product_id')->unsigned()->nullable();
+            $table->bigInteger('product_id')->unsigned()->nullable();
             $table->foreign('product_id')->references('id')->on('products');
 
             $table->integer('warehouse_id')->unsigned()->nullable();

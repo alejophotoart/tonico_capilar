@@ -4,6 +4,7 @@ function registerProduct() {
     let price2 = $("#price").val();
     let quantity = document.getElementById("quantity").value;
     let description = document.getElementById("description").value;
+    var citiesProduct = $("#city_id").val();
 
     let price1 = price2.replace(/\$/g, "");
     let price = price1.replace(/\./g, "");
@@ -43,7 +44,8 @@ function registerProduct() {
                     name,
                     price,
                     quantity,
-                    description
+                    description,
+                    citiesProduct
                 };
                 console.log(data);
                 let timerInterval;

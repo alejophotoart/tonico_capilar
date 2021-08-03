@@ -26,8 +26,10 @@
     },
     "dependencies": {
         "autonumeric": "^4.6.0",
+        "bootstrap-select": "^1.13.18",
         "jQuery-QueryBuilder": "^2.6.0",
         "jquery-ui-dist": "^1.12.1",
+        "mdbootstrap": "^4.20.0",
         "sweetalert2": "^11.0.18"
     }
 }

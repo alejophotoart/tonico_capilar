@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Country;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
+use Laravel\Ui\Presets\React;
 
 class ProductController extends Controller
 {
@@ -29,7 +31,8 @@ class ProductController extends Controller
     public function create()
     {
         return view ('admin.products.create', [
-            'product' => new Product
+            'product' => new Product,
+            'country' => Country::where('active', 1)->get(),
         ]);
     }
 
@@ -41,13 +44,21 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         if($request['description'] > 400){
             return response(array('status' => 500, 'title' => 'Descripcion del producto' ,'message' => __('la descripcion es muy larga, intenta con algo mas corto'), 'icon' => "error"));
                 }else{
                 if(Product::where('code', $request["code"])->first()){
                     return response(array('status' => 400, 'title' => 'Codigo del producto' ,'message' => __('Ya existe un producto con ese codigo'), 'icon' => "error"));
                 }else{
-                if (Product::create($request->all())) {
+                if (isset($request)) {
+                        $product = Product::create([
+                            'code'          => $request['code'],
+                            'name'          => $request['name'],
+                            'price'         => $request['price'],
+                            'quantity'      => $request['quantity'],
+                            'description'   => $request['description']
+                        ]);
                     return response(array('status' => 200, 'd' => array('code' => $request->code),'title' => 'Producto creado' ,'message' => 'Creaste el producto', 'space' => ' ','name' => $request->name, 'icon' => "success"));
                 } else {
                     return response(array('status' => 100, 'title' => __('Ops...') ,'message' => __('Ocurrio un error inesperado, intentalo de mas tarde'), 'icon' => "warning"));

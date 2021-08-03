@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(StateEmployeeSeeder::class);
         $this->call(StateOrderSeeder::class);
         $this->call(UserSeeder::class);
+        $this->call(StateWarehouseSeeder::class);
 
     }
 }

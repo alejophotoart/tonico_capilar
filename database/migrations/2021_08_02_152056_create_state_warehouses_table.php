@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateWarehousesTable extends Migration
+class CreateStateWarehousesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateWarehousesTable extends Migration
      */
     public function up()
     {
-        Schema::create('warehouses', function (Blueprint $table) {
-            $table->increments('id');
+        Schema::create('state_warehouses', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('code');
+            $table->string('name');
 
-            $table->integer('city_id')->unsigned()->nullable();
-            $table->foreign('city_id')->references('id')->on('cities');
-
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateWarehousesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('warehouses');
+        Schema::dropIfExists('state_warehouses');
     }
 }

@@ -85,7 +85,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="input-group mb-3">
                     <input
                         class="form-control"
@@ -117,18 +116,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="input-group mb-3">
-                <select class="mdb-select md-form colorful-select dropdown-danger" multiple>
-                    <option value="" disabled selected>Choose your country</option>
-                    <option value="1">USA</option>
-                    <option value="2">Germany</option>
-                    <option value="3">France</option>
-                    <option value="3">Poland</option>
-                    <option value="3">Japan</option>
-                  </select>
-                  <label class="mdb-main-label">Label example</label>
-                  <button class="btn-save btn btn-danger btn-sm">Save</button>
-                </div>
                 <br />
                 <div class="row">
                     <!-- /.col -->
@@ -156,11 +143,6 @@
 ></script>
 <script src="/adminlte/js/autoNumeric.js" type="text/javascript"></script>
 <script src="/adminlte/js/autoNumeric.min.js" type="text/javascript"></script>
-<script>
-    $(document).ready(function() {
-        $('.mdb-select').materialSelect();
-    });
-</script>
 <script>
     new AutoNumeric(".__format_currency__", {
         currencySymbol: " $",

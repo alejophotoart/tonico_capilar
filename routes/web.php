@@ -15,6 +15,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ResumeController;
+use App\Http\Controllers\WarehouseController;
 
 Auth::routes();
 Route::get('/', function () { //valida si el usuario esta auth,
@@ -58,15 +59,24 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
       Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda
       Route::post('/order/saveImage', [OrderController::class, 'saveImage']);//guarda imagen del pedido
+//Rutas de bodegas
+        Route::get('/bodegas/crear', [WarehouseController::class, 'create']);//llama a la vista de crear bodegas
+        Route::post('/bodegas/create', [WarehouseController::class, 'store']);//Crea las bodegas
+        Route::get('/bodegas/{id}', [WarehouseController::class, 'edit']);//llama la informacion del modal para editarla
+        Route::delete('/bodegas/{id}/{name}/delete', [WarehouseController::class, 'destroy']);//elimina bodegas
     });
 
     Route::group(['middleware' => 'logistic'], function () {
+//Rutas de Productos
       Route::get('/productos', [ProductController::class, 'index'])->name('products.index');//llama a la vista de productos
       Route::get('/productos/{id}', [ProductController::class, 'show']);//muestra info de los producto
+//Rutas de pedidos
       Route::put('/pedidos/aprobados/{id}', [OrderController::class, 'passedOrder']);//Aprueba las ordenes con pago tipo deposito
       Route::put('/pedidos/proceso/{id}', [OrderController::class, 'processOrder']);//pone en proceso las ordenes con pago tipo deposito
       Route::put('/pedidos/entregados/{id}', [OrderController::class, 'deliveredOrder']);//pone en proceso las ordenes con pago tipo deposito
       Route::put('/pedidos/{id}/{note}/delete', [OrderController::class, 'destroy']);//Cancelar producto
+//Rutas de bodegas
+        Route::get('/bodegas', [WarehouseController::class, 'index'])->name('warehouses.index');//Llama a la vista de bodegas
     });
  // Rutas para actualizar perfil
       Route::get('/profile/{id}', [UserController::class, 'editProfile']);//Muestra modal de actualizar perfil
