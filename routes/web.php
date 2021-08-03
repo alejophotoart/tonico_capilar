@@ -64,6 +64,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/bodegas/create', [WarehouseController::class, 'store']);//Crea las bodegas
         Route::get('/bodegas/{id}', [WarehouseController::class, 'edit']);//llama la informacion del modal para editarla
         Route::delete('/bodegas/{id}/{name}/delete', [WarehouseController::class, 'destroy']);//elimina bodegas
+        Route::put('/bodegas/{id}/update', [WarehouseController::class, 'update']);
     });
 
     Route::group(['middleware' => 'logistic'], function () {

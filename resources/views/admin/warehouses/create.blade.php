@@ -179,3 +179,5 @@
         });
     });
 </script>
+<script src="/adminlte/js/warehouses/createWarehouse.js"></script>
+

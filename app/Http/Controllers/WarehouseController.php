@@ -91,7 +91,16 @@ class WarehouseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request){
+            $warehouse = Warehouse::where('id', $id)->update([
+                'name'                  => $request['name'],
+                'city_id'               => $request['city_id'],
+                'state_warehouse_id'    => $request['state_warehouse_id']
+            ]);
+            return response(array('status' => 200, 'title' => 'Bodega Actualizada' ,'message' => 'Editaste la bodega', 'space' => ' ','name' => $request->name, 'icon' => "success"));
+        } else {
+            return response(array('status' => 100, 'title' => __('Ops...') ,'message' => __('Ocurrio un error inesperado, intentalo de mas tarde'), 'icon' => "warning"));
+        }
     }
 
     /**

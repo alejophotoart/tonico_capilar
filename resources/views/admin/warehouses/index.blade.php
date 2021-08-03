@@ -80,7 +80,7 @@ __('Warehouses')) @section('explorer')
                             @if(auth()->user()->role_id == 1 ||
                             auth()->user()->role_id == 2)
                             <a
-                                onclick="editWarehouses( {{ $w->id }}, {{ $w->state_warehouse_id }} )"
+                                onclick="editWarehouses( {{ $w->id }}, {{ $w->state_warehouse_id }}, {{ $w->city->state->country->id }}, {{$w->city->id}}, {{ $w->city->state->id }})"
                                 class="mg-10"
                             >
                                 <i id="IconE" class="fas fa-pencil-alt"></i>
@@ -101,7 +101,5 @@ __('Warehouses')) @section('explorer')
     </div>
 </div>
 <script src="/adminlte/js/warehouses/showDataTable.js"></script>
-<script src="/adminlte/js/warehouses/createWarehouse.js"></script>
 <script src="/adminlte/js/warehouses/deleteWarehouses.js"></script>
-<script src="/adminlte/js/warehouses/editWarehouses.js"></script>
 @include('admin.warehouses.create') @include('admin.warehouses.edit')@endsection

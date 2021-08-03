@@ -13,7 +13,7 @@
                     class="form-control"
                     placeholder="Nombre o alias de la bodega"
                     id="name_warehouse"
-                    name="name"
+                    name="name_warehouse"
                     autofocus
                     {{ old('name_warehouse') }}
                 />
@@ -34,7 +34,7 @@
                 </div>
             </div>
             <div class="input-group mb-3">
-                <select class="form-control" id="country_id_warehouse" name="country_id" data-live-search="true"
+                <select class="form-control" id="country_id_warehouse" name="country_id_warehouse"
                 onchange="changeCountryType(this.value)">
                   </select>
                   <div class="input-group-append">
@@ -44,8 +44,8 @@
                 </div>
             </div>
             <div class="input-group mb-3">
-            <select class="form-control" id="state_id_warehouse" name="state_id" onchange="changeStateType(this.value)"
-            {{ old('country_id_warehouse') ? '' : 'disabled' }} data-live-search="true">
+            <select class="form-control" id="state_id_warehouse" name="state_id_warehouse" onchange="changeStateType(this.value)"
+            {{ old('country_id_warehouse') ? '' : 'disabled' }}>
                   </select>
                   <div class="input-group-append">
                     <div class="input-group-text">
@@ -54,8 +54,7 @@
                 </div>
             </div>
             <div class="input-group mb-3">
-            <select class="form-control multi_select" data-live-search="true"
-                id="city_id_warehouse" name="city_id">
+            <select class="form-control" id="city_id_warehouse" name="city_id_warehouse">
             </select>
                 <div class="input-group-append">
                     <div class="input-group-text">
@@ -65,111 +64,19 @@
             </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" id="buttonUpdate" onclick="editInfowarehouse()" data-id="" class="btn btn-dark">Guardar Cambios</button>
         </div>
       </div>
     </div>
   </div>
+<script
+    src="https://code.jquery.com/jquery-3.6.0.js"
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"
+></script>
 <script>
-    var country_code_value ='{{ old("country_id_warehouse") }}';
-if (country_code_value && country_code_value != "") {
-    changeCountryType(country_code_value);
-}
-var state_code_value =
-    '{{ old("state_id_warehouse") }}';
-if (state_code_value && state_code_value != "") {
-    changeStateType(state_code_value);
-}
 
-function changeCountryType(country_code) {
-    console.log(country_code);
-
-    var state_id = localStorage.getItem("state_id_warehouse");;
-
-    $.ajax({
-        type: "GET",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-        },
-        url: "/optionCountry/state/" + country_code,
-        data: null,
-        success: function(r) {
-            if (!r) {
-                r = JSON.parse(r);
-            }
-            if (r) {
-                $("#state_id_warehouse").prop("disabled", false);
-                $("#state_id_warehouse option").remove();
-                for (var i = 0; i < r.d.states.length; i++) {
-                    if (state_id == r.d.states[i].id) {
-                        $("#state_id_warehouse").append(
-                            '<option value="' +
-                                r.d.states[i].id +
-                                '" selected>' +
-                                r.d.states[i].name +
-                                "</option>"
-                        );
-                    } else {
-                        $("#state_id_warehouse").append(
-                            '<option value="' +
-                                r.d.states[i].id +
-                                '">' +
-                                r.d.states[i].name +
-                                "</option>"
-                        );
-                    }
-                }
-            }
-        },
-        error: function(textStatus, errorThrown) {
-            alert("error");
-        }
-    });
-}
-
-function changeStateType(state_code) {
-console.log(state_code);
-    var city_id = localStorage.getItem("city_id_warehouse");
-
-    $.ajax({
-        type: "GET",
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-        },
-        url: "/optionState/city/" + state_code,
-        data: null,
-        success: function(r) {
-            if (!r) {
-                r = JSON.parse(r);
-            }
-            if (r) {
-                $("#city_id_warehouse").prop("disabled", false);
-                $("#city_id_warehouse option").remove();
-                for (var i = 0; i < r.d.cities.length; i++) {
-                    if (city_id == r.d.cities[i].id) {
-                        $("#city_id_warehouse").append(
-                            '<option value="' +
-                                r.d.cities[i].id +
-                                '" selected>' +
-                                r.d.cities[i].name +
-                                "</option>"
-                        );
-                    } else {
-                        $("#city_id_warehouse").append(
-                            '<option value="' +
-                                r.d.cities[i].id +
-                                '">' +
-                                r.d.cities[i].name +
-                                "</option>"
-                        );
-                    }
-                }
-            }
-        },
-        error: function(textStatus, errorThrown) {
-            alert("error");
-        }
-    });
-}
 </script>
+<script src="/adminlte/js/warehouses/editWarehouses.js"></script>
+
