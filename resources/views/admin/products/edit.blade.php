@@ -92,10 +92,10 @@
                         <option value="0" disabled>Seleccione la bodega del producto</option>
                         @foreach ($product_warehouses as $pw)
                             @foreach ($pw->warehouses as $pww)
-                                @if($product->id == $pw->product_id)
-                                    <option value="{{$pww->id}}" selected>{{$pww->name}}</option>
-                                    @else
-                                    <option value="{{$pww->id}}">{{$pww->name}}</option>
+                                @if($pw->product_id == $product->id)
+                                <option value="{{$pww->id}}" selected>{{$pww->name}}</option>
+                                @else
+                                <option value="{{$pww->id}}">{{$pww->name}}</option>
                                 @endif
                             @endforeach
                         @endforeach

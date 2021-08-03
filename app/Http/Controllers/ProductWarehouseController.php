@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ProductWarehouse;
 use Illuminate\Http\Request;
 
 class ProductWarehouseController extends Controller
@@ -13,7 +14,9 @@ class ProductWarehouseController extends Controller
      */
     public function index()
     {
-        //
+        $product_warehouses = ProductWarehouse::where('active', 1)->orderBy('id', 'asc')->with(['warehouses', 'products'])->get();
+        // dd($product_warehouses);
+        return view ('admin.product_warehouses.index')->with('product_warehouses', $product_warehouses);
     }
 
     /**
@@ -56,7 +59,7 @@ class ProductWarehouseController extends Controller
      */
     public function edit($id)
     {
-        //
+        return ProductWarehouse::where('id', $id)->with('warehouses')->first();
     }
 
     /**
@@ -68,7 +71,15 @@ class ProductWarehouseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request){
+            $product_warehouse = ProductWarehouse::where('id', $id)->update([
+                'quantity'  => $request['quantity']
+            ]);
+            return response(array('status' => 200, 'd' => array('id' => $id),'title' => 'Cantidad actualizada' ,'message' => 'Actualizaste la cantidad del producto en la bodega', 'space' => ' ','name' => $request->name, 'icon' => "success"));
+        } else {
+            return response(array('status' => 100, 'title' => __('Ops...') ,'message' => __('Ocurrio un error inesperado, intentalo de mas tarde'), 'icon' => "warning"));
+        }
+
     }
 
     /**
@@ -77,8 +88,11 @@ class ProductWarehouseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id, $name, $name2)
     {
-        //
+        $product_warehouse = ProductWarehouse::where('id', $id)->first();
+        $product_warehouse->delete();
+
+        return array('status' => 200, 'title' => 'Item eliminado' ,'message' => 'Elimiaste el producto', 'space' => ' ' ,'name' => $name, 'space' => ' ','message2' => 'de la bodega', 'space' => ' ','name2' => $name2,'icon' => "success");
     }
 }

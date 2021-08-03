@@ -182,7 +182,6 @@ function editInfowarehouse(){
         state_warehouse_id == 0 ||
         state_warehouse_id == ""
     ) {
-        console.log();
         Swal.fire({
             icon: "info",
             title: "Campos vacios",

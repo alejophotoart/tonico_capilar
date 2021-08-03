@@ -66,6 +66,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/bodegas/{id}', [WarehouseController::class, 'edit']);//llama la informacion del modal para editarla
         Route::delete('/bodegas/{id}/{name}/delete', [WarehouseController::class, 'destroy']);//elimina bodegas
         Route::put('/bodegas/{id}/update', [WarehouseController::class, 'update']);
+//Rutas productos x bodega
+        Route::get('/productos-bodega/{id}', [ProductWarehouseController::class, 'edit']);
+        Route::put('/productos-bodega/{id}/update', [ProductWarehouseController::class, 'update']);
+        Route::delete('/productos-bodegas/{id}/{name}/{name2}/delete', [ProductWarehouseController::class, 'destroy']);
     });
 
     Route::group(['middleware' => 'logistic'], function () {
