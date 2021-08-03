@@ -462,6 +462,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             </li>
                                             <li class="nav-item">
                                                 <a
+                                                href="{{ route('product_warehouses.index') }}"
+                                                class="nav-link" style="padding-left: 35px;">
+                                                    <i
+                                                        class="fas fa-boxes"
+                                                        style="margin: 5px;"
+                                                    ></i>
+                                                    <p>{{ __("Productos x Bodega") }}</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a
                                                 href="{{ route('warehouses.index') }}"
                                                 class="nav-link" style="padding-left: 35px;">
                                                     <i

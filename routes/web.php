@@ -14,6 +14,7 @@ use App\Http\Controllers\StateController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ProductWarehouseController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\WarehouseController;
 
@@ -69,15 +70,17 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(['middleware' => 'logistic'], function () {
 //Rutas de Productos
-      Route::get('/productos', [ProductController::class, 'index'])->name('products.index');//llama a la vista de productos
-      Route::get('/productos/{id}', [ProductController::class, 'show']);//muestra info de los producto
+        Route::get('/productos', [ProductController::class, 'index'])->name('products.index');//llama a la vista de productos
+        Route::get('/productos/{id}', [ProductController::class, 'show']);//muestra info de los producto
 //Rutas de pedidos
-      Route::put('/pedidos/aprobados/{id}', [OrderController::class, 'passedOrder']);//Aprueba las ordenes con pago tipo deposito
-      Route::put('/pedidos/proceso/{id}', [OrderController::class, 'processOrder']);//pone en proceso las ordenes con pago tipo deposito
-      Route::put('/pedidos/entregados/{id}', [OrderController::class, 'deliveredOrder']);//pone en proceso las ordenes con pago tipo deposito
-      Route::put('/pedidos/{id}/{note}/delete', [OrderController::class, 'destroy']);//Cancelar producto
+        Route::put('/pedidos/aprobados/{id}', [OrderController::class, 'passedOrder']);//Aprueba las ordenes con pago tipo deposito
+        Route::put('/pedidos/proceso/{id}', [OrderController::class, 'processOrder']);//pone en proceso las ordenes con pago tipo deposito
+        Route::put('/pedidos/entregados/{id}', [OrderController::class, 'deliveredOrder']);//pone en proceso las ordenes con pago tipo deposito
+        Route::put('/pedidos/{id}/{note}/delete', [OrderController::class, 'destroy']);//Cancelar producto
 //Rutas de bodegas
         Route::get('/bodegas', [WarehouseController::class, 'index'])->name('warehouses.index');//Llama a la vista de bodegas
+//Rutas productos x bodega
+        Route::get('/productos-bodega', [ProductWarehouseController::class, 'index'])->name('product_warehouses.index');
     });
  // Rutas para actualizar perfil
       Route::get('/profile/{id}', [UserController::class, 'editProfile']);//Muestra modal de actualizar perfil

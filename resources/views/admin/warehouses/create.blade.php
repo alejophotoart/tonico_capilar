@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="input-group mb-3">
+        <div class="input-group mb-3">
             <select class="form-control multi_select" data-live-search="true" title="Seleccione la bodega del producto"
                 id="city_id" name="city_id" {{ old('state_id') ? '' : 'disabled' }}>
             </select>

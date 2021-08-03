@@ -263,11 +263,7 @@ var country_code_value = '{{ old("country_id") }}' || "{{ $user->city->state->co
                                 );
                             } else {
                                 $("#state_id").append(
-                                    '<option value="' +
-                                        r.d.states[i].id +
-                                        '">' +
-                                        r.d.states[i].name +
-                                        "</option>"
+                                    '<option value="' + r.d.states[i].id +'">' + r.d.states[i].name + "</option>"
                                 );
                             }
                         }

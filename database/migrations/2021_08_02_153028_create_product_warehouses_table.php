@@ -23,6 +23,7 @@ class CreateProductWarehousesTable extends Migration
             $table->integer('warehouse_id')->unsigned()->nullable();
             $table->foreign('warehouse_id')->references('id')->on('warehouses');
 
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }

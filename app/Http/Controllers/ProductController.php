@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use App\Models\Country;
+use App\Models\ProductWarehouse;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -18,9 +19,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return view('admin.products.index',[
-            'products' => Product::where('active', 1 )->orderBy('id')->get()
-        ]);
+        $products  = Product::where('active', 1 )->orderBy('id')->with('product_warehouses')->get();
+        $product_warehouses = ProductWarehouse::where('active', 1)->with('warehouses')->get();
+        // dd($products);
+        return view('admin.products.index')
+        ->with('products', $products)
+        ->with('product_warehouses', $product_warehouses);
+
     }
 
     /**
@@ -32,7 +37,7 @@ class ProductController extends Controller
     {
         return view ('admin.products.create', [
             'product' => new Product,
-            'country' => Country::where('active', 1)->get(),
+            'warehouses' => Warehouse::where([['active', 1],['state_warehouse_id', 1]])->get(),
         ]);
     }
 
@@ -44,7 +49,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         if($request['description'] > 400){
             return response(array('status' => 500, 'title' => 'Descripcion del producto' ,'message' => __('la descripcion es muy larga, intenta con algo mas corto'), 'icon' => "error"));
                 }else{
@@ -59,7 +64,16 @@ class ProductController extends Controller
                             'quantity'      => $request['quantity'],
                             'description'   => $request['description']
                         ]);
-                    return response(array('status' => 200, 'd' => array('code' => $request->code),'title' => 'Producto creado' ,'message' => 'Creaste el producto', 'space' => ' ','name' => $request->name, 'icon' => "success"));
+                        $prodcut_warehouses = count($request['warehouses']);
+                        for($i = 0; $i < $prodcut_warehouses; $i++){
+                            $prod_ware                  = new ProductWarehouse;
+                            $prod_ware->quantity        = $request['quantity']; //posicion de las cantidades
+                            $prod_ware->product_id      = $product['id']; //posicion de los id del producto
+                            $prod_ware->warehouse_id    = $request['warehouses'][$i];
+                            $prod_ware->save();
+                        }
+
+                        return response(array('status' => 200, 'd' => array('code' => $request->code),'title' => 'Producto creado' ,'message' => 'Creaste el producto', 'space' => ' ','name' => $request->name, 'icon' => "success"));
                 } else {
                     return response(array('status' => 100, 'title' => __('Ops...') ,'message' => __('Ocurrio un error inesperado, intentalo de mas tarde'), 'icon' => "warning"));
                 }
@@ -122,7 +136,7 @@ class ProductController extends Controller
     public function show($id)
     {
 
-        return Product::where('id',$id)->first();
+        return Product::where('id',$id)->with('product_warehouses')->first();
     }
 
     /**
@@ -133,9 +147,12 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('admin.products.edit', [
-            'product' => Product::where('id', $product->id)->first()
-        ]);
+        $product = Product::where('id', $product->id)->with('product_warehouses')->first();
+        $product_warehouses = ProductWarehouse::where('active', 1)->with('warehouses')->get();
+        // dd($products);
+        return view('admin.products.edit')
+        ->with('product', $product)
+        ->with('product_warehouses', $product_warehouses);
     }
 
     /**
@@ -147,18 +164,30 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         if($request['description'] > 400){
             return response(array('status' => 500, 'title' => 'Descripcion del producto' ,'message' => __('la descripcion es muy larga, intenta con algo mas corto'), 'icon' => "error"));
         }else{
             if(Product::where('code', $request["code"])->first()){
                 return response(array('status' => 400, 'title' => 'Codigo del producto' ,'message' => __('Ya existe un producto con ese codigo'), 'icon' => "error"));
             }else{
-                if (Product::where('id',$id)->update([
+                if(isset($request)){
+                Product::where('id',$id)->update([
                     "name"          => $request["name"],
                     "price"         => $request["price"],
                     "quantity"      => $request["quantity"],
                     "description"   => $request["description"],
-                ])) {
+                ]);
+
+                $prodcut_warehouses = count($request['warehouses']);
+                ProductWarehouse::where('product_id', $id)->delete();
+                for($i = 0; $i < $prodcut_warehouses; $i++){
+                    $prod_ware                  = new ProductWarehouse;
+                    $prod_ware->quantity        = $request['quantity'];
+                    $prod_ware->product_id      = $id;
+                    $prod_ware->warehouse_id    = $request['warehouses'][$i];
+                    $prod_ware->save();
+                }
                     return response(array('status' => 200, 'd' => array('id' => $id),'title' => 'Producto actualizado' ,'message' => 'Editaste el producto', 'space' => ' ','name' => $request->name, 'icon' => "success"));
                 } else {
                     return response(array('status' => 100, 'title' => __('Ops...') ,'message' => __('Ocurrio un error inesperado, intentalo de mas tarde'), 'icon' => "warning"));
@@ -176,8 +205,10 @@ class ProductController extends Controller
      */
     public function destroy($id, $name)
     {
+        ProductWarehouse::where('product_id', $id)->delete();
         $product = Product::where('id', $id)->first();
         $product->delete();
+
         return array('status' => 200, 'title' => 'Producto eliminado' ,'message' => 'Elimiaste el producto', 'space' => ' ' ,'name' => $name, 'icon' => "success");
 
     }

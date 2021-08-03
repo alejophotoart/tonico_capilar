@@ -85,7 +85,27 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="input-group mb-3">
+                    <select class="form-control" data-live-search="true" data-selected-text-format="count > 3"
+                    data-actions-box="true" id="warehouses" name="warehouses[]" title="Seleccione la bodega del producto"
+                     multiple>
+                        <option value="0" disabled>Seleccione la bodega del producto</option>
+                        @foreach ($product_warehouses as $pw)
+                            @foreach ($pw->warehouses as $pww)
+                                @if($product->id == $pw->product_id)
+                                    <option value="{{$pww->id}}" selected>{{$pww->name}}</option>
+                                    @else
+                                    <option value="{{$pww->id}}">{{$pww->name}}</option>
+                                @endif
+                            @endforeach
+                        @endforeach
+                    </select>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-city"></span>
+                            </div>
+                        </div>
+                    </div>
                 <div class="input-group mb-3">
                     <input
                         class="form-control"

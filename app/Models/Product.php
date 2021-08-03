@@ -21,4 +21,8 @@ class Product extends Model
         return $this->belongsToMany(OrderItem::class);
     }
 
+    public function product_warehouses()
+    {
+        return $this->hasMany(ProductWarehouse::class)->with('warehouses');
+    }
 }

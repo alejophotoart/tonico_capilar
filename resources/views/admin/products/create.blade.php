@@ -86,6 +86,20 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
+                    <select class="form-control" data-live-search="true" data-actions-box="true" data-selected-text-format="count > 3"
+                    id="warehouses" name="warehouses[]" title="Seleccione la bodega del producto" multiple>
+                        <option value="0" disabled>Seleccione la bodega del producto</option>
+                        @foreach ($warehouses as $w)
+                            <option value="{{$w->id}}">{{$w->name}}</option>
+                        @endforeach
+                    </select>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-city"></span>
+                            </div>
+                        </div>
+                    </div>
+                <div class="input-group mb-3">
                     <input
                         class="form-control"
                         type="file"

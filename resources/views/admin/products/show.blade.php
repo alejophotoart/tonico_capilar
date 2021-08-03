@@ -79,7 +79,24 @@
                         />
                     </div>
                 </div>
-
+                <div class="mb-3 row">
+                    <label for="" class="col-sm-2 col-form-label">{{
+                        __("Bodegas")
+                    }}</label>
+                    <div class="col-sm-10 heigh-text">
+                        <textarea
+                        style=" padding: 10px;
+                                width: 80%;
+                                height: 100px;
+                                max-height: 140;
+                                min-height: 50px;"
+                        type="text"
+                        readonly
+                        class="form-control-plaintext"
+                        id="warehouses"
+                    ></textarea>
+                    </div>
+                </div>
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 col-form-label">{{
                         __("Descripcion")
@@ -115,6 +132,9 @@
             success: function(r) {
                 console.log(r);
                 products = r;
+                product_warehouse = r.product_warehouses
+                console.log(product_warehouse);
+
                 const options = {
                     style: "currency",
                     currency: "USD",
@@ -129,6 +149,14 @@
                     $("#quantity").val(products.quantity);
                     $("#description").val(products.description);
                 }
+                var arraWare = [];
+                product_warehouse.forEach(pw => {
+                    pw.warehouses.forEach(pww => {
+                        arraWare.push(pww.name);
+                    });
+                });
+
+                $("#warehouses").val(arraWare);
 
                 if (products.img !== null) {
                     $("#imagenProduct").attr(

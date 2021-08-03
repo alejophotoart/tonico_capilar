@@ -40,6 +40,9 @@ __('Products')) @section('explorer')
                         <th>
                             {{ __("Quantity") }}
                         </th>
+                        <th>
+                            {{__('Bodegas')}}
+                        </th>
                         @if(auth()->user()->role_id == 1 ||
                         auth()->user()->role_id == 2 || auth()->user()->role_id
                         == 3)
@@ -51,18 +54,18 @@ __('Products')) @section('explorer')
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($products as $product)
+                    @foreach ($products as $p)
                     <tr>
-                        <td id="content-id">
-                            {{ $product->id }}
+                        <td>
+                            {{ $p->id }}
                         </td>
                         <td>
-                            @if($product->img !== null)
+                            @if($p->img !== null)
                             <div class="d-flex justify-content-center">
                                 <div class="image-product">
                                     <img
-                                        src="{{$product->link}}{{$product->img}}"
-                                        alt="{{$product->name}}"
+                                        src="{{$p->link}}{{$p->img}}"
+                                        alt="{{$p->name}}"
                                         class="img-circle elevation-2"
                                         id="imgProduct"
                                     />
@@ -73,7 +76,7 @@ __('Products')) @section('explorer')
                                 <div class="image-product">
                                     <img
                                         src="/adminlte/img/products/default.png"
-                                        alt="{{$product->name}}"
+                                        alt="{{$p->name}}"
                                         class="img-circle elevation-2"
                                         id="imgProduct"
                                     />
@@ -81,33 +84,42 @@ __('Products')) @section('explorer')
                             </div>
                             @endif
                         </td>
-                        <td id="content-name">
-                            {{ $product->name }}
+                        <td>
+                            {{ $p->name }}
                         </td>
-                        <td id="content-price">
+                        <td>
                             {{ "$" }}
-                            {{ number_format($product->price, 0, ',', '.') }}
+                            {{ number_format($p->price, 0, ',', '.') }}
                         </td>
-                        <td id="content-quantity">
-                            {{ $product->quantity }}
+                        <td>
+                            {{ $p->quantity }}
                         </td>
-                        <td id="actions">
+                        <td>
+                            @foreach ($product_warehouses as $pw)
+                                @foreach ($pw->warehouses as $pww)
+                                    @if($p->id == $pw->product_id)
+                                        {{$pww->name}} <br />
+                                    @endif
+                                @endforeach
+                            @endforeach
+                        </td>
+                        <td>
                             @if(auth()->user()->role_id == 1 ||
                             auth()->user()->role_id == 2)
                             <a
-                                href="{{ route('products.edit', $product) }}"
+                                href="{{ route('products.edit', $p) }}"
                                 class="mg-10"
                             >
                                 <i id="IconE" class="fas fa-pencil-alt"></i>
                             </a>
                             <a
                                 class="mg-10"
-                                onclick="DeleteProduct('{{$product->id}}', '{{$product->name}}')"
+                                onclick="DeleteProduct('{{$p->id}}', '{{$p->name}}')"
                             >
                                 <i id="IconD" class="fas fa-trash-alt"></i>
                             </a>
                             <a
-                                onclick="ShowInfoProduct('{{$product->id}}')"
+                                onclick="ShowInfoProduct('{{$p->id}}')"
                                 data-bs-toggle="modal"
                                 data-bs-whatever="@fat"
                                 class="mg-10-1"
@@ -116,7 +128,7 @@ __('Products')) @section('explorer')
                             </a>
                             @else
                             <a
-                                onclick="ShowInfoProduct('{{$product->id}}')"
+                                onclick="ShowInfoProduct('{{$p->id}}')"
                                 data-bs-toggle="modal"
                                 data-bs-whatever="@fat"
                                 class="mg-10-1"

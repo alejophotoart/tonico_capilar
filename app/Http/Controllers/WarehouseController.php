@@ -18,9 +18,9 @@ class WarehouseController extends Controller
      */
     public function index()
     {
-        return view('admin.warehouses.index',[
-            'warehouses' => Warehouse::where('active', 1 )->orderBy('id')->get()
-        ]);
+        $warehouses = Warehouse::where('active', 1 )->orderBy('id')->with('product_warehouses')->get();
+        // dd($warehouses);
+        return view('admin.warehouses.index')->with('warehouses', $warehouses);
     }
 
     /**

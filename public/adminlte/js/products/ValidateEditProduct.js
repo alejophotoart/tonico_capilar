@@ -1,5 +1,6 @@
 $(document).ready(function() {
     document.getElementById("code").readOnly = true;
+    $('#warehouses').selectpicker();
 });
 
 function EditProduct(id) {
@@ -7,6 +8,7 @@ function EditProduct(id) {
     let price2 = $("#price").val();
     let quantity = document.getElementById("quantity").value;
     let description = document.getElementById("description").value;
+    var warehouses = $("#warehouses").val();
 
     let price1 = price2.replace(/\$/g, "");
     let price = price1.replace(/\./g, "");
@@ -17,7 +19,9 @@ function EditProduct(id) {
         price == 0 ||
         price == "" ||
         quantity == 0 ||
-        quantity == ""
+        quantity == "" ||
+        warehouses == 0 ||
+        warehouses == ""
     ) {
         Swal.fire({
             icon: "info",
@@ -43,7 +47,8 @@ function EditProduct(id) {
                     name,
                     price,
                     quantity,
-                    description
+                    description,
+                    warehouses
                 };
                 console.log(data);
                 let timerInterval;

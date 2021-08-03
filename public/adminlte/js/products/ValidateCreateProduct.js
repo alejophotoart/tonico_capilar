@@ -1,10 +1,13 @@
+$(function () {
+    $('#warehouses').selectpicker();
+});
 function registerProduct() {
     let code = document.getElementById("code").value;
     let name = document.getElementById("name").value;
     let price2 = $("#price").val();
     let quantity = document.getElementById("quantity").value;
     let description = document.getElementById("description").value;
-    var citiesProduct = $("#city_id").val();
+    var warehouses = $("#warehouses").val();
 
     let price1 = price2.replace(/\$/g, "");
     let price = price1.replace(/\./g, "");
@@ -17,7 +20,9 @@ function registerProduct() {
         price == 0 ||
         price == "" ||
         quantity == 0 ||
-        quantity == ""
+        quantity == ""||
+        warehouses == 0 ||
+        warehouses == ""
     ) {
         Swal.fire({
             icon: "info",
@@ -45,7 +50,7 @@ function registerProduct() {
                     price,
                     quantity,
                     description,
-                    citiesProduct
+                    warehouses
                 };
                 console.log(data);
                 let timerInterval;
