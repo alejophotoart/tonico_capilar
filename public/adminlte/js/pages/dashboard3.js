@@ -85,9 +85,11 @@ $(function () {
             contentType: "application/json"
         },
         success: function(r) {
+            console.log(r);
+
             var orders = r.orders //orders: recibe todas las ordenes
             var dates = r.dates;// dates: recibe de la base de datos la consulta donde solo me trae los registros de los ultimos 7 dias
-            console.log(dates);
+            var products = r.products; //products: recibe el array de todos los prodcutos
             let sales = 0; //recibe las ventas totales en tabla ventas
             let NewOrders = 0; //recibe los pedidos nuevas y las muestra en el toggle
             let ProcessOrder = 0; //recibe los pedidos en proceso y las muestra en el toggle
@@ -104,6 +106,8 @@ $(function () {
             var returnTotal = {}; // acumula las fechas y sus totales definitivos
             var returnCount = {}; // acumula las ventas segun la fecha actual a 7 dias atras
             var returnPercentage = {}; // acumula los totales segun la fecha actual y la anterior
+            var arrCountProd = {}; //acumula cuantas veces se repite ese producto en las ventas
+            var arrPackage = {}; //acumulas cuantos productos hay en un pedido
 
             for (var i = 0; i < orders.length; i++) {
                 if(orders[i].state_order_id == 3){
@@ -119,24 +123,41 @@ $(function () {
             /**
              * muestra en la tabla de ventas los pedidos entregados
              */
+             function last7Days(){
+                let arr = [];
+                var today = new Date();
+                let i = 0;
+                do {
+                  if(i != 0)
+                  today.setDate(today.getDate() - 1);
+                  let finalDate = today.getDate()+'/'+ (today.getMonth()+1) +'/'+today.getFullYear();
+                  arr.push(finalDate);
+                  i++;
+                }  while(i < 7)
 
-             for(let i = 0; i < 7; i++){
-                let date = new Date();
-                date.setDate(date.getDate() - i);
-                let finalDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
-                fechas.push(finalDate);
-            }
-            /**
+                return arr;
+              }
+              fechas = last7Days();
+              /**
              * for que calcula la fecha actual hasta 7 dias atras
              * Se usa en la frafica de ventas x dia
             */
 
-             for(let i = 0; i < 2; i++){
-                let date = new Date();
-                date.setDate(date.getDate() - i);
-                let finalDate = date.getDate()+'/'+ (date.getMonth()+1) +'/'+date.getFullYear();
-                datelocal.push(finalDate);
-            }
+               function last2Days(){
+                let arrlast2Day = [];
+                var today = new Date();
+                let i = 0;
+                do {
+                  if(i != 0)
+                  today.setDate(today.getDate() - 1);
+                  let finalDate = today.getDate()+'/'+ (today.getMonth()+1) +'/'+today.getFullYear();
+                  arrlast2Day.push(finalDate);
+                  i++;
+                }  while(i < 2)
+
+                return arrlast2Day;
+              }
+              datelocal = last2Days();
             /**
              * for que saca la fecha actual y la del dia anterior
              * esto es para hacer el crecimiento de ventas
@@ -162,6 +183,7 @@ $(function () {
             }
             var keys = Object.values(returnTotal);
             var counts = Object.values(returnCount);
+
             /**
              * for para recorrer los valores totales de las ventas
              */
@@ -197,7 +219,7 @@ $(function () {
              * For que cuenta las ventas segun el estado del pedido
              * los almacena en las variable y los muestra segun los id de la etiqueta
              */
-            fechas.sort(); //Coloca la fechas de la menor a la mayor(osea la actual)
+            fechas.reverse(); //Reversa el array de fechas y la orden ade menor a mayor
             keys.reverse(); //reversa el array y lo ordenar de abajo hacia arriba segun el key
             counts.reverse(); //reversa el array de contar ventas por dia
 
@@ -254,11 +276,165 @@ $(function () {
                     }
                 }
             }
-
-
             /**
              * for para recorrer la fecha actual y la anterior para sacar el porcentaje de crecimiento
              */
+            let totalP = 0;
+            var countSum=0;
+            function conuntProd(){
+                for (let p = 0; p < products.length; p++) {
+                    for (let o = 0; o < orders.length; o++) {
+                        if(orders[o].state_order_id == 3){
+                            for (let d = 0; d < orders[o].order_items.length; d++) {
+                                if(products[p].id == orders[o].order_items[d].product_id){
+                                    totalP ++;
+                                    arrCountProd[[products[p].id]] =totalP;
+                                }
+                            }
+                        }
+                    }
+                    totalP = 0;
+                }
+                var keysdown = Object.values(arrCountProd);
+                keysdown.forEach (function(numero){
+                    countSum += numero;
+                });
+            }
+            conuntProd();
+            var i = -1;
+            var rturn = {};
+            var keysup = Object.values(arrCountProd);
+
+
+            for (let f = 0; f < keysup.length; f++) {
+                i++
+                var tr = document.getElementById("insertTD-" + i);
+                var c = (keysup[f]/countSum)*100;
+                var string_c = c.toFixed(2) +"%"
+                var td = document.createElement("td");
+                if(string_c >= "20"){
+                    $(td).each(function(){
+                        $(this).append('<i class="text-success fas fa-arrow-up"></i>');
+                        $(this).append('<small style="font-size: .85em;" class="text-success mr-1" id="percentSales">'+ string_c +'</small>');
+                        $(this).append('Sold');
+                    });
+                    tr.appendChild(td);
+                }else{
+                    if(string_c <= "19"){
+                        $(td).each(function(){
+                            $(this).append('<i class="text-danger fas fa-arrow-down"></i>');
+                            $(this).append('<small style="font-size: .85em;" class="text-danger mr-1" id="percentSales">'+ string_c +'</small>');
+                            $(this).append('Sold');
+                        });
+                        tr.appendChild(td);
+                    }
+                }
+            }
+            /**
+             * proceso para sacar el porcentaje de cada producto para saber cual es el pedido que mas veces se vende
+             */
+             let totalPK = 0;
+             var PKSum = 0;
+             function packageCount(){
+                    for (let o = 0; o < orders.length; o++) {
+                        if(orders[o].state_order_id == 3){
+                            for (let d = 0; d < orders[o].order_items.length; d++) {
+                                if(orders[o].id == orders[o].order_items[d].order_id){
+                                    totalPK ++;
+                                    arrPackage['Pedido #'+[orders[o].id]] = totalPK;
+                                }
+                            }
+                        }
+                        totalPK = 0;
+                    }
+                for (let z = 0; z < orders.length; z++) {
+                    if(orders[z].state_order_id == 3){
+                        for (let d = 0; d < orders[z].order_items.length; d++) {
+                            PKSum++; // almacena el total de order_items
+                        }
+                    }
+                }
+            }
+            packageCount();
+
+            var PKS = Object.values(arrPackage);
+            var PKone = 0;
+            for (let x = 0; x < PKS.length; x++) {
+                if(PKS[x] == 1){
+                    PKone++;// almacena cuantas ventas han sido de un producto
+                }
+            }
+            var PKpercent = (PKone/PKSum)*100;
+            var string_pkone = PKpercent.toFixed(2) +"%"
+            var contentOne = document.getElementById("percentOne");
+            var span = document.createElement("span");
+            var span_title = document.createElement("span");
+            $(span).each(function(){
+                $(this).attr("class","font-weight-bold");
+                $(this).append('<i class="ion ion-android-arrow-up text-danger"> </i> ');
+                $(this).append(string_pkone);
+            });
+            $(span_title).each(function(){
+                $(this).attr("class", "text-muted");
+                $(this).append("1 PRODUCTO");
+            });
+            contentOne.appendChild(span);
+            contentOne.appendChild(span_title);
+            /**
+             * proceso para el primer indicador de porcentaje de ventas de un producto
+             */
+
+             var PKStwo = Object.values(arrPackage);
+             var PKtwo = 0;
+             for (let x = 0; x < PKStwo.length; x++) {
+                 if(PKS[x] >= 2 && PKS[x] <= 3 ){
+                    PKtwo++;// almacena cuantas ventas han sido de un producto
+                 }
+             }
+             var PKpercenttwo = (PKtwo/PKSum)*100;
+             var string_pktwo = PKpercenttwo.toFixed(2) +"%"
+             var contentTwo = document.getElementById("percentTwo");
+             var spanTwo = document.createElement("span");
+             var span_title_Two = document.createElement("span");
+             $(spanTwo).each(function(){
+                 $(this).attr("class","font-weight-bold");
+                 $(this).append('<i class="ion ion-android-arrow-up text-warning"> </i> ');
+                 $(this).append(string_pktwo);
+             });
+             $(span_title_Two).each(function(){
+                 $(this).attr("class", "text-muted");
+                 $(this).append("2 a 3 PRODUCTOS");
+             });
+             contentTwo.appendChild(spanTwo);
+             contentTwo.appendChild(span_title_Two);
+            /**
+             * proceso para el segundo indicador de porcentaje de ventas de un producto
+             */
+
+             var PKSthree = Object.values(arrPackage);
+             var PKthree = 0;
+             for (let x = 0; x < PKSthree.length; x++) {
+                 if(PKS[x] >= 4 ){
+                    PKthree++;// almacena cuantas ventas han sido de un producto
+                 }
+             }
+             var PKpercentthree = (PKthree/PKSum)*100;
+             var string_pkthree = PKpercentthree.toFixed(2) +"%"
+             var contentthree = document.getElementById("percentThree");
+             var spanthree = document.createElement("span");
+             var span_title_three = document.createElement("span");
+             $(spanthree).each(function(){
+                 $(this).attr("class","font-weight-bold");
+                 $(this).append('<i class="ion ion-android-arrow-up text-success"> </i> ');
+                 $(this).append(string_pkthree);
+             });
+             $(span_title_three).each(function(){
+                 $(this).attr("class", "text-muted");
+                 $(this).append("+4 PRODUCTOS");
+             });
+             contentthree.appendChild(spanthree);
+             contentthree.appendChild(span_title_three);
+
 
             var $visitorsChart = $('#visitors-chart')
             // eslint-disable-next-line no-unused-vars

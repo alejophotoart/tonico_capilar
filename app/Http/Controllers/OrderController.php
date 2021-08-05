@@ -13,6 +13,7 @@ use App\Models\Product;
 use App\Models\PaymentType;
 use App\Models\State;
 use App\Models\User;
+use DateTime;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -169,7 +170,7 @@ class OrderController extends Controller
     }
     public function store(Request $request)
     {
-
+        // dd($request->all());
         if(Client::where('id', $request['client_id'])->first())
         {
             $client = Client::where('id', $request['client_id'])->update([
@@ -224,7 +225,7 @@ class OrderController extends Controller
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
-            $this->sendMessage($request);
+            $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }else{
             $client = Client::create([
@@ -279,7 +280,7 @@ class OrderController extends Controller
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
-            $this->sendMessage($request);
+            $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }
 
@@ -292,8 +293,9 @@ class OrderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function sendMessage($request)
+    public function sendMessage($request, $order_id)
     {
+        // dd($order_id);
         $city = City::where('active', 1)->with('state')->get();
         $state = 0;
         $country = 0;
@@ -315,15 +317,19 @@ class OrderController extends Controller
                 }
             }
         }
-        $guia= $request['id'];
-        $delivery_date = $request['delivery_date'];
+        $guia= $order_id;
+        $date = new DateTime($request['delivery_date']);
+        $delivery_date = $date->format("D, d/m/Y H:i a");
         $name = $request['name'];
         $address = $request['address'];
         $neighborhood = $request['neighborhood'];
         $phone = $request['phone'];
         $whatsapp = $request['whatsapp'];
-        $total = $request['total'];
-
+        $notes = $request['notes'];
+        $subtotal = $request['total'];
+        $total = number_format($subtotal, 0, '', '.');
+        $name_user = $request['name_user'];
+        $role_id = $request['role_id_user'];
 
 
         $data = [
@@ -338,12 +344,15 @@ class OrderController extends Controller
                         "\nBarrio: " . $neighborhood .
                         "\nTelefono: " . $phone .
                         "\nWhatsapp: " . $whatsapp .
-                        "\nTotal: " . $total,
+                        "\nNotas: " . $notes .
+                        "\nTotal: $" . $total .
+                        "\nVendedor: " . $name_user .
+                        "\nRef: " . $role_id,
         ];
         $json = json_encode($data);
 
-        $token = 'z0g622gpapksd8xo';
-        $instanceId = '312925';
+        $token = 'c2zbqxn2i3oo3gj6';
+        $instanceId = '312945';
         $url = 'https://api.chat-api.com/instance'.$instanceId.'/message?token='.$token;
 
         $options = stream_context_create(['http' => [

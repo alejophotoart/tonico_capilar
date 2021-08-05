@@ -90,14 +90,23 @@
                     data-actions-box="true" id="warehouses" name="warehouses[]" title="Seleccione la bodega del producto"
                      multiple>
                         <option value="0" disabled>Seleccione la bodega del producto</option>
-                        @foreach ($product_warehouses as $pw)
-                            @foreach ($pw->warehouses as $pww)
-                                @if($pw->product_id == $product->id)
-                                <option value="{{$pww->id}}" selected>{{$pww->name}}</option>
-                                @else
-                                <option value="{{$pww->id}}">{{$pww->name}}</option>
-                                @endif
-                            @endforeach
+                        @foreach ($warehouses as $w)
+
+                        @php
+                        $selected = false;
+                            foreach ($product_warehouses as $p) {
+                                if($w->id == $p->warehouse_id){
+                                    $selected = true;
+                                }
+                            }
+                        @endphp
+
+                        @if ($selected)
+                            <option value="{{ $w->id }}" selected>{{ $w->name }}</option>
+                            @else
+                            <option value="{{ $w->id }}">{{ $w->name }}</option>
+                        @endif
+
                         @endforeach
                     </select>
                         <div class="input-group-append">

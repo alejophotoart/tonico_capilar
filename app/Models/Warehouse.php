@@ -22,10 +22,10 @@ class Warehouse extends Model
 //
     public function product_warehouses()
     {
-        return $this->hasMany(ProductWarehouse::class);
+        return $this->hasMany(ProductWarehouse::class)->with("products");
     }
 
-    public function product()
+    public function products()
     {
         return $this->hasMany(Product::class);
     }

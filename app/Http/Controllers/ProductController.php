@@ -147,14 +147,14 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product = Product::where('id', $product->id)->with('product_warehouses')->first();
-        $product_warehouses = ProductWarehouse::where('active', 1)->with('warehouses')->get();
-        // $warehouses = Warehouse::where('active', 1)->get();
-        // dd($product);
+        $product = Product::where('id', $product->id)->with(['product_warehouses'])->first();
+        $product_warehouses = ProductWarehouse::where([['active', 1],['product_id', $product->id]])->with('warehouses')->get();
+        $warehouses = Warehouse::where('active', 1)->with(['product_warehouses'])->get();
+        // dd($product_warehouses);
         return view('admin.products.edit')
         ->with('product', $product)
-        ->with('product_warehouses', $product_warehouses);
-        // ->with('warehouses', $warehouses);
+        ->with('product_warehouses', $product_warehouses)
+        ->with('warehouses', $warehouses);
     }
 
     /**

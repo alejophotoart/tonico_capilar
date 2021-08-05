@@ -14,6 +14,8 @@ function message ()
 }
 
 function CreateOrder(id) {
+    let name_user = document.getElementById("name_user").value;
+    let role_id_user = document.getElementById("role_id_user").value;
     let identification = document.getElementById("identification").value;
     let name = document.getElementById("name").value;
     let address = document.getElementById("address").value;
@@ -29,7 +31,6 @@ function CreateOrder(id) {
     let total2 = document.getElementById("total").value;
     let delivery_price2 = document.getElementById("delivery_price").value;
     let img = document.getElementById("formFileSm").value;
-    let tramp = document.getElementById("trampId").value;
     let quantity = [];
     let product = [];
     for (var i = 0; i < $(".copy_quantity").length; i++) {
@@ -39,7 +40,6 @@ function CreateOrder(id) {
         product.push($(".copy")[i].value);
     }
     var prod_quan = [quantity, product];
-    console.log(tramp);
 
     let total1 = total2.replace(/\$/g, "");
     let total = total1.replace(/\./g, "");
@@ -170,6 +170,8 @@ function CreateOrder(id) {
                             }).then(result => {
                                 if (result.isConfirmed) {
                                     let data = {
+                                        name_user,
+                                        role_id_user,
                                         id,
                                         client_id,
                                         identification,
@@ -305,6 +307,8 @@ function CreateOrder(id) {
                         }).then(result => {
                             if (result.isConfirmed) {
                                 let data = {
+                                    name_user,
+                                    role_id_user,
                                     id,
                                     client_id,
                                     identification,
@@ -550,7 +554,6 @@ function searchClient() {
                             $("#name").val(r.d.client_data.name);
                             $("#phone").val(r.d.client_data.phone);
                             $("#whatsapp").val(r.d.client_data.whatsapp);
-                            $("#trampId").val(r.d.client_data.id);
                         }
                     });
                 } else {

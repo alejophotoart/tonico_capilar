@@ -52,14 +52,13 @@ Route::middleware(['auth'])->group(function () {
       Route::post('/productos/updateImage', [ProductController::class, 'updateImage']);//actualiza la imagen del producto
       Route::delete('/productos/{id}/{name}/delete', [ProductController::class, 'destroy']);//Eliminar producto
 // Rutas del calendario
-      Route::get('/calendario', [CalendarController::class, 'index'])->name('calendar.index');//llama a la vista calendario
+      Route::get('/calendario', [CalendarController::class, 'addEvents'])->name('calendar.index');//llama a la vista calendario
 // Rutas para el resumen
       Route::get('/resumen', [ResumeController::class, 'index'])->name('resume.index');//llama a la vista resumen
-      Route::get('/resumen/sales', [ResumeController::class, 'salesTable'])->name('resume.index');
+      Route::get('/resumen/sales', [ResumeController::class, 'salesTable']);
 // Rutas de pedido
       Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
       Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda
-      Route::post('/order/saveImage', [OrderController::class, 'saveImage']);//guarda imagen del pedido
 //Rutas de bodegas
         Route::get('/bodegas/crear', [WarehouseController::class, 'create']);//llama a la vista de crear bodegas
         Route::post('/bodegas/create', [WarehouseController::class, 'store']);//Crea las bodegas
@@ -102,7 +101,9 @@ Route::middleware(['auth'])->group(function () {
       Route::get('/pedidos/mostrar/{id}', [OrderController::class, 'show']);//llama a el modal de crear pedido
       Route::get('/pedidos/{id}', [OrderController::class, 'create']);//llama a el modal de crear pedido
       Route::post('/pedidos/create', [OrderController::class, 'store']);//crea un pedido nuevo
-    //prueba de envio de mensajes
+      Route::post('/order/saveImage', [OrderController::class, 'saveImage']);//guarda imagen del pedido
+
+//prueba de envio de mensajes
       Route::post('/message', [OrderController::class, 'sendMessage']);//crea un pedido nuevo
 
 // Rutas para filtrar ciudades y estados

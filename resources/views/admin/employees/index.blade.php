@@ -20,7 +20,7 @@ __('Employees')) @section('explorer')
         </div>
         <div class="card-body">
             <table
-                class="table table-striped"
+                class="table table-striped table-responsive"
                 style="width:100%"
                 id="tableEmployee"
             >

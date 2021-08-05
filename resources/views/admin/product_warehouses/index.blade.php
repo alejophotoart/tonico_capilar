@@ -19,7 +19,7 @@ __('Productos x Bodega')) @section('explorer')
         </div>
         <div class="card-body">
             <table
-                class="table table-striped"
+                class="table table-striped table-responsive"
                 style="width:100%"
                 id="tableProductWarehouses"
             >
@@ -41,15 +41,13 @@ __('Productos x Bodega')) @section('explorer')
                             {{ __("Quantity") }}
                         </th>
                         <th>
-                            {{__('ultimo ajuste')}}
+                            {{__('Ultimo ajuste')}}
                         </th>
                         @if(auth()->user()->role_id == 1 ||
-                        auth()->user()->role_id == 2 || auth()->user()->role_id
-                        == 3)
+                        auth()->user()->role_id == 2 )
                         <th>
                             {{ __("Actions") }}
                         </th>
-
                         @endif
                     </tr>
                 </thead>
@@ -82,9 +80,9 @@ __('Productos x Bodega')) @section('explorer')
                                 {{ $pw->updated_at->diffForHumans() }}
                             </p>
                         </td>
+                        @if(auth()->user()->role_id == 1 ||
+                        auth()->user()->role_id == 2)
                         <td>
-                            @if(auth()->user()->role_id == 1 ||
-                            auth()->user()->role_id == 2)
                             <a
                                 onclick="editProductWarehouse({{ $pw->id }})"
                                 class="mg-10"
@@ -97,8 +95,8 @@ __('Productos x Bodega')) @section('explorer')
                             >
                                 <i id="IconD" class="fas fa-trash-alt"></i>
                             </a>
-                            @endif
                         </td>
+                        @endif
                     </tr>
                         @endforeach
                     @endforeach

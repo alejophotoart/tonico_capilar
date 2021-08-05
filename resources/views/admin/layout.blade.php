@@ -32,7 +32,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
             href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
         />
         <!-- fullCalendar -->
-        <link rel="stylesheet" href="/adminlte/plugins/fullcalendar/main.css" />
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.0/main.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.5.0/main.css"/>
+        {{-- <link rel="stylesheet" href="/adminlte/plugins/fullcalendar/main.css" /> --}}
         <!-- bootstraps 5 -->
         <link rel="stylesheet" href="/bootstrap-5.0.2-dist/css/bootstrap.css" />
         <link
@@ -632,8 +636,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- OPTIONAL SCRIPTS -->
         <script src="/adminlte/plugins/chart.js/Chart.min.js"></script>
         <!-- fullCalendar 2.2.5 -->
-        <script src="/adminlte/plugins/moment/moment.min.js"></script>
-        <script src="/adminlte/plugins/fullcalendar/main.js"></script>
+        {{-- <script src="/adminlte/plugins/moment/moment.min.js"></script>
+        <script src="/adminlte/plugins/fullcalendar/main.js"></script> --}}
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
         <!--Datatables-->

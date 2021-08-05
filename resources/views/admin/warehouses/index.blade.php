@@ -19,7 +19,7 @@ __('Warehouses')) @section('explorer')
         </div>
         <div class="card-body">
             <table
-                class="table table-striped"
+                class="table table-striped table-responsive"
                 style="width:100%"
                 id="tablewarehouses"
             >
@@ -38,12 +38,10 @@ __('Warehouses')) @section('explorer')
                             {{ __("Estado") }}
                         </th>
                         @if(auth()->user()->role_id == 1 ||
-                        auth()->user()->role_id == 2 || auth()->user()->role_id
-                        == 3)
+                        auth()->user()->role_id == 2)
                         <th>
                             {{ __("Actions") }}
                         </th>
-
                         @endif
                     </tr>
                 </thead>
@@ -76,9 +74,9 @@ __('Warehouses')) @section('explorer')
                                 @endif
                             @endif
                         </td>
-                        <td id="actions">
-                            @if(auth()->user()->role_id == 1 ||
+                        @if(auth()->user()->role_id == 1 ||
                             auth()->user()->role_id == 2)
+                        <td id="actions">
                             <a
                                 onclick="editWarehouses( {{ $w->id }}, {{ $w->state_warehouse_id }}, {{ $w->city->state->country->id }}, {{$w->city->id}}, {{ $w->city->state->id }})"
                                 class="mg-10"
@@ -91,8 +89,8 @@ __('Warehouses')) @section('explorer')
                             >
                                 <i id="IconD" class="fas fa-trash-alt"></i>
                             </a>
-                            @endif
                         </td>
+                        @endif
                     </tr>
                     @endforeach
                 </tbody>

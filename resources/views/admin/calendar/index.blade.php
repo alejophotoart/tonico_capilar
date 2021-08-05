@@ -4,7 +4,7 @@
     {{ __("Calendario") }}
 </li>
 @endsection @section('content')
-<section class="content">
+{{-- <section class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3">
@@ -295,5 +295,13 @@
             $("#new-event").val("");
         });
     });
-</script>
-@endsection
+</script> --}}
+<button type="button" class="btn btn-dark" style="margin-left: 20px"
+    onclick="addEventCalendar()">
+    <span class="far fa-calendar-plus"></span>
+</button>
+    {!! $calendar->calendar() !!}
+    {!! $calendar->script() !!}
+
+<script src="/adminlte/js/calendar/createEvents.js"></script>
+@include('admin.calendar.create') @endsection
