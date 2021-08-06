@@ -19,7 +19,7 @@ __('Productos x Bodega')) @section('explorer')
         </div>
         <div class="card-body">
             <table
-                class="table table-striped table-responsive"
+                class="table table-striped"
                 style="width:100%"
                 id="tableProductWarehouses"
             >

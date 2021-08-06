@@ -19,9 +19,7 @@ function EditProduct(id) {
         price == 0 ||
         price == "" ||
         quantity == 0 ||
-        quantity == "" ||
-        warehouses == 0 ||
-        warehouses == ""
+        quantity == ""
     ) {
         Swal.fire({
             icon: "info",

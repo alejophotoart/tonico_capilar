@@ -302,6 +302,10 @@
 </button>
     {!! $calendar->calendar() !!}
     {!! $calendar->script() !!}
-
+<script>
+    function deleteEvents(event_id){
+        console.log(event_id);
+    }
+</script>
 <script src="/adminlte/js/calendar/createEvents.js"></script>
 @include('admin.calendar.create') @endsection

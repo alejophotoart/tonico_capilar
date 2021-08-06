@@ -15,22 +15,12 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </title>
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
-
         <!-- Google Font: Source Sans Pro -->
-        <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
-        />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
         <!-- Font Awesome Icons -->
-        <link
-            rel="stylesheet"
-            href="/adminlte/plugins/fontawesome-free/css/all.min.css"
-        />
+        <link rel="stylesheet"href="/adminlte/plugins/fontawesome-free/css/all.min.css"/>
         <!-- IonIcons -->
-        <link
-            rel="stylesheet"
-            href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"
-        />
+        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
         <!-- fullCalendar -->
         <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
@@ -39,33 +29,24 @@ scratch. This page gets rid of all links and provides the needed markup only.
         {{-- <link rel="stylesheet" href="/adminlte/plugins/fullcalendar/main.css" /> --}}
         <!-- bootstraps 5 -->
         <link rel="stylesheet" href="/bootstrap-5.0.2-dist/css/bootstrap.css" />
-        <link
-            rel="stylesheet"
-            href="/bootstrap-5.0.2-dist/css/bootstrap-grid.css"
-        />
-        <link
-            rel="stylesheet"
-            href="/bootstrap-5.0.2-dist/css/bootstrap-utilities.css"
-        />
-        <link
-            rel="stylesheet"
-            href="/bootstrap-5.0.2-dist/css/bootstrap-reboot.css"
-        />
+        <link rel="stylesheet" href="/bootstrap-5.0.2-dist/css/bootstrap-grid.css"/>
+        <link rel="stylesheet" href="/bootstrap-5.0.2-dist/css/bootstrap-utilities.css"/>
+        <link rel="stylesheet" href="/bootstrap-5.0.2-dist/css/bootstrap-reboot.css"/>
         <!--DataTables-->
-        <link
-            rel="stylesheet"
-            type="text/css"
-            href="/js/DataTables-1.10.25/css/dataTables.bootstrap5.min.css"
-        />
-        <link
-            rel="stylesheet"
-            href="//cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css"
-        />
+        <link rel="stylesheet" type="text/css" href="/js/DataTables-1.10.25/css/dataTables.bootstrap5.min.css"/>
+        <link rel="stylesheet" href="//cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css"/>
         <!-- Theme style -->
         <link rel="stylesheet" href="/adminlte/css/adminlte.min.css" />
         <link rel="stylesheet" href="/adminlte/css/icons.css" />
         <link rel="stylesheet" href="/adminlte/css/Products.css" />
         <link rel="stylesheet" href="/adminlte/css/body.css" />
+        {{-- datePicker --}}
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        {{-- <link rel="stylesheet" href="/resources/demos/style.css"> --}}
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="/adminlte/plugins/moment/moment.min.js"></script>
+
     </head>
 
     <body class="hold-transition sidebar-mini">
@@ -636,8 +617,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- OPTIONAL SCRIPTS -->
         <script src="/adminlte/plugins/chart.js/Chart.min.js"></script>
         <!-- fullCalendar 2.2.5 -->
-        {{-- <script src="/adminlte/plugins/moment/moment.min.js"></script>
-        <script src="/adminlte/plugins/fullcalendar/main.js"></script> --}}
+       {{--  <script src="/adminlte/plugins/fullcalendar/main.js"></script> --}}
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/js/bootstrap-select.min.js"></script>
         <!--Datatables-->

@@ -312,7 +312,7 @@ $(function () {
                 var c = (keysup[f]/countSum)*100;
                 var string_c = c.toFixed(2) +"%"
                 var td = document.createElement("td");
-                if(string_c >= "20"){
+                if(c >= 20){
                     $(td).each(function(){
                         $(this).append('<i class="text-success fas fa-arrow-up"></i>');
                         $(this).append('<small style="font-size: .85em;" class="text-success mr-1" id="percentSales">'+ string_c +'</small>');
@@ -320,10 +320,18 @@ $(function () {
                     });
                     tr.appendChild(td);
                 }else{
-                    if(string_c <= "19"){
+                    if(c <= 20){
                         $(td).each(function(){
                             $(this).append('<i class="text-danger fas fa-arrow-down"></i>');
                             $(this).append('<small style="font-size: .85em;" class="text-danger mr-1" id="percentSales">'+ string_c +'</small>');
+                            $(this).append('Sold');
+                        });
+                        tr.appendChild(td);
+                    }else
+                    if(c == "" || c == 0){
+                        $(td).each(function(){
+                            $(this).append('<i class="text-danger fas fa-arrow-down"></i>');
+                            $(this).append('<small style="font-size: .85em;" class="text-danger mr-1" id="percentSales">'+ '0%' +'</small>');
                             $(this).append('Sold');
                         });
                         tr.appendChild(td);
@@ -364,22 +372,39 @@ $(function () {
                     PKone++;// almacena cuantas ventas han sido de un producto
                 }
             }
+
             var PKpercent = (PKone/PKSum)*100;
             var string_pkone = PKpercent.toFixed(2) +"%"
             var contentOne = document.getElementById("percentOne");
             var span = document.createElement("span");
             var span_title = document.createElement("span");
-            $(span).each(function(){
-                $(this).attr("class","font-weight-bold");
-                $(this).append('<i class="ion ion-android-arrow-up text-danger"> </i> ');
-                $(this).append(string_pkone);
-            });
-            $(span_title).each(function(){
-                $(this).attr("class", "text-muted");
-                $(this).append("1 PRODUCTO");
-            });
-            contentOne.appendChild(span);
-            contentOne.appendChild(span_title);
+            if(isNaN(PKpercent)){
+                $(span).each(function(){
+                    $(this).attr("class","font-weight-bold");
+                    $(this).append('<i class="ion ion-android-arrow-up text-danger"> </i> ');
+                    $(this).append('0%');
+                });
+
+                $(span_title).each(function(){
+                    $(this).attr("class", "text-muted");
+                    $(this).append("1 PRODUCTO");
+                });
+                contentOne.appendChild(span);
+                contentOne.appendChild(span_title);
+            }else{
+                $(span).each(function(){
+                    $(this).attr("class","font-weight-bold");
+                    $(this).append('<i class="ion ion-android-arrow-up text-danger"> </i> ');
+                    $(this).append(string_pkone);
+                });
+                $(span_title).each(function(){
+                    $(this).attr("class", "text-muted");
+                    $(this).append("1 PRODUCTO");
+                });
+                contentOne.appendChild(span);
+                contentOne.appendChild(span_title);
+            }
+
             /**
              * proceso para el primer indicador de porcentaje de ventas de un producto
              */
@@ -396,17 +421,32 @@ $(function () {
              var contentTwo = document.getElementById("percentTwo");
              var spanTwo = document.createElement("span");
              var span_title_Two = document.createElement("span");
-             $(spanTwo).each(function(){
-                 $(this).attr("class","font-weight-bold");
-                 $(this).append('<i class="ion ion-android-arrow-up text-warning"> </i> ');
-                 $(this).append(string_pktwo);
-             });
-             $(span_title_Two).each(function(){
-                 $(this).attr("class", "text-muted");
-                 $(this).append("2 a 3 PRODUCTOS");
-             });
-             contentTwo.appendChild(spanTwo);
-             contentTwo.appendChild(span_title_Two);
+             if(isNaN(PKpercenttwo)){
+                $(spanTwo).each(function(){
+                    $(this).attr("class","font-weight-bold");
+                    $(this).append('<i class="ion ion-android-arrow-up text-warning"> </i> ');
+                    $(this).append('0%');
+                });
+                $(span_title_Two).each(function(){
+                    $(this).attr("class", "text-muted");
+                    $(this).append("2 a 3 PRODUCTOS");
+                });
+                contentTwo.appendChild(spanTwo);
+                contentTwo.appendChild(span_title_Two);
+             }else{
+                $(spanTwo).each(function(){
+                    $(this).attr("class","font-weight-bold");
+                    $(this).append('<i class="ion ion-android-arrow-up text-warning"> </i> ');
+                    $(this).append(string_pktwo);
+                });
+                $(span_title_Two).each(function(){
+                    $(this).attr("class", "text-muted");
+                    $(this).append("2 a 3 PRODUCTOS");
+                });
+                contentTwo.appendChild(spanTwo);
+                contentTwo.appendChild(span_title_Two);
+             }
+
             /**
              * proceso para el segundo indicador de porcentaje de ventas de un producto
              */
@@ -423,19 +463,31 @@ $(function () {
              var contentthree = document.getElementById("percentThree");
              var spanthree = document.createElement("span");
              var span_title_three = document.createElement("span");
-             $(spanthree).each(function(){
-                 $(this).attr("class","font-weight-bold");
-                 $(this).append('<i class="ion ion-android-arrow-up text-success"> </i> ');
-                 $(this).append(string_pkthree);
-             });
-             $(span_title_three).each(function(){
-                 $(this).attr("class", "text-muted");
-                 $(this).append("+4 PRODUCTOS");
-             });
-             contentthree.appendChild(spanthree);
-             contentthree.appendChild(span_title_three);
-
-
+             if(isNaN(PKpercentthree)){
+                $(spanthree).each(function(){
+                    $(this).attr("class","font-weight-bold");
+                    $(this).append('<i class="ion ion-android-arrow-up text-success"> </i> ');
+                    $(this).append('0%');
+                });
+                $(span_title_three).each(function(){
+                    $(this).attr("class", "text-muted");
+                    $(this).append("+4 PRODUCTOS");
+                });
+                contentthree.appendChild(spanthree);
+                contentthree.appendChild(span_title_three);
+             }else{
+                $(spanthree).each(function(){
+                    $(this).attr("class","font-weight-bold");
+                    $(this).append('<i class="ion ion-android-arrow-up text-success"> </i> ');
+                    $(this).append(string_pkthree);
+                });
+                $(span_title_three).each(function(){
+                    $(this).attr("class", "text-muted");
+                    $(this).append("+4 PRODUCTOS");
+                });
+                contentthree.appendChild(spanthree);
+                contentthree.appendChild(span_title_three);
+             }
             var $visitorsChart = $('#visitors-chart')
             // eslint-disable-next-line no-unused-vars
             var visitorsChart = new Chart($visitorsChart, {

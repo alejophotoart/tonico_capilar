@@ -53,6 +53,8 @@ Route::middleware(['auth'])->group(function () {
       Route::delete('/productos/{id}/{name}/delete', [ProductController::class, 'destroy']);//Eliminar producto
 // Rutas del calendario
       Route::get('/calendario', [CalendarController::class, 'addEvents'])->name('calendar.index');//llama a la vista calendario
+      Route::post('/calendar/create_event', [CalendarController::class, 'store']);//llama a la vista calendario
+
 // Rutas para el resumen
       Route::get('/resumen', [ResumeController::class, 'index'])->name('resume.index');//llama a la vista resumen
       Route::get('/resumen/sales', [ResumeController::class, 'salesTable']);

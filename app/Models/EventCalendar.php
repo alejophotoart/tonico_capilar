@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Acaronlex\LaravelCalendar\Event;
 
-class EventModel extends Model
+class EventCalendar extends Model
 {
     protected $dates = ['start', 'end'];
-
+    protected $fillable = ['start', 'end', 'title', 'all_day', 'user_id'];
     /**
      * Get the event's id number
      *
