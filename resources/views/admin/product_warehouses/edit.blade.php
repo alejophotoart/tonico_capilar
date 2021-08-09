@@ -27,7 +27,8 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" id="updateQuantity" class="btn btn-dark" data-id="" onclick="editQuantity()">Guardar Cambios</button>
+          <button type="button" id="updateQuantity" class="btn btn-dark" data-id="" data-product_id=""
+            onclick="editQuantity()">Guardar Cambios</button>
         </div>
       </div>
     </div>

@@ -9,12 +9,7 @@ __('Productos x Bodega')) @section('explorer')
         <div class="card-header">
             <h1 class="card-title">{{ __("Lista de productos x bodega") }}</h1>
             @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
-            <div class="float-end">
-                <a href="#"
-                    ><button class="btn btn-dark" type="button">
-                        <i class="fas fa-plus"></i></button
-                ></a>
-            </div>
+
             @endif
         </div>
         <div class="card-body">

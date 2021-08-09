@@ -11,13 +11,16 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\PaymentType;
+use App\Models\ProductWarehouse;
 use App\Models\State;
 use App\Models\User;
+use App\Models\Warehouse;
 use DateTime;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 
 
@@ -170,7 +173,6 @@ class OrderController extends Controller
     }
     public function store(Request $request)
     {
-        // dd($request->all());
         if(Client::where('id', $request['client_id'])->first())
         {
             $client = Client::where('id', $request['client_id'])->update([
@@ -216,7 +218,32 @@ class OrderController extends Controller
                     ]);
                 }
             }
-
+            $product_quan = count($request['prod_quan'][0]);
+            $toDiscountXCity = ProductWarehouse::where('active', 1)->with('warehouses')->get();
+            for ($e=0; $e < $product_quan; $e++) {
+                if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])){
+                    for ($t=0; $t < count($toDiscountXCity); $t++) {
+                        for($p = 0; $p < count($toDiscountXCity[$t]->warehouses); $p++) {
+                            if($toDiscountXCity[$t]->warehouses[$p]->city_id == $request['city_id']){
+                                if(DB::table('product_warehouses')->leftJoin('warehouses', 'product_warehouses.warehouse_id', '=', 'warehouses.id')
+                                ->where([['warehouses.city_id', $request['city_id']],['product_warehouses.product_id', $request['prod_quan'][1][$e]]])
+                                ->update(['product_warehouses.quantity' => ($toDiscountXCity[$t]->quantity - $request['prod_quan'][0][$e])])){
+                                }
+                            }else if($toDiscountXCity[$t]->warehouses[$p]->city_id <> $request['city_id']){
+                                $quantityProduct = Product::where('id', $request['prod_quan'][1][$e])->first();
+                                Product::where('id', $request['prod_quan'][1][$e])->update([
+                                    'quantity'  => (($quantityProduct->quantity) - ($request['prod_quan'][0][$e]))
+                                ]);
+                            }
+                        }
+                    }
+                }else if(ProductWarehouse::where('product_id', '<>',$request['prod_quan'][1][$e])){
+                    $quantityProduct = Product::where('id', $request['prod_quan'][1][$e])->first();
+                    Product::where('id', $request['prod_quan'][1][$e])->update([
+                        'quantity'  => (($quantityProduct->quantity) - ($request['prod_quan'][0][$e]))
+                    ]);
+                }
+            }
             $prod_quan = count($request['prod_quan'][0]);
             for($i = 0; $i < $prod_quan; $i++){
                 $order_item             = new OrderItem;
@@ -225,7 +252,7 @@ class OrderController extends Controller
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
-            $this->sendMessage($request, $order['id']);
+            // $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }else{
             $client = Client::create([
@@ -273,6 +300,31 @@ class OrderController extends Controller
                 }
             }
             $product_quan = count($request['prod_quan'][0]);
+            $toDiscountXCity = ProductWarehouse::where('active', 1)->with('warehouses')->get();
+            for ($e=0; $e < $product_quan; $e++) {
+                if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->first()){
+                    for ($t=0; $t < count($toDiscountXCity); $t++) {
+                        for($p = 0; $p < count($toDiscountXCity[$t]->warehouses); $p++) {
+                            if($toDiscountXCity[$t]->warehouses[$p]->city_id == $request['city_id']){
+                                if(DB::table('product_warehouses')->leftJoin('warehouses', 'product_warehouses.warehouse_id', '=', 'warehouses.id')
+                                ->where([['warehouses.city_id', $request['city_id']],['product_warehouses.product_id', $request['prod_quan'][1][$e]]])
+                                ->update(['product_warehouses.quantity' => ($toDiscountXCity[$t]->quantity - $request['prod_quan'][0][$e])])){
+                                }
+                            }else if($toDiscountXCity[$t]->warehouses[$p]->city_id <> $request['city_id']){
+                                $quantityProduct = Product::where('id', $request['prod_quan'][1][$e])->first();
+                                Product::where('id', $request['prod_quan'][1][$e])->update([
+                                    'quantity'  => (($quantityProduct->quantity) - ($request['prod_quan'][0][$e]))
+                                ]);
+                            }
+                        }
+                    }
+                }else if(ProductWarehouse::where('product_id', '<>',$request['prod_quan'][1][$e])){
+                    $quantityProduct = Product::where('id', $request['prod_quan'][1][$e])->first();
+                    Product::where('id', $request['prod_quan'][1][$e])->update([
+                        'quantity'  => (($quantityProduct->quantity) - ($request['prod_quan'][0][$e]))
+                    ]);
+                }
+            }
             for($i = 0; $i < $product_quan; $i++){
                 $order_item             = new OrderItem;
                 $order_item->quantity   = $request['prod_quan'][0][$i]; //posicion de las cantidades
@@ -280,7 +332,7 @@ class OrderController extends Controller
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
-            $this->sendMessage($request, $order['id']);
+            // $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }
 
@@ -432,7 +484,7 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //dd($request->all());
+        dd($request->all());
         if(Order::where('id', $id)->first()){
                 if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
                 'delivery_date'=> $request['delivery_date'],
@@ -503,8 +555,33 @@ class OrderController extends Controller
             }
 
         }
-
             $product_quan = count($request['prod_quan'][0]);
+            $toDiscountXCity = ProductWarehouse::where('active', 1)->with('warehouses')->get();
+            for ($e=0; $e < $product_quan; $e++) {
+                if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->first()){
+                    for ($t=0; $t < count($toDiscountXCity); $t++) {
+                        for($p = 0; $p < count($toDiscountXCity[$t]->warehouses); $p++) {
+                            if($toDiscountXCity[$t]->warehouses[$p]->city_id == $request['city_id']){
+                                if(DB::table('product_warehouses')->leftJoin('warehouses', 'product_warehouses.warehouse_id', '=', 'warehouses.id')
+                                ->where([['warehouses.city_id', $request['city_id']],['product_warehouses.product_id', $request['prod_quan'][1][$e]]])
+                                ->update(['product_warehouses.quantity' => ($toDiscountXCity[$t]->quantity - $request['prod_quan'][0][$e])])){
+                                }
+                            }else if($toDiscountXCity[$t]->warehouses[$p]->city_id <> $request['city_id']){
+                                $quantityProduct = Product::where('id', $request['prod_quan'][1][$e])->first();
+                                Product::where('id', $request['prod_quan'][1][$e])->update([
+                                    'quantity'  => (($quantityProduct->quantity) - ($request['prod_quan'][0][$e]))
+                                ]);
+                            }
+                        }
+                    }
+                }else if(ProductWarehouse::where('product_id', '<>',$request['prod_quan'][1][$e])){
+                    $quantityProduct = Product::where('id', $request['prod_quan'][1][$e])->first();
+                    Product::where('id', $request['prod_quan'][1][$e])->update([
+                        'quantity'  => (($quantityProduct->quantity) - ($request['prod_quan'][0][$e]))
+                    ]);
+                }
+            }
+
             OrderItem::where('order_id', $id)->delete();
             for($i = 0; $i < $product_quan; $i++){
                 $order_i       = new OrderItem;

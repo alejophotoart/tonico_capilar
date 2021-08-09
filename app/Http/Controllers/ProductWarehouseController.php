@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\ProductWarehouse;
 use Illuminate\Http\Request;
 
@@ -71,10 +72,19 @@ class ProductWarehouseController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
+
         if($request){
             $product_warehouse = ProductWarehouse::where('id', $id)->update([
                 'quantity'  => $request['quantity']
             ]);
+            // $quantityProduct = Product::where('id', $request['product_id_pw'])->first();
+            // dd($quantityProduct->quantity);
+            // $resul = (($quantityProduct->quantity) - floatval($request['quantity']));
+            // $toDiscountProduct = Product::where('id', $request['product_id_pw'])->update([
+            //     'quantity'  => (($quantityProduct->quantity) - ($resul))
+            // ]);
+            // dd($toDiscountProduct);
             return response(array('status' => 200, 'd' => array('id' => $id),'title' => 'Cantidad actualizada' ,'message' => 'Actualizaste la cantidad del producto en la bodega', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         } else {
             return response(array('status' => 100, 'title' => __('Ops...') ,'message' => __('Ocurrio un error inesperado, intentalo de mas tarde'), 'icon' => "warning"));

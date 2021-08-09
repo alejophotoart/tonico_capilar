@@ -8,8 +8,9 @@ function editProductWarehouse(id){
             contentType: "application/json"
         },
         success: function(r) {
-           var prodcutWarehouse = r;
-           var p_w = r.warehouses;
+            console.log(r);
+            var prodcutWarehouse = r;
+            var p_w = r.warehouses;
 
             if(r){
                 $("#editModalProductWarehouse").modal("show");
@@ -18,12 +19,14 @@ function editProductWarehouse(id){
                     $("#name_productWarehouse").text(pw.name);
                 });
                 $("#updateQuantity").data("id", prodcutWarehouse.id);
+                $("#updateQuantity").data("product_id", prodcutWarehouse.product_id);
             }
         }
     });
 }
 
 function editQuantity() {
+    var product_id_pw = $("#updateQuantity").data("product_id");
     var id_pw = $("#updateQuantity").data("id");
     var name = document.getElementById("name_productWarehouse").innerHTML;
 
@@ -51,7 +54,8 @@ function editQuantity() {
             if (result.isConfirmed) {
                 let data = {
                     quantity,
-                    name
+                    name,
+                    product_id_pw
                 };
                 let timerInterval;
                 Swal.fire({
