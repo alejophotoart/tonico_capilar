@@ -67,7 +67,12 @@ __('Productos x Bodega')) @section('explorer')
 
                         </td>
                         <td>
-                            {{ $pw->quantity }}
+                            @if ($pw->quantity <= 10)
+                                <p class="text-danger">{{ $pw->quantity }} <br> Quedan pocas unidades</p>
+                                @else
+                                {{ $pw->quantity }}
+                            @endif
+
                         </td>
                         <td>
                             <p style="opacity: 0.6; font-size: 0.8em;">

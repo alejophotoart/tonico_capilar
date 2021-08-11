@@ -4,7 +4,7 @@ async function CancelOrder(id) {
             title: "Por que se cancela el pedido?",
             input: "textarea",
             inputLabel: "Mensaje",
-            inputPlaceholder: "Escriba un mensaje...",
+            inputPlaceholder: "Escriba el motivo de cancelacion...",
             inputAttributes: {
                 "aria-label": "Escriba un motivo",
                 maxlength: 180,
@@ -74,7 +74,8 @@ async function CancelOrder(id) {
                                 Swal.fire({
                                     icon: "error",
                                     title: "Ops...",
-                                    text: "Ocurrio un error inesperado"
+                                    text: "Ocurrio un error inesperado",
+                                    confirmButtonColor: "#343a40",
                                 });
                             }
                         }

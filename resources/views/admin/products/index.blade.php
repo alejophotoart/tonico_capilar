@@ -56,7 +56,7 @@ __('Products')) @section('explorer')
                 <tbody>
                     @foreach ($products as $p)
                     <tr>
-                        <td>
+                        <td id="content-id">
                             {{ $p->id }}
                         </td>
                         <td>
@@ -84,26 +84,26 @@ __('Products')) @section('explorer')
                             </div>
                             @endif
                         </td>
-                        <td>
+                        <td id="content-name">
                             {{ $p->name }}
                         </td>
-                        <td>
+                        <td id="content-price">
                             {{ "$" }}
                             {{ number_format($p->price, 0, ',', '.') }}
                         </td>
-                        <td>
+                        <td id="content-quantity">
                             {{ $p->quantity }}
                         </td>
                         <td>
                             @foreach ($product_warehouses as $pw)
                                 @foreach ($pw->warehouses as $pww)
-                                    @if($p->id == $pw->product_id)
-                                        {{$pww->name}} <br />
+                                    @if ($p->id == $pw->product_id)
+                                        {{$pww->name}} <br>
                                     @endif
                                 @endforeach
                             @endforeach
                         </td>
-                        <td>
+                        <td id="actions">
                             @if(auth()->user()->role_id == 1 ||
                             auth()->user()->role_id == 2)
                             <a

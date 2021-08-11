@@ -1,6 +1,6 @@
 #imgProduct{
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     position: relative;
     border-radius: 50px;
 }
@@ -10,7 +10,7 @@
     border-radius: 50%;
 }
 #content-name, #content-id, #content-price, #content-quantity, #content-rol, #content-status,#actions{
-    padding-top: 25px;
+    padding-top: 20px;
 }
 #imagenProduct{
     max-width: 180px;

@@ -227,52 +227,85 @@ function CreateOrder(id) {
                                             var image = document.getElementById(
                                                 "formFileSm"
                                             );
-                                            image = image.files[0];
-                                            if (image) {
-                                                var id_order = r.d.id;
-                                                var name_client = r.name;
-                                                saveImage(
-                                                    id_order,
-                                                    name_client
-                                                );
-                                            } else {
-                                                if (r["status"] == 200) {
+                                            if(r["status"] == 500){
+                                                Swal.fire({
+                                                    icon: r["icon"],
+                                                    title: r["name"],
+                                                    text: r["message"],
+                                                    confirmButtonColor: "#343a40",
+                                                    showConfirmButton: true
+                                                });
+                                                return false;
+                                            }else{
+                                                if(r["status"] == 400){
                                                     Swal.fire({
                                                         icon: r["icon"],
-                                                        title: r["title"],
-                                                        text:
-                                                            r["message"] +
-                                                            r["space"] +
-                                                            r["name"],
-                                                        confirmButtonColor:
-                                                            "#343a40",
+                                                        title: r["name"],
+                                                        text: r["message"],
+                                                        confirmButtonColor: "#343a40",
                                                         showConfirmButton: true
-                                                    }).then(val => {
-                                                        $(location).attr(
-                                                            "href",
-                                                            "/pedidos"
-                                                        );
                                                     });
-                                                } else {
-                                                    if (r["status"] == 100) {
+                                                    return false;
+                                                }else{
+                                                    if(r["status"] == 404){
                                                         Swal.fire({
                                                             icon: r["icon"],
-                                                            title: r["title"],
+                                                            title: r["name"],
                                                             text: r["message"],
-                                                            confirmButtonColor:
-                                                                "#343a40"
+                                                            confirmButtonColor: "#343a40",
+                                                            showConfirmButton: true
                                                         });
                                                         return false;
-                                                    } else {
-                                                        Swal.fire({
-                                                            icon: "error",
-                                                            title: "Ops...",
-                                                            text:
-                                                                "Ocurrio un error inesperado",
-                                                            confirmButtonColor:
-                                                                "#343a40"
-                                                        });
-                                                        return false;
+                                                    }else{
+                                                        image = image.files[0];
+                                                        if (image) {
+                                                            var id_order = r.d.id;
+                                                            var name_client = r.name;
+                                                            saveImage(
+                                                                id_order,
+                                                                name_client
+                                                            );
+                                                        } else {
+                                                            if (r["status"] == 200) {
+                                                                Swal.fire({
+                                                                    icon: r["icon"],
+                                                                    title: r["title"],
+                                                                    text:
+                                                                        r["message"] +
+                                                                        r["space"] +
+                                                                        r["name"],
+                                                                    confirmButtonColor:
+                                                                        "#343a40",
+                                                                    showConfirmButton: true
+                                                                }).then(val => {
+                                                                    $(location).attr(
+                                                                        "href",
+                                                                        "/pedidos"
+                                                                    );
+                                                                });
+                                                            } else {
+                                                                if (r["status"] == 100) {
+                                                                    Swal.fire({
+                                                                        icon: r["icon"],
+                                                                        title: r["title"],
+                                                                        text: r["message"],
+                                                                        confirmButtonColor:
+                                                                            "#343a40"
+                                                                    });
+                                                                    return false;
+                                                                } else {
+                                                                    Swal.fire({
+                                                                        icon: "error",
+                                                                        title: "Ops...",
+                                                                        text:
+                                                                            "Ocurrio un error inesperado",
+                                                                        confirmButtonColor:
+                                                                            "#343a40"
+                                                                    });
+                                                                    return false;
+                                                                }
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -364,49 +397,82 @@ function CreateOrder(id) {
                                         var image = document.getElementById(
                                             "formFileSm"
                                         );
-                                        image = image.files[0];
-                                        if (image) {
-                                            var id_order = r.d.id;
-                                            var name_client = r.name;
-                                            saveImage(id_order, name_client);
-                                        } else {
-                                            if (r["status"] == 200) {
+                                        if(r["status"] == 500){
+                                            Swal.fire({
+                                                icon: r["icon"],
+                                                title: r["name"],
+                                                text: r["message"],
+                                                confirmButtonColor: "#343a40",
+                                                showConfirmButton: true
+                                            });
+                                            return false;
+                                        }else{
+                                            if(r["status"] == 400){
                                                 Swal.fire({
                                                     icon: r["icon"],
-                                                    title: r["title"],
-                                                    text:
-                                                        r["message"] +
-                                                        r["space"] +
-                                                        r["name"],
-                                                    confirmButtonColor:
-                                                        "#343a40",
+                                                    title: r["name"],
+                                                    text: r["message"],
+                                                    confirmButtonColor: "#343a40",
                                                     showConfirmButton: true
-                                                }).then(val => {
-                                                    $(location).attr(
-                                                        "href",
-                                                        "/pedidos"
-                                                    );
                                                 });
-                                            } else {
-                                                if (r["status"] == 100) {
+                                                return false;
+                                            }else{
+                                                if(r["status"] == 404){
                                                     Swal.fire({
                                                         icon: r["icon"],
-                                                        title: r["title"],
+                                                        title: r["name"],
                                                         text: r["message"],
-                                                        confirmButtonColor:
-                                                            "#343a40"
+                                                        confirmButtonColor: "#343a40",
+                                                        showConfirmButton: true
                                                     });
                                                     return false;
-                                                } else {
-                                                    Swal.fire({
-                                                        icon: "error",
-                                                        title: "Ops...",
-                                                        text:
-                                                            "Ocurrio un error inesperado",
-                                                        confirmButtonColor:
-                                                            "#343a40"
-                                                    });
-                                                    return false;
+                                                }else{
+                                                    image = image.files[0];
+                                                    if (image) {
+                                                        var id_order = r.d.id;
+                                                        var name_client = r.name;
+                                                        saveImage(id_order, name_client);
+                                                    } else {
+                                                        if (r["status"] == 200) {
+                                                            Swal.fire({
+                                                                icon: r["icon"],
+                                                                title: r["title"],
+                                                                text:
+                                                                    r["message"] +
+                                                                    r["space"] +
+                                                                    r["name"],
+                                                                confirmButtonColor:
+                                                                    "#343a40",
+                                                                showConfirmButton: true
+                                                            }).then(val => {
+                                                                $(location).attr(
+                                                                    "href",
+                                                                    "/pedidos"
+                                                                );
+                                                            });
+                                                        } else {
+                                                            if (r["status"] == 100) {
+                                                                Swal.fire({
+                                                                    icon: r["icon"],
+                                                                    title: r["title"],
+                                                                    text: r["message"],
+                                                                    confirmButtonColor:
+                                                                        "#343a40"
+                                                                });
+                                                                return false;
+                                                            } else {
+                                                                Swal.fire({
+                                                                    icon: "error",
+                                                                    title: "Ops...",
+                                                                    text:
+                                                                        "Ocurrio un error inesperado",
+                                                                    confirmButtonColor:
+                                                                        "#343a40"
+                                                                });
+                                                                return false;
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
                                         }

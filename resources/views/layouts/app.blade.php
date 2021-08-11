@@ -8,19 +8,20 @@
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
         <title>{{ __("Home") }} | {{ __("Login") }}</title>
+        {{-- favicon --}}
+        <link rel="icon" href="/adminlte/img/GDSEC-logo.ico">
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
 
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-        <link
-            href="https://fonts.googleapis.com/css?family=Nunito"
-            rel="stylesheet"
-        />
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100&display=swap" rel="stylesheet">
 
         <!-- Styles -->
         <link href="{{ asset('css/app.css') }}" rel="stylesheet" />
+        {{-- <link href="{{ asset('css/material.css') }}" rel="stylesheet" /> --}}
+
     </head>
     <body>
         <div id="app">
@@ -28,8 +29,10 @@
                 class="navbar navbar-expand-md navbar-light bg-white shadow-sm"
             >
                 <div class="container">
+
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        Tonico Capilar
+                        <img style="height: 50px;" src="/adminlte/img/GDSEC-font.png" alt="">
+                        Gdsec Latam
                     </a>
                     <button
                         class="navbar-toggler"

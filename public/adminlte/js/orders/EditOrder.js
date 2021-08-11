@@ -79,7 +79,7 @@ function EditOrder(id, client_id, address_id, user_id, delivery_d){
     var prod_quan = [quantity, product];
     let total1 = total2.replace(/\$/g, "");
     let total = total1.replace(/\./g, "");
-    console.log(prod_quan);
+    console.log(prod_quan[1]);
     // let delivery_price1 = delivery_price2.replace(/\$/g, "");
     // let delivery_price = delivery_price1.replace(/\./g, "");
 
@@ -98,11 +98,7 @@ function EditOrder(id, client_id, address_id, user_id, delivery_d){
         }
     }
 
-    for (let i = 0; i < product.length; i++) {
-        if (
-            product[i].length <= 0 ||
-            product[i].length == ""
-        ) {
+        if (prod_quan[1].length === 0 || !prod_quan[1].length) {
             Swal.fire({
                 icon: "warning",
                 title: "Productos",
@@ -111,7 +107,6 @@ function EditOrder(id, client_id, address_id, user_id, delivery_d){
             });
             return false;
         }
-    }
 
     if (
         identification == 0 ||
@@ -215,60 +210,82 @@ function EditOrder(id, client_id, address_id, user_id, delivery_d){
                         willClose: () => {
                             clearInterval(timerInterval);
                         };
-                        if (r["status"] == 400) {
+                        if(r["status"] == 500){
                             Swal.fire({
                                 icon: r["icon"],
-                                title: r["title"],
+                                title: r["name"],
                                 text: r["message"],
                                 confirmButtonColor: "#343a40",
                                 showConfirmButton: true
                             });
                             return false;
-                        } else {
-                            var image = document.getElementById("LoadVoucher");
-                            image = image.files[0];
-                            if (image) {
-                                var id_order = r.id;
-                                var name_client = r.name;
-                                saveImage(id_order, name_client);
-                            } else {
-                                if (r["status"] == 200) {
+                        }else{
+                            if(r["status"] == 400){
+                                Swal.fire({
+                                    icon: r["icon"],
+                                    title: r["name"],
+                                    text: r["message"],
+                                    confirmButtonColor: "#343a40",
+                                    showConfirmButton: true
+                                });
+                                return false;
+                            }else{
+                                if(r["status"] == 404){
                                     Swal.fire({
                                         icon: r["icon"],
-                                        title: r["title"],
-                                        text:
-                                            r["message"] +
-                                            r["space"] +
-                                            r["name"],
-                                        confirmButtonColor:
-                                            "#343a40",
+                                        title: r["name"],
+                                        text: r["message"],
+                                        confirmButtonColor: "#343a40",
                                         showConfirmButton: true
-                                    }).then(val => {
-                                        $(location).attr(
-                                            "href",
-                                            "/pedidos"
-                                        );
                                     });
-                                } else {
-                                    if (r["status"] == 100) {
-                                        Swal.fire({
-                                            icon: r["icon"],
-                                            title: r["title"],
-                                            text: r["message"],
-                                            confirmButtonColor:
-                                                "#343a40"
-                                        });
-                                        return false;
+                                    return false;
+                                }else{
+                                    var image = document.getElementById("LoadVoucher");
+                                    image = image.files[0];
+                                    if (image) {
+                                        var id_order = r.id;
+                                        var name_client = r.name;
+                                        saveImage(id_order, name_client);
                                     } else {
-                                        Swal.fire({
-                                            icon: "error",
-                                            title: "Ops...",
-                                            text:
-                                                "Ocurrio un error inesperado",
-                                            confirmButtonColor:
-                                                "#343a40"
-                                        });
-                                        return false;
+                                        if (r["status"] == 200) {
+                                            Swal.fire({
+                                                icon: r["icon"],
+                                                title: r["title"],
+                                                text:
+                                                    r["message"] +
+                                                    r["space"] +
+                                                    r["name"],
+                                                confirmButtonColor:
+                                                    "#343a40",
+                                                showConfirmButton: true
+                                            }).then(val => {
+                                                $(location).attr(
+                                                    "href",
+                                                    "/pedidos"
+                                                );
+                                            });
+                                        } else {
+                                            if (r["status"] == 100) {
+                                                Swal.fire({
+                                                    icon: r["icon"],
+                                                    title: r["title"],
+                                                    text: r["message"],
+                                                    confirmButtonColor:
+                                                        "#343a40"
+                                                });
+                                                return false;
+                                            } else {
+                                                Swal.fire({
+                                                    icon: "error",
+                                                    title: "Ops...",
+                                                    text:
+                                                        "Ocurrio un error inesperado",
+                                                    confirmButtonColor:
+                                                        "#343a40"
+                                                });
+                                                return false;
+                                            }
+                                        }
                                     }
                                 }
                             }

@@ -86,9 +86,9 @@ class ResetPasswordNotification extends Notification
     protected function buildMailMessage($url, $notifiable)
     {
         return (new MailMessage)
-            ->subject(Lang::get('Solicitud de restablecimiento de contraseña.'))
+            ->subject(Lang::get('Restablecimiento de contraseña en GDSEC.'))
             ->greeting('Hey, ' . $notifiable->name)
-            ->line(Lang::get('Solicitaste reestablecer la contraseña para tu cuenta en Tiendas Tonico Capilar.'))
+            ->line(Lang::get('Solicitaste reestablecer la contraseña para tu cuenta en GDSEC.'))
             ->action(Lang::get('Reestablecer contraseña'), $url)
             ->line(Lang::get('This password reset link will expire in :count minutes.', ['count' => config('auth.passwords.'.config('auth.defaults.passwords').'.expire')]))
             ->line(Lang::get('If you did not request a password reset, no further action is required.'))

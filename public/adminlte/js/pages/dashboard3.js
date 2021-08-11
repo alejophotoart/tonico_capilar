@@ -219,7 +219,7 @@ $(function () {
              * For que cuenta las ventas segun el estado del pedido
              * los almacena en las variable y los muestra segun los id de la etiqueta
              */
-            fechas.reverse(); //Reversa el array de fechas y la orden ade menor a mayor
+            // fechas.reverse(); //Reversa el array de fechas y la orden ade menor a mayor
             keys.reverse(); //reversa el array y lo ordenar de abajo hacia arriba segun el key
             counts.reverse(); //reversa el array de contar ventas por dia
 
@@ -508,9 +508,9 @@ $(function () {
                 type: 'line',
                 data: counts,
                 backgroundColor: 'tansparent',
-                borderColor: '#ced4da',
-                pointBorderColor: '#ced4da',
-                pointBackgroundColor: '#ced4da',
+                borderColor: '#ffffff',
+                pointBorderColor: '#ffffff',
+                pointBackgroundColor: '#ffffff',
                 fill: false
                 // pointHoverBackgroundColor: '#ced4da',
                 // pointHoverBorderColor    : '#ced4da'

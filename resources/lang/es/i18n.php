@@ -2,7 +2,7 @@
 
 return [
     'title' => [
-        'title'         => 'Tonico Capilar'
+        'title'         => 'GDSEC'
 
     ],
     'screen_login' => [

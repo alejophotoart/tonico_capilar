@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Order;
 use Illuminate\Console\Command;
+use Carbon\Carbon;
+
 
 class OrderStatus extends Command
 {
@@ -11,7 +14,7 @@ class OrderStatus extends Command
      *
      * @var string
      */
-    protected $signature = 'order:status {state_order_id = 2}';
+    protected $signature = 'order:command';
 
     /**
      * The console command description.
@@ -38,12 +41,19 @@ class OrderStatus extends Command
     public function handle()
     {
         $cabecera = ['state_order_id'];
-        $order = Order::where('state_order_id', 1)->update([
+
+        $date = new Carbon('tomorrow');
+        $date1 = $date->format('Y-m-d 00:00:00');
+        $date2 = $date->format('Y-m-d 23:59:59');
+
+        $order = Order::where('delivery_date','>=',$date1)->where('delivery_date','<=',$date2)
+            ->where('state_order_id', 1)->update([
             'state_order_id' => 2
         ]);
 
-        $this->table($cabecera, $order);
+        return;
+        // $this->table($cabecera, $order);
 
-        $this->info('Status change !');
+        // $this->info('Status change !');
     }
 }
