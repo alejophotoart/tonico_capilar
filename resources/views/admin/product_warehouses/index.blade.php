@@ -6,15 +6,15 @@ __('Productos x Bodega')) @section('explorer')
 @endsection @section('content')
 <div class="content" style="text-align: center;">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header darkMode-bbg">
             <h1 class="card-title">{{ __("Lista de productos x bodega") }}</h1>
             @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
 
             @endif
         </div>
-        <div class="card-body">
+        <div class="card-body darkMode-bbg">
             <table
-                class="table table-striped"
+                class="table table-responsive-xl"
                 style="width:100%"
                 id="tableProductWarehouses"
             >
@@ -49,24 +49,24 @@ __('Productos x Bodega')) @section('explorer')
                 <tbody>
                     @foreach ($product_warehouses as $pw)
                     <tr>
-                        <td>
+                        <td class="darkMode-fill">
                             {{ $pw->id }}
                         </td>
                         @foreach ($pw->products as $pwp)
                             @if($pwp->id == $pw->product_id)
-                                <td>
+                                <td class="darkMode-fill">
                                     {{ $pwp->name }} <br />
                                 </td>
                             @endif
 
-                        <td>
+                        <td class="darkMode-fill">
                             @foreach ($pw->warehouses as $pww)
                                 @if($pww->id == $pw->warehouse_id)
                                     {{$pww->name}} <br />
                                 @endif
 
                         </td>
-                        <td>
+                        <td class="darkMode-fill">
                             @if ($pw->quantity <= 10)
                                 <p class="text-danger">{{ $pw->quantity }} <br> Quedan pocas unidades</p>
                                 @else
@@ -74,7 +74,7 @@ __('Productos x Bodega')) @section('explorer')
                             @endif
 
                         </td>
-                        <td>
+                        <td class="darkMode-fill">
                             <p style="opacity: 0.6; font-size: 0.8em;">
                                 Ajustado
                                 {{ $pw->updated_at->diffForHumans() }}
@@ -82,18 +82,18 @@ __('Productos x Bodega')) @section('explorer')
                         </td>
                         @if(auth()->user()->role_id == 1 ||
                         auth()->user()->role_id == 2)
-                        <td>
+                        <td class="darkMode-fill">
                             <a
                                 onclick="editProductWarehouse({{ $pw->id }})"
                                 class="mg-10"
                             >
-                                <i id="IconE" class="fas fa-pencil-alt"></i>
+                                <i id="IconE" class="fas fa-pencil-alt darkMode-icon"></i>
                             </a>
                             <a
                                 class="mg-10"
                                 onclick="deleteProductWarehouse('{{$pw->id}}', '{{$pww->name}}', '{{ $pwp->name }}')"
                             >
-                                <i id="IconD" class="fas fa-trash-alt"></i>
+                                <i id="IconD" class="fas fa-trash-alt darkMode-icon"></i>
                             </a>
                         </td>
                         @endif

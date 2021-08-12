@@ -1,7 +1,7 @@
 @extends('admin.layout') @section('title', __('Editar Pedido'))
 @section('titleSup', __('Pedidos')) @section('explorer')
 <li class="breadcrumb-item">
-    <a href="{{ route('orders.index') }}">{{ __("Orders") }}</a>
+    <a class="darkMode-text" href="{{ route('orders.index') }}">{{ __("Orders") }}</a>
 </li>
 <li class="breadcrumb-item active">
     {{ __("Editar Pedido") }}
@@ -10,7 +10,7 @@
 <form class="row g-3" method="PUT" enctype="multipart/form-data" style="display: flex; justify-content: center">
     <div class="col-auto" style="width: 500px">
             <div class="card card-outline card-primary">
-                <div class="card-header text-center" style="height: 60px;">
+                <div class="card-header darkMode-bbg text-center" style="height: 60px;">
                     <b
                         ><span
                             class="fas fa-clipboard-list"
@@ -19,7 +19,7 @@
                         {{ __("Pedido") }} - {{ $order->id }}</b> <br>
                         <p>{{ __("Datos del cliente") }}</p>
                 </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                         @method('patch') @csrf
                         <div class="input-group mb-3">
                             <input
@@ -124,7 +124,7 @@
             </div>
             <!-- /.card -->
             <div class="card card-outline card-primary">
-                <div class="card-header text-center" style="height: 60px;">
+                <div class="card-header text-center darkMode-bbg" style="height: 60px;">
                     <button type="button" class="btn btn-outline-success bg-success" id="addProduct"
                      style="position: absolute; display: block; left: 425px;">
                         <span class="fas fa-plus" style="color: #fff;"></span>
@@ -139,7 +139,7 @@
 
 
                 </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                     <div class="form-group fieldGroupCopy">
                     @for($i = 0; $i < count($order->order_items);$i++)
                         @for($p = 0; $p < count($products);$p++)
@@ -187,7 +187,7 @@
 
     <div class="col-auto" style="width: 500px">
             <div class="card card-outline card-primary">
-                <div class="card-header text-center" style="height: 60px;">
+                <div class="card-header text-center darkMode-bbg" style="height: 60px;">
                     <b
                         ><span
                             class="fas fa-clipboard-list"
@@ -196,7 +196,7 @@
                         {{ __("Pedido") }} - {{ $order->id }}</b> <br>
                         <p>{{ __("Datos de envio") }}</p>
                 </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                         <div class="input-group mb-3">
                             <select id="country_id" name="country_id" class="form-control"
                             onchange="changeCountryType(this.value)">
@@ -246,7 +246,7 @@
             </div>
         </div>
         <div class="card card-outline card-primary">
-            <div class="card-header text-center" style="height: 60px;">
+            <div class="card-header text-center darkMode-bbg" style="height: 60px;">
                 <b
                     ><span
                         class="fas fa-clipboard-list"
@@ -255,7 +255,7 @@
                     {{ __("Pedido") }} - {{ $order->id }}</b> <br>
                     <p>{{ __("Tipo de pago") }}</p>
             </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                     <div class="input-group mb-3">
                         <select
                         id="payment_type_id" name="payment_type_id" class="form-control">
@@ -279,7 +279,7 @@
             </div>
         </div>
         <div class="card card-outline card-primary">
-            <div class="card-header text-center" style="height: 60px;">
+            <div class="card-header text-center darkMode-bbg" style="height: 60px;">
                 <b
                     ><span
                         class="fas fa-clipboard-list"
@@ -288,7 +288,7 @@
                     {{ __("Pedido") }} - {{ $order->id }}</b> <br>
                     <p>{{ __("Fecha y hora") }}</p>
             </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                     <div class="input-group mb-3 delivery_date_info">
                         <input
                             type="text"
@@ -355,7 +355,7 @@
         </div>
     </div>
 </form>
-    <div class="row" style="display: flex; justify-content: center;">
+    <div class="row" style="display: flex; justify-content: center; padding-bottom: 20px;">
         <div class="d-grid gap-2" style="width: 1000px">
         @foreach ($address as $a)
             @if($a->id == $order->id)

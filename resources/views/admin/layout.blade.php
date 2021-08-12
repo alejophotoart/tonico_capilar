@@ -13,6 +13,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <title>
             @yield('titleSup', __('Home')) | {{ auth()->user()->name }}
         </title>
+        {{-- DarkMode --}}
+        <link rel="stylesheet" href="/adminlte/css/adminlte.min.css" />
         {{-- favicon --}}
         <link rel="icon" href="/adminlte/img/GDSEC-logo.ico">
         <!-- Latest compiled and minified CSS -->
@@ -54,12 +56,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <body class="hold-transition sidebar-mini">
         <div class="wrapper">
             <!-- Navbar -->
-            <nav
-                class="
-                    main-header
-                    navbar navbar-expand navbar-white navbar-light
-                "
-            >
+            <nav class="main-header navbar navbar-expand navbar-white navbar-light darkMode-bg">
                 <!-- Left navbar links -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
@@ -68,7 +65,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             data-widget="pushmenu"
                             href="#"
                             role="button"
-                            ><i class="fas fa-bars"></i
+                            ><i class="fas fa-bars darkMode-text"></i
                         ></a>
                     </li>
                 </ul>
@@ -83,7 +80,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             href="#"
                             role="button"
                         >
-                            <i class="fas fa-search"></i>
+                            <i class="fas fa-search darkMode-text"></i>
                         </a>
                         <div class="navbar-search-block">
                             <form class="form-inline">
@@ -121,7 +118,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             href="#"
                             role="button"
                         >
-                            <i class="fas fa-expand-arrows-alt"></i>
+                            <i class="fas fa-expand-arrows-alt darkMode-text"></i>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -133,15 +130,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             role="button"
                             style="padding-top: 0px;"
                         >
-                            <div
-                                class="image"
-                                style="width: 40px;
-                                       height: 40px;;"
-                            >
+                            <div class="image" style="width: 40px; height: 40px;">
                                 @if(auth()->user()->img !== null)
                                 <img
                                     src="{{ auth()->user()->link }}{{ auth()->user()->img }}"
-                                    class="img-circle elevation-2"
+                                    class="darkMode-circle img-circle elevation-2"
                                     alt="User Image"
                                     style=" height: 42px;
                                             border: 3px solid gray;
@@ -150,10 +143,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                 @else
                                 <img
                                     src="/adminlte/img/users/default.png"
-                                    class="img-circle elevation-2"
+                                    class="darkMode-circle img-circle elevation-2"
                                     alt="User Image"
-                                    style=" max-height: 100%;
-                                    border: 3px solid gray;"
+                                    style=" max-height: 100%; border: 3px solid gray;"
                                 />
                                 @endif
                             </div>
@@ -346,9 +338,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
             </aside>
 
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper">
+            <div class="content-wrapper darkMode-bg">
                 <!-- Content Header (Page header) -->
-                <div class="content-header">
+                <div class="content-header darkMode">
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
@@ -362,7 +354,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                     @if(auth()->user()->role_id == 1 ||
                                     auth()->user()->role_id == 2)
                                     <li class="breadcrumb-item">
-                                        <a href="{{ route('resume.index') }}">{{
+                                        <a class="darkMode-text" href="{{ route('resume.index') }}">{{
                                             __("Resumen")
                                         }}</a>
                                     </li>
@@ -377,7 +369,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
                 <!-- /.content-header -->
                 <!-- Main content -->
-                <div class="content">
+                <div class="content darkMode-bg">
                     @include('admin.profile.edit') @yield('content')
                     <!-- /.container-fluid -->
                 </div>
@@ -397,7 +389,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            id="flexSwitchCheckDefault"
+                            id="darkMode"
                         />
                         <label
                             class="form-check-label"
@@ -440,6 +432,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 All rights reserved.
             </footer>-->
         </div>
+        <!-- DarkMode -->
+        <script src="/adminlte/js/darkMode/darkMode.js"></script>
         <!-- jQuery -->
         <script src="/adminlte/plugins/jquery/jquery.min.js"></script>
         <!--SweetAlert2-->

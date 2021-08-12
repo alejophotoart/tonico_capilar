@@ -6,7 +6,7 @@ __('Employees')) @section('explorer')
 @endsection @section('content')
 <div class="content" style="text-align: center;">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header darkMode-bbg">
             <h1 class="card-title">{{ __("Employees list") }}</h1>
             @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2 ||
             auth()->user()->role_id == 3)
@@ -18,9 +18,9 @@ __('Employees')) @section('explorer')
             </div>
             @endif
         </div>
-        <div class="card-body">
+        <div class="card-body darkMode-bbg">
             <table
-                class="table table-striped"
+                class="table table-responsive-xl"
                 style="width:100%"
                 id="tableEmployee"
             >
@@ -54,13 +54,13 @@ __('Employees')) @section('explorer')
                 <tbody>
                     @foreach ($users as $user)
                     <tr>
-                        <td id="content-id">
+                        <td class="darkMode-fill" id="content-id">
                             {{ $user->id }}
                         </td>
-                        <td>
+                        <td class="darkMode-fill">
                             @if($user->img !== null)
                             <div class="d-flex justify-content-center">
-                                <div class="image-product">
+                                <div class="image-product darkMode-circle">
                                     <img
                                         src="{{$user->link}}{{$user->img}}"
                                         alt="{{$user->name}}"
@@ -71,7 +71,7 @@ __('Employees')) @section('explorer')
                             </div>
                             @else
                             <div class="d-flex justify-content-center">
-                                <div class="image-product">
+                                <div class="image-product darkMode-circle">
                                     <img
                                         src="/adminlte/img/users/default.png"
                                         alt="{{$user->name}}"
@@ -82,10 +82,10 @@ __('Employees')) @section('explorer')
                             </div>
                             @endif
                         </td>
-                        <td id="content-name">
+                        <td class="darkMode-fill" id="content-name">
                             {{ $user->name }}
                         </td>
-                        <td id="content-status">
+                        <td class="darkMode-fill" id="content-status">
                             @if($user->employee_state_id == 1)
 
                             <span class="right badge badge-success"
@@ -99,24 +99,24 @@ __('Employees')) @section('explorer')
                             >
                             @endif @endif
                         </td>
-                        <td id="content-rol">
+                        <td class="darkMode-fill" id="content-rol">
                             {{ $user->role->name }}
                         </td>
                         @if(auth()->user()->role_id == 1 ||
                         auth()->user()->role_id == 2 || auth()->user()->role_id
                         == 3)
-                        <td id="actions">
+                        <td class="darkMode-fill" id="actions">
                             <a
                                 href="{{ route('employees.edit', $user) }}"
                                 class="mg-10"
                             >
-                                <i id="IconE" class="fas fa-pencil-alt"></i>
+                                <i id="IconE" class="fas fa-pencil-alt darkMode-icon"></i>
                             </a>
                             <a
                                 class="mg-10"
                                 onclick="DeleteUser('{{$user->id}}', '{{$user->name}}')"
                             >
-                                <i id="IconD" class="fas fa-trash-alt"></i>
+                                <i id="IconD" class="fas fa-trash-alt darkMode-icon"></i>
                             </a>
                             <a
                                 onclick="ShowInfoUser('{{$user->id}}')"
@@ -124,7 +124,7 @@ __('Employees')) @section('explorer')
                                 data-bs-whatever="@fat"
                                 class="mg-10-1"
                             >
-                                <i id="IconS" class="fas fa-eye"></i>
+                                <i id="IconS" class="fas fa-eye darkMode-icon"></i>
                             </a>
                         </td>
                         @endif

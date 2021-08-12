@@ -6,7 +6,7 @@ __('Products')) @section('explorer')
 @endsection @section('content')
 <div class="content" style="text-align: center;">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header darkMode-bbg">
             <h1 class="card-title">{{ __("Prodcuts list") }}</h1>
             @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
             <div class="float-end">
@@ -17,9 +17,9 @@ __('Products')) @section('explorer')
             </div>
             @endif
         </div>
-        <div class="card-body">
+        <div class="card-body darkMode-bbg">
             <table
-                class="table table-striped"
+                class="table table-responsive-sm"
                 style="width:100%"
                 id="tableProducts"
             >
@@ -56,13 +56,13 @@ __('Products')) @section('explorer')
                 <tbody>
                     @foreach ($products as $p)
                     <tr>
-                        <td id="content-id">
+                        <td class="darkMode-fill" id="content-id">
                             {{ $p->id }}
                         </td>
-                        <td>
+                        <td class="darkMode-fill">
                             @if($p->img !== null)
                             <div class="d-flex justify-content-center">
-                                <div class="image-product">
+                                <div class="image-product darkMode-circle">
                                     <img
                                         src="{{$p->link}}{{$p->img}}"
                                         alt="{{$p->name}}"
@@ -73,7 +73,7 @@ __('Products')) @section('explorer')
                             </div>
                             @else
                             <div class="d-flex justify-content-center">
-                                <div class="image-product">
+                                <div class="image-product darkMode-circle">
                                     <img
                                         src="/adminlte/img/products/default.png"
                                         alt="{{$p->name}}"
@@ -84,17 +84,17 @@ __('Products')) @section('explorer')
                             </div>
                             @endif
                         </td>
-                        <td id="content-name">
+                        <td class="darkMode-fill" id="content-name">
                             {{ $p->name }}
                         </td>
-                        <td id="content-price">
+                        <td class="darkMode-fill" id="content-price">
                             {{ "$" }}
                             {{ number_format($p->price, 0, ',', '.') }}
                         </td>
-                        <td id="content-quantity">
+                        <td class="darkMode-fill" id="content-quantity">
                             {{ $p->quantity }}
                         </td>
-                        <td>
+                        <td class="darkMode-fill">
                             @foreach ($product_warehouses as $pw)
                                 @foreach ($pw->warehouses as $pww)
                                     @if ($p->id == $pw->product_id)
@@ -103,20 +103,20 @@ __('Products')) @section('explorer')
                                 @endforeach
                             @endforeach
                         </td>
-                        <td id="actions">
+                        <td class="darkMode-fill" id="actions">
                             @if(auth()->user()->role_id == 1 ||
                             auth()->user()->role_id == 2)
                             <a
                                 href="{{ route('products.edit', $p) }}"
                                 class="mg-10"
                             >
-                                <i id="IconE" class="fas fa-pencil-alt"></i>
+                                <i id="IconE" class="fas fa-pencil-alt darkMode-icon"></i>
                             </a>
                             <a
                                 class="mg-10"
                                 onclick="DeleteProduct('{{$p->id}}', '{{$p->name}}')"
                             >
-                                <i id="IconD" class="fas fa-trash-alt"></i>
+                                <i id="IconD" class="fas fa-trash-alt darkMode-icon"></i>
                             </a>
                             <a
                                 onclick="ShowInfoProduct('{{$p->id}}')"
@@ -124,7 +124,7 @@ __('Products')) @section('explorer')
                                 data-bs-whatever="@fat"
                                 class="mg-10-1"
                             >
-                                <i id="IconS" class="fas fa-eye"></i>
+                                <i id="IconS" class="fas fa-eye darkMode-icon"></i>
                             </a>
                             @else
                             <a
@@ -133,7 +133,7 @@ __('Products')) @section('explorer')
                                 data-bs-whatever="@fat"
                                 class="mg-10-1"
                             >
-                                <i id="IconS" class="fas fa-eye"></i>
+                                <i id="IconS" class="fas fa-eye darkMode-icon"></i>
                             </a>
                             @endif
                         </td>

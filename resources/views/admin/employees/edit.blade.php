@@ -1,7 +1,7 @@
 @extends('admin.layout') @section('title', __('Edit employee')) @section('titleSup', __('Employees'))
 @section('explorer')
 <li class="breadcrumb-item">
-    <a href="{{ route('employees.index') }}">{{ __("Employees") }}</a>
+    <a class="darkMode-text" href="{{ route('employees.index') }}">{{ __("Employees") }}</a>
 </li>
 <li class="breadcrumb-item active">
     {{ __("Edit employee") }}
@@ -9,7 +9,7 @@
 @endsection @section('content')
 <div class="register-box">
     <div class="card card-outline card-primary">
-        <div class="card-header text-center">
+        <div class="card-header darkMode-bbg text-center">
             <b
                 ><span
                     class="fas fa-user-plus"
@@ -18,9 +18,21 @@
                 {{ __("i18n.screen_login.text_nav_login1") }}</b
             >
         </div>
-        <div class="card-body">
+        <div class="card-body darkMode-bbg">
+            @if($user->img !== null)
             <div class="d-flex justify-content-center">
-                <div id="image-edit">
+                <div class="darkMode-circle" id="image-edit">
+                    <img
+                        src="{{$user->link}}{{$user->img}}"
+                        alt="{{$user->name}}"
+                        class="img-circle elevation-2"
+                        id="imageUser"
+                    />
+                </div>
+            </div>
+            @else
+            <div class="d-flex justify-content-center">
+                <div class="darkMode-circle" id="image-edit">
                     <img
                         src="/adminlte/img/users/default.png"
                         alt="{{$user->name}}"
@@ -29,6 +41,7 @@
                     />
                 </div>
             </div>
+            @endif
             <form action="" method="POST">
                 @method('patch') @csrf
                 <div class="input-group mb-3">

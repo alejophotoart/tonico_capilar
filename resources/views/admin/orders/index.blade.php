@@ -10,7 +10,7 @@ __('Orders')) @section('explorer')
             <li class="nav-item">
                 <a
                     href="{{ route('orders.index') }}"
-                    class="nav-link active"
+                    class="nav-link active darkMode-nav"
                     aria-current="true"
                     style="color: black;"
                     >{{ __("News") }}</a
@@ -87,10 +87,10 @@ __('Orders')) @section('explorer')
             </li>
         </ul>
     </div>
-    <div class="card-body">
+    <div class="card-body darkMode">
         <div class="content" style="text-align: center;">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header darkMode-bbg">
                     <h1 class="card-title">
                         <i
                             class="fas fa-list-ol"
@@ -106,9 +106,9 @@ __('Orders')) @section('explorer')
                         ></a>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                     <table
-                        class="table table-striped"
+                        class="table table-responsive-lg"
                         style="width:100%"
                         id="tableOrders"
                     >
@@ -147,8 +147,8 @@ __('Orders')) @section('explorer')
                         <tbody>
                             @foreach($orders as $o)
                             <tr>
-                                <td>{{ $o->id }}</td>
-                                <td style="width: 90px;">
+                                <td class="darkMode-fill">{{ $o->id }}</td>
+                                <td class="darkMode-fill" style="width: 90px;">
                                     {{ $o->user->name }}
                                     <br />
                                     <p style="opacity: 0.6; font-size: 0.8em;">
@@ -156,27 +156,27 @@ __('Orders')) @section('explorer')
                                         {{ $o->created_at->diffForHumans() }}
                                     </p>
                                 </td>
-                                <td>
+                                <td class="darkMode-fill">
                                     {{ $o->city->state->country->name }} <br />
                                     {{ $o->city->state->name }} <br />
                                     {{ $o->city->name }}
                                 </td>
-                                <td style="width: 90px;">
+                                <td class="darkMode-fill" style="width: 90px;">
                                     {{ $o->client->name }}
                                 </td>
-                                <td>{{ $o->delivery_date }}</td>
-                                <td>
+                                <td class="darkMode-fill">{{ $o->delivery_date }}</td>
+                                <td class="darkMode-fill">
                                     {{ "$" }}
                                     {{ number_format($o->total, 0, ',', '.') }}
                                 </td>
-                                <td>
+                                <td class="darkMode-fill">
                                     @if(auth()->user()->role_id == 1 ||
                                     auth()->user()->role_id == 2)
                                     <a type="button" class="mg-10"
                                     href="{{ route('orders.edit', $o->id) }}">
                                         <i
                                             id="IconE"
-                                            class="fas fa-pencil-alt"
+                                            class="fas fa-pencil-alt darkMode-icon"
                                             style="left: 1px;"
                                         ></i>
                                     </a>
@@ -184,7 +184,7 @@ __('Orders')) @section('explorer')
                                         class="mg-10-0"
                                         onclick="CancelOrder('{{$o->id}}')"
                                     >
-                                        <i id="IconD" class="fas fa-ban"></i>
+                                        <i id="IconD" class="fas fa-ban darkMode-icon"></i>
                                     </a>
                                     <a
                                         onclick="ShowOrderModal( '{{ $o->id }}' )"
@@ -192,7 +192,7 @@ __('Orders')) @section('explorer')
                                         data-bs-whatever="@fat"
                                         class="mg-10-1"
                                     >
-                                        <i id="IconS" class="fas fa-eye"></i>
+                                        <i id="IconS" class="fas fa-eye darkMode-icon"></i>
                                     </a>
                                     @else
                                     <a
@@ -201,7 +201,7 @@ __('Orders')) @section('explorer')
                                         data-bs-whatever="@fat"
                                         class="mg-10-1"
                                     >
-                                        <i id="IconS" class="fas fa-eye"></i>
+                                        <i id="IconS" class="fas fa-eye darkMode-icon"></i>
                                     </a>
                                     @endif
                                 </td>

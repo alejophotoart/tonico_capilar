@@ -79,7 +79,7 @@ __('Orders')) @section('explorer')
             <li class="nav-item">
                 <a
                     href="{{ route('orders.tables.pending') }}"
-                    class="nav-link active"
+                    class="nav-link active darkMode-nav"
                     href="#"
                     style="color: black;">
                     {{ __("Reagendados") }}
@@ -87,10 +87,10 @@ __('Orders')) @section('explorer')
             </li>
         </ul>
     </div>
-    <div class="card-body">
+    <div class="card-body darkMode">
         <div class="content" style="text-align: center;">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header darkMode-bbg">
                     <h1 class="card-title">
                         <i
                             class="fas fa-spinner"
@@ -106,9 +106,9 @@ __('Orders')) @section('explorer')
                         ></a>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                     <table
-                        class="table table-striped"
+                        class="table table-responsive-sm"
                         style="width:100%"
                         id="tablePending"
                     >
@@ -155,7 +155,7 @@ __('Orders')) @section('explorer')
                                 @if(auth()->user()->role_id == 1 ||
                                 auth()->user()->role_id == 2)
                                 @if($o->payment_type_id == 2)
-                                <td style="padding: 6px 0px 0px 0px;">
+                                <td class="darkMode-fill" style="padding: 6px 0px 0px 0px;">
                                     <div class="form-check" id="formIdPending">
                                         <input
                                             class="form-check-input checkOrder"
@@ -174,10 +174,10 @@ __('Orders')) @section('explorer')
                                     @endif
                                 @endif
 
-                                <td style="padding: 6px 0px 0px 0px;">
+                                <td class="darkMode-fill" style="padding: 6px 0px 0px 0px;">
                                     {{ $o->id }}
                                 </td>
-                                <td style="width: 75px;">
+                                <td class="darkMode-fill" style="width: 75px;">
                                     {{ $o->user->name }}
                                     <br />
                                     <p style="opacity: 0.6; font-size: 0.8em;">
@@ -188,33 +188,33 @@ __('Orders')) @section('explorer')
                                         {{ $o->updated_at->diffForHumans() }}
                                     </p>
                                 </td>
-                                <td>
+                                <td class="darkMode-fill">
                                     {{ $o->city->state->country->name }} <br />
                                     {{ $o->city->state->name }} <br />
                                     {{ $o->city->name }}
                                 </td>
-                                <td style="width: 75px;">
+                                <td class="darkMode-fill" style="width: 75px;">
                                     {{ $o->client->name }}
                                 </td>
-                                <td>{{ $o->delivery_date }}</td>
-                                <td>
+                                <td class="darkMode-fill">{{ $o->delivery_date }}</td>
+                                <td class="darkMode-fill">
                                     {{$o->notes}}
                                 </td>
-                                <td style="padding: 5px 5px 5px 0px;">
+                                <td class="darkMode-fill" style="padding: 5px 5px 5px 0px;">
                                     @if(auth()->user()->role_id == 1 ||
                                     auth()->user()->role_id == 2)
                                     <a class="mg-10"
                                     href="{{ route('orders.edit', $o->id) }}">
                                         <i
                                             id="IconE"
-                                            class="fas fa-pencil-alt"
+                                            class="fas fa-pencil-alt darkMode-icon"
                                         ></i>
                                     </a>
                                     <a
                                         class="mg-10-0"
                                         onclick="CancelOrder('{{$o->id}}')"
                                     >
-                                        <i id="IconD" class="fas fa-ban"></i>
+                                        <i id="IconD" class="fas fa-ban darkMode-icon"></i>
                                     </a>
                                     <a
                                         onclick="ShowOrderModal( '{{ $o->id }}' )"
@@ -225,7 +225,7 @@ __('Orders')) @section('explorer')
                                     >
                                         <i
                                             id="IconS"
-                                            class="fas fa-eye"
+                                            class="fas fa-eye darkMode-icon"
                                             style="position: relative; right: -2px;"
                                         ></i>
                                     </a>
@@ -235,7 +235,7 @@ __('Orders')) @section('explorer')
                                             type="button"
                                             class="mg-10-1"
                                             >
-                                                <i id="IconI" class="fas fa-image"></i>
+                                                <i id="IconI" class="fas fa-image darkMode-icon"></i>
                                             </a>
                                         @endif
                                     @else
@@ -248,7 +248,7 @@ __('Orders')) @section('explorer')
                                     >
                                         <i
                                             id="IconS"
-                                            class="fas fa-eye"
+                                            class="fas fa-eye darkMode-icon"
                                             style="position: relative; right: -2px;"
                                         ></i>
                                     </a>
@@ -258,7 +258,7 @@ __('Orders')) @section('explorer')
                                             type="button"
                                             class="mg-10-1"
                                             >
-                                                <i id="IconI" class="fas fa-image"></i>
+                                                <i id="IconI" class="fas fa-image darkMode-icon"></i>
                                             </a>
                                         @endif
                                     @endif

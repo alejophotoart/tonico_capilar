@@ -1,7 +1,7 @@
 @extends('admin.layout') @section('title', __('Create employee')) @section('titleSup', __('Employees'))
 @section('explorer')
 <li class="breadcrumb-item">
-    <a href="{{ route('employees.index') }}">{{ __("Employees") }}</a>
+    <a class="darkMode-text" href="{{ route('employees.index') }}">{{ __("Employees") }}</a>
 </li>
 <li class="breadcrumb-item active">
     {{ __("Create employee") }}
@@ -10,7 +10,7 @@
 
 <div class="register-box">
     <div class="card card-outline card-primary">
-        <div class="card-header text-center">
+        <div class="card-header text-center darkMode-bbg">
             <b
                 ><span
                     class="fas fa-user-plus"
@@ -19,7 +19,7 @@
                 {{ __("i18n.screen_login.text_nav_login1") }}</b
             >
         </div>
-        <div class="card-body">
+        <div class="card-body darkMode-bbg">
             <p class="login-box-msg">
                 {{ __("Register new employee") }}
             </p>

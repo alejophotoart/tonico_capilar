@@ -37,7 +37,7 @@ __('Orders')) @section('explorer')
             <li class="nav-item">
                 <a
                     href="{{ route('orders.tables.canceled') }}"
-                    class="nav-link active"
+                    class="nav-link active darkMode-nav"
                     href="#"
                     style="color: black;"
                     >{{ __("Canceled") }}</a
@@ -87,10 +87,10 @@ __('Orders')) @section('explorer')
             </li>
         </ul>
     </div>
-    <div class="card-body">
+    <div class="card-body darkMode">
         <div class="content" style="text-align: center;">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header darkMode-bbg">
                     <h1 class="card-title">
                         <i
                             class="fas fa-ban"
@@ -106,9 +106,9 @@ __('Orders')) @section('explorer')
                         ></a>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                     <table
-                        class="table table-striped"
+                        class="table table-responsive-lg"
                         style="width:100%"
                         id="tableOrders"
                     >
@@ -146,8 +146,8 @@ __('Orders')) @section('explorer')
                         <tbody>
                             @foreach($orders as $o)
                             <tr>
-                                <td>{{ $o->id }}</td>
-                                <td style="width: 90px;">
+                                <td class="darkMode-fill">{{ $o->id }}</td>
+                                <td class="darkMode-fill" style="width: 90px;">
                                     {{ $o->user->name }}
                                     <br />
                                     <p style="opacity: 0.6; font-size: 0.8em;">
@@ -155,22 +155,22 @@ __('Orders')) @section('explorer')
                                         {{ $o->updated_at->diffForHumans() }}
                                     </p>
                                 </td>
-                                <td>
+                                <td class="darkMode-fill">
                                     {{ $o->city->state->country->name }} <br />
                                     {{ $o->city->state->name }} <br />
                                     {{ $o->city->name }}
                                 </td>
-                                <td style="width: 90px;">
+                                <td class="darkMode-fill" style="width: 90px;">
                                     {{ $o->client->name }}
                                 </td>
-                                <td>
+                                <td class="darkMode-fill">
                                     <i class="fas fa-mobile-alt"></i>
                                     {{ $o->client->phone }} <br />
                                     <i class="fab fa-whatsapp"></i>
                                     {{ $o->client->whatsapp }}
                                 </td>
-                                <td>{{ $o->reason }}</td>
-                                <td>
+                                <td class="darkMode-fill">{{ $o->reason }}</td>
+                                <td class="darkMode-fill">
                                     @for($i = 0; $i < count($o->order_items); $i++)
                                         @for($p = 0; $p < count($products); $p++)
                                             @if($o->order_items[$i]->product_id == $products[$p]->id)
@@ -181,7 +181,7 @@ __('Orders')) @section('explorer')
                                     @endfor
                                 </td>
 
-                                <td>
+                                <td class="darkMode-fill">
                                     {{ "$" }}
                                     {{ number_format($o->total, 0, ',', '.') }}
                                 </td>

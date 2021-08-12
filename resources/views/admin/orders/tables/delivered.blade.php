@@ -28,7 +28,7 @@ __('Orders')) @section('explorer')
             <li class="nav-item">
                 <a
                     href="{{ route('orders.tables.delivered') }}"
-                    class="nav-link active"
+                    class="nav-link active darkMode-nav"
                     href="#"
                     style="color: black;"
                     >{{ __("Delivered") }}</a
@@ -87,10 +87,10 @@ __('Orders')) @section('explorer')
             </li>
         </ul>
     </div>
-    <div class="card-body">
+    <div class="card-body darkMode">
         <div class="content" style="text-align: center;">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header darkMode-bbg">
                     <h1 class="card-title">
                         <i
                             class="fas fa-box-open"
@@ -106,9 +106,9 @@ __('Orders')) @section('explorer')
                         ></a>
                     </div>
                 </div>
-                <div class="card-body">
+                <div class="card-body darkMode-bbg">
                     <table
-                        class="table table-striped"
+                        class="table table-responsive-lg"
                         style="width:100%"
                         id="tableOrders"
                     >
@@ -149,8 +149,8 @@ __('Orders')) @section('explorer')
                         <tbody>
                             @foreach($orders as $o)
                             <tr>
-                                <td>{{ $o->id }}</td>
-                                <td>{{ $o->user->name }}
+                                <td class="darkMode-fill">{{ $o->id }}</td>
+                                <td class="darkMode-fill">{{ $o->user->name }}
                                     <br />
                                     <p style="opacity: 0.6; font-size: 0.8em;">
                                         Creado
@@ -160,14 +160,14 @@ __('Orders')) @section('explorer')
                                         {{ $o->updated_at->diffForHumans() }}
                                     </p>
                                 </td>
-                                <td>
+                                <td class="darkMode-fill">
                                     {{ $o->city->state->country->name }} <br />
                                     {{ $o->city->state->name }} <br />
                                     {{ $o->city->name }}
                                 </td>
-                                <td>{{ $o->client->name }}</td>
-                                <td>{{ $o->delivery_date }}</td>
-                                <td>
+                                <td class="darkMode-fill">{{ $o->client->name }}</td>
+                                <td class="darkMode-fill">{{ $o->delivery_date }}</td>
+                                <td class="darkMode-fill">
                                     @for($i = 0; $i < count($o->order_items); $i++)
                                         @for($p = 0; $p < count($products); $p++)
                                             @if($o->order_items[$i]->product_id == $products[$p]->id)
@@ -177,17 +177,17 @@ __('Orders')) @section('explorer')
                                         @endfor
                                     @endfor
                                 </td>
-                                <td>
+                                <td class="darkMode-fill">
                                     {{ "$" }}
                                     {{ number_format($o->delivery_price, 0, ',', '.') }}
                                 </td>
-                                <td>
+                                <td class="darkMode-fill">
                                     {{ "$" }}
                                     {{ number_format($o->total, 0, ',', '.') }}
                                 </td>
                                 @foreach($total as $t)
                                     @if($o->id == $t->id)
-                                        <td>
+                                        <td class="darkMode-fill">
                                             {{ "$" }}
                                             {{ number_format($t->total, 0, ',', '.') }}
                                         </td>
