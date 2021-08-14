@@ -196,7 +196,7 @@ __('Resumen')) @section('content')
                             <tbody>
                                 @if(count($countryXOrdes) === 0)
                                     <tr>
-                                        <td>{{ "No se registran ventas este dia" }}</td>
+                                        <td>{{ "No se registran ventas hoy" }}</td>
                                         <td>{{"$0"}}</td>
                                         <td>{{ "0" }}</td>
                                         <td>{{"$0"}}</td>
