@@ -10,6 +10,7 @@ if (country_code_value && country_code_value != "") {
 function changeCountryType(country_code) {
     // llama estados o departamentos
     var state_id = localStorage.getItem("state_id");
+    let country_id = document.getElementById("country_id").value;
 
     $.ajax({
         type: "GET",
@@ -23,6 +24,14 @@ function changeCountryType(country_code) {
                 r = JSON.parse(r);
             }
             if (r) {
+
+                for (var c = 0; c < r.country.length; c++) {
+                    if(r.country[c].id == country_id){
+                        $("#phonecode").val("+" + r.country[c].phonecode);
+
+                    }
+                }
+
                 $("#state_id").prop("disabled", false);
                 $("#state_id option").remove();
                 $("#city_id option").remove();
@@ -116,6 +125,8 @@ function changeCity(city_id) {
 }
 
 function ShowCreateOrderModal(id) {
+    $("#phonecode").val("");
+
     $.ajax({
         url: "/pedidos/" + id,
         type: "GET",
@@ -160,6 +171,7 @@ function ShowCreateOrderModal(id) {
                             "</option>"
                     );
                 }
+
                 for (var i = 0; i < payment_type.length; i++) {
                     $("#payment_type_id").append(
                         '<option value="' +

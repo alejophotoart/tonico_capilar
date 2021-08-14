@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" style="max-width: 55px;" value="+57" name="phonecode" id="phonecode" disabled>
+                    <input type="text" class="form-control" style="max-width: 55px;"  name="phonecode" id="phonecode" disabled>
                     <input
                         type="text"
                         class="form-control"
@@ -252,7 +252,7 @@ var country_code_value = '{{ old("country_id") }}' || "{{ $user->city->state->co
 
         function changeCountryType(country_code) {
             var state_id = "{{ $user->city->state->id }}";
-
+            let country_id = document.getElementById("country_id").value;
             $.ajax({
                 type: "GET",
                 headers: {
@@ -266,8 +266,15 @@ var country_code_value = '{{ old("country_id") }}' || "{{ $user->city->state->co
                         r = JSON.parse(r);
                     }
                     if (r) {
+                        for (var c = 0; c < r.country.length; c++) {
+                            if(r.country[c].id == country_id){
+                                $("#phonecode").val("+" + r.country[c].phonecode);
+
+                            }
+                        }
                         $("#state_id").prop("disabled", false);
                         $("#state_id option").remove();
+                        $("#city_id option").remove();
                         $("#state_id").append('<option value="0" selected>---Seleccione estado---</option>');
                         for (var i = 0; i < r.d.states.length; i++) {
                             if (state_id == r.d.states[i].id ) {

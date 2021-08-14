@@ -57,7 +57,8 @@ Route::middleware(['auth'])->group(function () {
 
 // Rutas para el resumen
       Route::get('/resumen', [ResumeController::class, 'index'])->name('resume.index');//llama a la vista resumen
-      Route::get('/resumen/sales', [ResumeController::class, 'salesTable']);
+      Route::get('/resumen/sales', [ResumeController::class, 'salesTable']); //carga la info de la tablas apenas inicia la pagina
+      Route::get('/resumen/{date}/filterDate', [ResumeController::class, 'filter']); //filtra la tabla de resumen segun la fecha indicada
 // Rutas de pedido
       Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
       Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda

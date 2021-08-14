@@ -36,7 +36,7 @@
                             >---Seleccione tipo de documento---</option
                         >
                         @foreach( $type_identification as $ti )
-                        <option value="{{ $ti->id }}">{{ $ti->name }}</option>
+                            <option value="{{ $ti->id }}">{{ $ti->name }}</option>
                         @endforeach
                     </select>
                     <div class="input-group-append">
@@ -89,7 +89,7 @@
                     </div>
                 </div>
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control" style="max-width: 55px;" value="+57" name="phonecode" id="phonecode" disabled>
+                    <input type="text" class="form-control" style="max-width: 55px;" name="phonecode" id="phonecode" disabled>
                     <input
                         type="text"
                         class="form-control"
@@ -222,7 +222,7 @@
         function changeCountryType(country_code) {
             console.log(country_code);
             var state_id = localStorage.getItem("state_id");
-
+            let country_id = document.getElementById("country_id").value;
             $.ajax({
                 type: "GET",
                 headers: {
@@ -236,6 +236,13 @@
                         r = JSON.parse(r);
                     }
                     if (r) {
+
+                        for (var c = 0; c < r.country.length; c++) {
+                            if(r.country[c].id == country_id){
+                                $("#phonecode").val("+" + r.country[c].phonecode);
+
+                            }
+                        }
                         $("#state_id").prop("disabled", false);
                         $("#state_id").append('<option value="0" selected disabled></option>');
                         $("#city_id").append('<option value="0" selected disabled></option>');

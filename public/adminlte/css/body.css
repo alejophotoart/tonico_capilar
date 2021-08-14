@@ -32,3 +32,8 @@
     border: 1px solid gray;
 
 }
+@media (max-width: 770px){
+    #datepicker{
+        width: 150px;
+    }
+}

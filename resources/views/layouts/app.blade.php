@@ -7,7 +7,7 @@
         <!-- CSRF Token -->
         <meta name="csrf-token" content="{{ csrf_token() }}" />
 
-        <title>{{ __("Home") }} | {{ __("Login") }}</title>
+        <title>{{ __("GDSEC") }} | {{ __("Login") }}</title>
         {{-- favicon --}}
         <link rel="icon" href="/adminlte/img/GDSEC-logo.ico">
 

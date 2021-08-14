@@ -166,32 +166,81 @@ __('Resumen')) @section('content')
             <!-- /.col-md-6 -->
             <div class="col-lg-6">
                 <div class="card">
-                    <div class="card-header border-0">
-                        <div class="d-flex justify-content-between">
-                            <h3 class="card-title">{{ __("Publicidad") }}</h3>
+                    <div class="card-header border-0" style="padding: 10px 20px 0px !important;">
+                            <div class="input-group mb-3 d-grid d-md-flex justify-content-md-end">
+                              <input
+                                  type="text"
+                                  class="form-control"
+                                  id="datepicker"
+                                  name="datepicker"
+                                  style="max-width: 150px;"
+                              />
+                            <div class="input-group-append">
+                                <button onclick="filterForDate()" class="input-group-text">
+                                    <span class="far fa-calendar-alt"></span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-striped table-valign-middle">
+                    <div class="card-body table-responsive p-0"  style="padding: 20px !important;">
+                        <table id="tableResume" class="table table-bordered table-valign-middle tablesDates">
                             <thead>
                                 <tr>
-                                    <th colspan="4">{{ __("Mesajes") }}</th>
-                                </tr>
-                                <tr>
-                                    <th>{{ __("M1") }}</th>
-                                    <th>{{ __("M6") }}</th>
-                                    <th>{{ __("B1") }}</th>
-                                    <th>{{ __("B6") }}</th>
+                                    <th>{{ __("Paises") }}</th>
+                                    <th>{{ __("Ventas") }}</th>
+                                    <th>{{ __("Cant.") }}</th>
+                                    <th>{{ __("Domicilios") }}</th>
+                                    <th>{{ __("Total") }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>6</td>
-                                    <td>14</td>
-                                    <td>28</td>
-                                    <td>18</td>
-                                </tr>
+                                @if(count($countryXOrdes) === 0)
+                                    <tr>
+                                        <td>{{ "No se registran ventas este dia" }}</td>
+                                        <td>{{"$0"}}</td>
+                                        <td>{{ "0" }}</td>
+                                        <td>{{"$0"}}</td>
+                                        <td>{{"$0"}}</td>
+                                    </tr>
+                                @else
+                                    @for($i=0; $i < count($countryXOrdes); $i++)
+                                        <tr>
+                                            <td>{{ $countryXOrdes[$i]['pais'] }}</td>
+
+                                            <td>
+                                                {{"$"}}
+                                                {{ number_format($countryXOrdes[$i]['subtotal'], 0, ',', '.') }}</td>
+
+                                            <td>{{ $countryXOrdes[$i]['sales'] }}</td>
+
+                                            <td>
+                                                {{"$"}}
+                                                {{ number_format($countryXOrdes[$i]['delivery'], 0, ',', '.') }}</td>
+
+                                            <td>
+                                                {{"$"}}
+                                                {{ number_format($countryXOrdes[$i]['neto'], 0, ',', '.') }}</td>
+                                        </tr>
+                                    @endfor
+                                @endif
                             </tbody>
+                            <tfoot>
+                                <tr style="font-weight: bold;">
+                                    <td scope="row" id="totalText">Total</td>
+                                    <td colspan="2" id="total">
+                                        {{ "$" }}
+                                        {{ number_format($subtotal, 0, ',', '.') }}
+                                    </td>
+                                    <td id="totalDelivery">
+                                        {{ "$" }}
+                                        {{ number_format($delivery, 0, ',', '.') }}
+                                    </td>
+                                    <td id="totalNeto">
+                                        {{ "$" }}
+                                        {{ number_format($neto, 0, ',', '.') }}
+                                    </td>
+                                </tr>
+                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -256,4 +305,37 @@ __('Resumen')) @section('content')
 </div>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="/adminlte/js/pages/dashboard3.js"></script>
+<script src="/adminlte/js/resumen/filterForDate.js"></script>
+<script>
+    $( function() {
+        var date = new Date();
+        var year = date.getFullYear();
+        let finalDate = date.getFullYear()+'-'+ (date.getMonth()+1) +'-'+date.getDate();
+        let dateFormat = date.getFullYear()+'-'+ (date.getMonth()+1) +'-'+date.getDate();
+        document.getElementById("datepicker").value = dateFormat;
+
+        var start = new Date();
+        start.setFullYear(start.getFullYear()-5);
+        var startf = start.toISOString().slice(0,10).replace(/-/g,"/");
+
+        $( "#datepicker" ).datepicker({
+            firstDay: 1,
+            dateFormat: 'yy-mm-dd',
+            dayNamesMin: [ "Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab" ],
+            dayNames: [ "Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado" ],
+            showOtherMonths: true,
+            monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ],
+            showAnim: "fold",
+            showButtonPanel: true,
+            changeMonth: true,
+            changeYear: true,
+            gotoCurrent: true,
+            currentText: "Hoy",
+            closeText: "Cerrar",
+            monthNamesShort: [ "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" ],
+            yearRange: startf + ":" + year,
+            maxDate: new Date(finalDate),
+        });
+    });
+</script>
 @endsection

@@ -126,7 +126,7 @@
                             class="form-control"
                             id="pais"
                             name="pais"
-                            onchange="changeCountryType(this.value)"
+                            onchange="changeCountryTypeProfile(this.value)"
                         >
                         </select>
                     </div>
@@ -138,7 +138,7 @@
                             class="form-control"
                             id="estado"
                             name="estado"
-                            onchange="changeStateType(this.value)"
+                            onchange="changeStateTypeProfile(this.value)"
                             {{ old('pais') ? '' : 'disabled' }}
 
                         >
@@ -222,15 +222,15 @@
     var country_code_value =
     '{{ old("pais") }}' || "{{ auth()->user()->city->state->country->id }}";
 if (country_code_value && country_code_value != "") {
-    changeCountryType(country_code_value);
+    changeCountryTypeProfile(country_code_value);
 }
 var state_code_value =
     '{{ old("estado") }}' || "{{ auth()->user()->city->state->id }}";
 if (state_code_value && state_code_value != "") {
-    changeStateType(state_code_value);
+    changeStateTypeProfile(state_code_value);
 }
 
-function changeCountryType(country_code) {
+function changeCountryTypeProfile(country_code) {
     var state_id = "{{ auth()->user()->city->state_id }}";
 
     $.ajax({
@@ -246,6 +246,7 @@ function changeCountryType(country_code) {
             }
             if (r) {
                 $("#estado").prop("disabled", false);
+                $("#ciudad option").remove();
                 $("#estado option").remove();
                 for (var i = 0; i < r.d.states.length; i++) {
                     if (state_id == r.d.states[i].id) {
@@ -274,7 +275,7 @@ function changeCountryType(country_code) {
     });
 }
 
-function changeStateType(state_code) {
+function changeStateTypeProfile(state_code) {
     var city_id = "{{ auth()->user()->city_id }}";
 
     $.ajax({

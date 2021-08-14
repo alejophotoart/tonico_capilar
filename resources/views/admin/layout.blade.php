@@ -11,7 +11,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <meta name="csrf-token" content="{{ csrf_token() }}" />
         <!--TOKEN DE AJAX-->
         <title>
-            @yield('titleSup', __('Home')) | {{ auth()->user()->name }}
+            @yield('titleSup', __('GDSEC')) | {{ auth()->user()->name }}
         </title>
         {{-- DarkMode --}}
         <link rel="stylesheet" href="/adminlte/css/adminlte.min.css" />

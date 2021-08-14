@@ -108,6 +108,7 @@ $(document).ready(function() {
             $("#formFileSm").prop("hidden", false);
         }
     });
+
 });
 
 function validePhone(evt) {

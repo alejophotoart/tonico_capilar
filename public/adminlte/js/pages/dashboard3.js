@@ -1,6 +1,7 @@
 /* global Chart:false */
 $(function () {
   'use strict'
+  $("#tablesResume").DataTable();
 
   var ticksStyle = {
     fontColor: '#495057',
@@ -85,8 +86,6 @@ $(function () {
             contentType: "application/json"
         },
         success: function(r) {
-            console.log(r);
-
             var orders = r.orders //orders: recibe todas las ordenes
             var dates = r.dates;// dates: recibe de la base de datos la consulta donde solo me trae los registros de los ultimos 7 dias
             var products = r.products; //products: recibe el array de todos los prodcutos
@@ -219,9 +218,9 @@ $(function () {
              * For que cuenta las ventas segun el estado del pedido
              * los almacena en las variable y los muestra segun los id de la etiqueta
              */
-            // fechas.reverse(); //Reversa el array de fechas y la orden ade menor a mayor
-            // keys.reverse(); //reversa el array y lo ordenar de abajo hacia arriba segun el key
-            // counts.reverse(); //reversa el array de contar ventas por dia
+            fechas.reverse(); //Reversa el array de fechas y la orden ade menor a mayor
+            keys.reverse(); //reversa el array y lo ordenar de abajo hacia arriba segun el key
+            counts.reverse(); //reversa el array de contar ventas por dia
 
                 for(let g = 0; g < datelocal.length; g++){
                     for(let h = 0; h < dates.length; h++){
