@@ -252,7 +252,7 @@ class OrderController extends Controller
                 $order_item->save();
             }
 
-            // $this->sendMessage($request, $order['id']);
+            $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }else{
             $warehouse = Warehouse::where('city_id', $request['city_id'])->first();
@@ -332,7 +332,7 @@ class OrderController extends Controller
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
-            // $this->sendMessage($request, $order['id']);
+            $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }
 
@@ -385,7 +385,7 @@ class OrderController extends Controller
 
 
         $data = [
-            'phone' => '+573154709447', // Receivers phone
+            'chatId' => '573218815792-1622841534@g.us', // Receivers phone
             'body' =>   "GUIA: " . $guia .
                         "\nPais: " . $country .
                         "\nDepartamento: " . $state .
