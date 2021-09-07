@@ -67,13 +67,12 @@ __('Resumen')) @section('content')
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-6">
+                {{-- Grafico de ventas a lo largo de la semana que indica si se vendio mas que ayer--}}
                 <div class="card">
                     <div class="card-header border-0">
-                        <div class="d-flex justify-content-between">
                             <h3 class="card-title">
                                 Estadisticas de ventas
                             </h3>
-                        </div>
                     </div>
                     <div class="card-body">
                         <div class="d-flex">
@@ -108,194 +107,23 @@ __('Resumen')) @section('content')
                     </div>
                 </div>
                 <!-- /.card -->
-
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">{{ __("Products") }}</h3>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-tool btn-sm">
-                                <i class="fas fa-download"></i>
-                            </a>
-                            <a href="#" class="btn btn-tool btn-sm">
-                                <i class="fas fa-bars"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive p-0">
-                        <table class="table table-striped table-valign-middle">
-                            <thead>
-                                <tr>
-                                    <th>{{ __("Producto") }}</th>
-                                    <th>{{ __("Price") }}</th>
-                                    <th>{{ __("% de venta") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @for ($i = 0; $i < count($products); $i++)
-                                <tr id="insertTD-{{ $i }}">
-                                    <td>
-                                        @if($products[$i]->img !== null)
-                                        <img
-                                            src="{{$products[$i]->link}}{{$products[$i]->img}}"
-                                            alt="{{$products[$i]->name}}"
-                                            class="img-circle img-size-32 mr-2"
-                                        />
-                                        {{$products[$i]->name}}
-                                        @else
-                                        <img
-                                            src="/adminlte/img/products/default.png"
-                                            alt="{{$products[$i]->name}}"
-                                            class="img-circle img-size-32 mr-2"
-                                        />
-                                        {{$products[$i]->name}}
-                                        @endif
-                                    </td>
-                                    <td>
-                                        {{ "$" }}
-                                        {{ number_format($products[$i]->price, 0, ',', '.') }}
-                                    </td>
-                                </tr>
-                                @endfor
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                {{-- Tabla de productos que indica el porcetaje de ventas de cada producto --}}
+                @include('admin.resume.percentProducts')
                 <!-- /.card -->
+
+
 
             </div>
             <!-- /.col-md-6 -->
             <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-header border-0" style="padding: 10px 20px 0px !important;">
-                            <div class="input-group mb-3 d-grid d-md-flex justify-content-md-end">
-                              <input
-                                  type="text"
-                                  class="form-control"
-                                  id="datepicker"
-                                  name="datepicker"
-                                  style="max-width: 150px;"
-                              />
-                            <div class="input-group-append">
-                                <button onclick="filterForDate()" class="input-group-text">
-                                    <span class="far fa-calendar-alt"></span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body table-responsive p-0"  style="padding: 20px !important;">
-                        <table id="tableResume" class="table table-bordered table-valign-middle tablesDates">
-                            <thead>
-                                <tr>
-                                    <th>{{ __("Paises") }}</th>
-                                    <th>{{ __("Ventas") }}</th>
-                                    <th>{{ __("Cant.") }}</th>
-                                    <th>{{ __("Domicilios") }}</th>
-                                    <th>{{ __("Total") }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @if(count($countryXOrdes) === 0)
-                                    <tr>
-                                        <td>{{ "No se registran ventas hoy" }}</td>
-                                        <td>{{"$0"}}</td>
-                                        <td>{{ "0" }}</td>
-                                        <td>{{"$0"}}</td>
-                                        <td>{{"$0"}}</td>
-                                    </tr>
-                                @else
-                                    @for($i=0; $i < count($countryXOrdes); $i++)
-                                        <tr>
-                                            <td>{{ $countryXOrdes[$i]['pais'] }}</td>
-
-                                            <td>
-                                                {{"$"}}
-                                                {{ number_format($countryXOrdes[$i]['subtotal'], 0, ',', '.') }}</td>
-
-                                            <td>{{ $countryXOrdes[$i]['sales'] }}</td>
-
-                                            <td>
-                                                {{"$"}}
-                                                {{ number_format($countryXOrdes[$i]['delivery'], 0, ',', '.') }}</td>
-
-                                            <td>
-                                                {{"$"}}
-                                                {{ number_format($countryXOrdes[$i]['neto'], 0, ',', '.') }}</td>
-                                        </tr>
-                                    @endfor
-                                @endif
-                            </tbody>
-                            <tfoot>
-                                <tr style="font-weight: bold;">
-                                    <td scope="row" id="totalText">Total</td>
-                                    <td colspan="2" id="total">
-                                        {{ "$" }}
-                                        {{ number_format($subtotal, 0, ',', '.') }}
-                                    </td>
-                                    <td id="totalDelivery">
-                                        {{ "$" }}
-                                        {{ number_format($delivery, 0, ',', '.') }}
-                                    </td>
-                                    <td id="totalNeto">
-                                        {{ "$" }}
-                                        {{ number_format($neto, 0, ',', '.') }}
-                                    </td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
+                {{-- Tabla de ventas que indica el total vendido el dia de hoy y anteriores dias --}}
+                @include('admin.resume.percentSalesToday')
                 <!-- /.card -->
-
-                <div class="card">
-                    <div class="card-header border-0">
-                        <h3 class="card-title">
-                            Ventas por producto
-                        </h3>
-                        <div class="card-tools">
-                            <a href="#" class="btn btn-sm btn-tool">
-                                <i class="fas fa-download"></i>
-                            </a>
-                            <a href="#" class="btn btn-sm btn-tool">
-                                <i class="fas fa-bars"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div
-                            class="d-flex justify-content-between align-items-center border-bottom mb-3"
-                        >
-                            <p class="text-danger text-xl">
-                                <i class="fas fa-shopping-bag"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right" id="percentOne">
-
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-                        <div
-                            class="d-flex justify-content-between align-items-center border-bottom mb-3"
-                        >
-                            <p class="text-warning text-xl">
-                                <i class="fas fa-shopping-bag"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right" id="percentTwo">
-
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-                        <div
-                            class="d-flex justify-content-between align-items-center mb-0"
-                        >
-                            <p class="text-success text-xl">
-                                <i class="fas fa-shopping-bag"></i>
-                            </p>
-                            <p class="d-flex flex-column text-right" id="percentThree">
-
-                            </p>
-                        </div>
-                        <!-- /.d-flex -->
-                    </div>
-                </div>
+                {{-- Tabla de mensajes de whatsApp publicidad --}}
+                @include('admin.resume.countMessagesWhatsApp')
+                <!-- /.card -->
+                {{-- Tabla de ventas que indica el total vendido de productos por paquetes --}}
+                @include('admin.resume.percentSalesforPack')
             </div>
             <!-- /.col-md-6 -->
         </div>

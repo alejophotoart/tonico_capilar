@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-header border-0" style="padding: 10px 20px 0px !important;">
+        <h3 class="card-title">Mensajes de WhatsApp</h3>
+        <div class="card-tools">
+            <a href="{{ route('resume.pdf.messagesWhatsapp') }}" class="btn btn-tool btn-sm m-1">
+                <i class="fas fa-download"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body table-responsive p-0"  style="padding: 20px !important;">
+        <table id="tableResume" class="table table-bordered table-valign-middle tablesDates">
+            <thead>
+                <tr>
+                    <th  colspan="6">{{ __("Telefonos") }}</th>
+                </tr>
+                <tr>
+                    <th>{{ __("Fecha") }}</th>
+                    <th>{{ __("M1") }}</th>
+                    <th>{{ __("M2") }}</th>
+                    <th>{{ __("M3") }}</th>
+                    <th>{{ __("M4") }}</th>
+                    <th>{{ __("Total") }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(count($chats) === 0)
+                    <tr>
+                        <td>{{ date('D, d-M-Y') }} <br> {{ date('H:i:s A') }}</td>
+                        <td>{{ "0" }}</td>
+                        <td>{{ "0" }}</td>
+                        <td>{{ "0" }}</td>
+                        <td>{{ "0" }}</td>
+                        <td>{{ $totalChats }}</td>
+                    </tr>
+                @else
+                    <tr>
+                        <td>{{ date('D, d-M-Y') }} <br> {{ date('H:i:s A') }}</td>
+                        <td>{{ count($chats) }}</td>
+                        <td>Not Available</td>
+                        <td>Not Available</td>
+                        <td>Not Available</td>
+                        <td>{{ $totalChats }}</td>
+                    </tr>
+
+                @endif
+            </tbody>
+            <tfoot>
+                <tr style="font-weight: bold;">
+                    <td scope="row" name="totalText">Total</td>
+                    <td name="total">{{ $totalChats }}</td>
+                    <td name="totalDelivery"></td>
+                    <td name="totalNeto"></td>
+                    <td></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

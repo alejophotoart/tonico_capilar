@@ -55,24 +55,26 @@ Route::middleware(['auth'])->group(function () {
     // Rutas del calendario
         Route::get('/calendario', [CalendarController::class, 'addEvents'])->name('calendar.index');//llama a la vista calendario
         Route::post('/calendar/create_event', [CalendarController::class, 'store']);//llama a la vista calendario
-
     // Rutas para el resumen
         Route::get('/resumen', [ResumeController::class, 'index'])->name('resume.index');//llama a la vista resumen
         Route::get('/resumen/sales', [ResumeController::class, 'salesTable']); //carga la info de la tablas apenas inicia la pagina
         Route::get('/resumen/{date}/filterDate', [ResumeController::class, 'filter']); //filtra la tabla de resumen segun la fecha indicada
-    // Rutas de pedido
+        Route::get('/resumen/PDF/products', [ResumeController::class, 'pdfProducts'])->name('resume.pdf.products');
+        Route::get('/resumen/PDF/messagesWhatsapp', [ResumeController::class, 'pdfMessagesWhatsapp'])->name('resume.pdf.messagesWhatsapp');
+        Route::get('/resumen/PDF/salesToday', [ResumeController::class, 'pdfSalesToday'])->name('resume.pdf.salesToday');
+    //Rutas de pedido
         Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
         Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda
     //Rutas de bodegas
-            Route::get('/bodegas/crear', [WarehouseController::class, 'create']);//llama a la vista de crear bodegas
-            Route::post('/bodegas/create', [WarehouseController::class, 'store']);//Crea las bodegas
-            Route::get('/bodegas/{id}', [WarehouseController::class, 'edit']);//llama la informacion del modal para editarla
-            Route::delete('/bodegas/{id}/{name}/delete', [WarehouseController::class, 'destroy']);//elimina bodegas
-            Route::put('/bodegas/{id}/update', [WarehouseController::class, 'update']);
+        Route::get('/bodegas/crear', [WarehouseController::class, 'create']);//llama a la vista de crear bodegas
+        Route::post('/bodegas/create', [WarehouseController::class, 'store']);//Crea las bodegas
+        Route::get('/bodegas/{id}', [WarehouseController::class, 'edit']);//llama la informacion del modal para editarla
+        Route::delete('/bodegas/{id}/{name}/delete', [WarehouseController::class, 'destroy']);//elimina bodegas
+        Route::put('/bodegas/{id}/update', [WarehouseController::class, 'update']);
     //Rutas productos x bodega
-            Route::get('/productos-bodega/{id}', [ProductWarehouseController::class, 'edit']);
-            Route::put('/productos-bodega/{id}/update', [ProductWarehouseController::class, 'update']);
-            Route::delete('/productos-bodegas/{id}/{name}/{name2}/delete', [ProductWarehouseController::class, 'destroy']);
+        Route::get('/productos-bodega/{id}', [ProductWarehouseController::class, 'edit']);
+        Route::put('/productos-bodega/{id}/update', [ProductWarehouseController::class, 'update']);
+        Route::delete('/productos-bodegas/{id}/{name}/{name2}/delete', [ProductWarehouseController::class, 'destroy']);
         });
 
         Route::group(['middleware' => 'logistic'], function () {
