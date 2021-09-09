@@ -48,9 +48,10 @@
                 <tr style="font-weight: bold;">
                     <td scope="row" name="totalText">Total</td>
                     <td name="total">{{ $totalChats }}</td>
-                    <td name="totalDelivery"></td>
-                    <td name="totalNeto"></td>
-                    <td></td>
+                    <td name="totalDelivery">{{ "0" }}</td>
+                    <td name="totalNeto">{{ "0" }}</td>
+                    <td name="totalDelivery">{{ "0" }}</td>
+                    <td name="totalNeto">{{ $totalChats }}</td>
                 </tr>
             </tfoot>
         </table>

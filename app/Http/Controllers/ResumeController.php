@@ -20,7 +20,7 @@ class ResumeController extends Controller
         $timestamp = strtotime('today');
         $today2 = strtotime('today');
         $yesterday2 = strtotime('-1 day 23:59:59', $today2);
-        $fromDate = strtotime('-6 month', $yesterday2);
+        $fromDate = strtotime('-2 month', $yesterday2);
         $token = 'c2zbqxn2i3oo3gj6';
         $instanceId = '312945';
         $url = 'https://api.chat-api.com/instance'.$instanceId.'/messages?token='.$token.'&limit=0&min_time='.$timestamp;
