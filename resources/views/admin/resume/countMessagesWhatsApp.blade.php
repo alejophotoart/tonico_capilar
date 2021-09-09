@@ -2,7 +2,7 @@
     <div class="card-header border-0" style="padding: 10px 20px 0px !important;">
         <h3 class="card-title">Mensajes de WhatsApp</h3>
         <div class="card-tools">
-            <a href="{{ route('resume.pdf.messagesWhatsapp') }}" class="btn btn-tool btn-sm m-1">
+            <a href="{{ route('pdf.messagesWhatsapp') }}" class="btn btn-tool btn-sm m-1">
                 <i class="fas fa-download"></i>
             </a>
         </div>
@@ -23,7 +23,7 @@
                 </tr>
             </thead>
             <tbody>
-                @if(count($chats) === 0)
+                @if(count($clave) === 0)
                     <tr>
                         <td>{{ date('D, d-M-Y') }} <br> {{ date('H:i:s A') }}</td>
                         <td>{{ "0" }}</td>
@@ -35,7 +35,7 @@
                 @else
                     <tr>
                         <td>{{ date('D, d-M-Y') }} <br> {{ date('H:i:s A') }}</td>
-                        <td>{{ count($chats) }}</td>
+                        <td>{{ count($clave) }}</td>
                         <td>Not Available</td>
                         <td>Not Available</td>
                         <td>Not Available</td>

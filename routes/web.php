@@ -14,6 +14,7 @@ use App\Http\Controllers\StateController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProductWarehouseController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\WarehouseController;
@@ -59,9 +60,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/resumen', [ResumeController::class, 'index'])->name('resume.index');//llama a la vista resumen
         Route::get('/resumen/sales', [ResumeController::class, 'salesTable']); //carga la info de la tablas apenas inicia la pagina
         Route::get('/resumen/{date}/filterDate', [ResumeController::class, 'filter']); //filtra la tabla de resumen segun la fecha indicada
-        Route::get('/resumen/PDF/products', [ResumeController::class, 'pdfProducts'])->name('resume.pdf.products');
-        Route::get('/resumen/PDF/messagesWhatsapp', [ResumeController::class, 'pdfMessagesWhatsapp'])->name('resume.pdf.messagesWhatsapp');
-        Route::get('/resumen/PDF/salesToday', [ResumeController::class, 'pdfSalesToday'])->name('resume.pdf.salesToday');
+        Route::get('/resumen/PDF/products', [PDFController::class, 'pdfProducts'])->name('pdf.products');
+        Route::get('/resumen/PDF/messagesWhatsapp', [PDFController::class, 'pdfMessagesWhatsapp'])->name('pdf.messagesWhatsapp');
+        Route::get('/resumen/PDF/salesToday', [PDFController::class, 'pdfSalesToday'])->name('pdf.salesToday');
     //Rutas de pedido
         Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
         Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda

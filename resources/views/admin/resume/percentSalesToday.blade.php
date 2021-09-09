@@ -2,7 +2,7 @@
     <div class="card-header border-0">
         <h3 class="card-title">Ventas totales</h3>
         <div class="card-tools">
-            <a href="{{ route('resume.pdf.salesToday') }}" class="btn btn-tool btn-sm m-1">
+            <a href="{{ route('pdf.salesToday') }}" class="btn btn-tool btn-sm m-1">
                 <i class="fas fa-download"></i>
             </a>
         </div>
