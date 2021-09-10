@@ -179,5 +179,5 @@
         });
     });
 </script>
-<script src="/adminlte/js/warehouses/createWarehouse.js"></script>
+<script src="{{ asset('/adminlte/js/warehouses/createWarehouses.js') }}"></script>
 

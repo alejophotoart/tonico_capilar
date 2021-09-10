@@ -1,4 +1,1 @@
-document.addEventListener("DOMContentLoaded", function() {
-    $("#tableOrders").DataTable();
-    $("#tablePending").DataTable();
-});
+document.addEventListener("DOMContentLoaded",function(){$("#tableOrders").DataTable(),$("#tablePending").DataTable()});

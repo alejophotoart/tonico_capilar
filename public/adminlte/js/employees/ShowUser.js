@@ -1,3 +1,1 @@
-document.addEventListener("DOMContentLoaded", function() {
-    $("#tableEmployee").DataTable();
-});
+document.addEventListener("DOMContentLoaded",function(){$("#tableEmployee").DataTable()});

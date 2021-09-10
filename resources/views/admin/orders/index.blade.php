@@ -13,8 +13,15 @@ __('Orders')) @section('explorer')
                     class="nav-link active darkMode-nav"
                     aria-current="true"
                     style="color: black;"
-                    >{{ __("News") }}</a
-                >
+                    >{{ __("News") }}
+                    @if(auth()->user()->role_id <> 4)
+                        <span id="NewOrders" class="badge badge-danger"
+                            ></span>
+                    @else
+                        <span id="NewOrdersSales" class="badge badge-danger"
+                            ></span>
+                    @endif
+                </a>
             </li>
             <li class="nav-item">
                 <a
@@ -22,8 +29,15 @@ __('Orders')) @section('explorer')
                     class="nav-link"
                     href="#"
                     style="color: black;"
-                    >{{ __("In progress") }}</a
-                >
+                    >{{ __("In progress") }}
+                    @if(auth()->user()->role_id <> 4)
+                        <span id="ProcessOrders" class="badge badge-danger"
+                            ></span>
+                    @else
+                        <span id="ProcessOrdersSales" class="badge badge-danger"
+                            ></span>
+                    @endif
+                </a>
             </li>
             <li class="nav-item">
                 <a
@@ -31,7 +45,15 @@ __('Orders')) @section('explorer')
                     class="nav-link"
                     href="#"
                     style="color: black;"
-                    >{{ __("Delivered") }}</a
+                    >{{ __("Delivered") }}
+                    @if(auth()->user()->role_id <> 4)
+                        <span id="DeliveredOrders" class="badge badge-danger"
+                        ></span>
+                    @else
+                        <span id="DeliveredOrdersSales" class="badge badge-danger"
+                        ></span>
+                    @endif                    
+                    </a
                 >
             </li>
             <li class="nav-item">
@@ -40,7 +62,16 @@ __('Orders')) @section('explorer')
                     class="nav-link"
                     href="#"
                     style="color: black;"
-                    >{{ __("Canceled") }}</a
+                    >{{ __("Canceled") }}
+                    @if(auth()->user()->role_id <> 4)
+                        <span id="CancelOrders" class="badge badge-danger"
+                        ></span>
+                    @else
+                        <span id="CancelOrdersSales" class="badge badge-danger"
+                        ></span>
+                    @endif 
+                    
+                    </a
                 >
             </li>
             @if(auth()->user()->role_id == 3)
@@ -50,7 +81,10 @@ __('Orders')) @section('explorer')
                     class="nav-link"
                     href="#"
                     style="color: black;"
-                    >{{ __("Deposito Aprobado") }}</a
+                    >{{ __("Deposito Aprobado") }}
+                    <span id="PendingAprobationLogistic" class="badge badge-danger"
+                        ></span>
+                    </a
                 >
             </li>
             @else
@@ -62,6 +96,8 @@ __('Orders')) @section('explorer')
                     href="#"
                     style="color: black;">
                     {{ __("Deposito Pendiente") }}
+                    <span id="PendingAprobationDeposit" class="badge badge-danger"
+                        ></span>
                 </a>
             </li>
                 @else
@@ -72,6 +108,8 @@ __('Orders')) @section('explorer')
                             href="#"
                             style="color: black;">
                             {{ __("Depositos") }}
+                            <span id="DepositSales" class="badge badge-danger"
+                            ></span>
                         </a>
                     </li>
                 @endif
@@ -83,6 +121,14 @@ __('Orders')) @section('explorer')
                     href="#"
                     style="color: black;">
                     {{ __("Reagendados") }}
+                    @if(auth()->user()->role_id <> 4)
+                         <span id="PendingOrders" class="badge badge-danger"
+                        ></span>
+                    @else
+                         <span id="PendingOrdersSales" class="badge badge-danger"
+                        ></span>
+                    @endif 
+                                       
                 </a>
             </li>
         </ul>
@@ -214,10 +260,12 @@ __('Orders')) @section('explorer')
         </div>
     </div>
 </div>
-<script src="/adminlte/js/orders/ShowTableOrder.js"></script>
-<script src="/adminlte/js/orders/ModalCreate.js"></script>
-<script src="/adminlte/js/orders/ModalShow.js"></script>
-<script src="/adminlte/js/orders/ValidateCreateOrder.js"></script>
-<script src="/adminlte/js/orders/CreateOrder.js"></script>
-<script src="/adminlte/js/orders/CancelOrder.js"></script>
+<script src="{{ asset('/adminlte/js/orders/ShowTableOrder.js') }}"></script>
+<script src="{{ asset('/adminlte/js/orders/ModalCreate.js') }}"></script>
+<script src="{{ asset('/adminlte/js/orders/ModalShow.js') }}"></script>
+<script src="{{ asset('/adminlte/js/orders/ValidateCreateOrder.js') }}"></script>
+<script src="{{ asset('/adminlte/js/orders/CreateOrder.js') }}"></script>
+<script src="{{ asset('/adminlte/js/orders/CancelOrder.js') }}"></script>
+<script src="{{ asset('/adminlte/js/pages/dashboard3.js') }}"></script>
+
 @include('admin.orders.create') @include('admin.orders.show') @endsection

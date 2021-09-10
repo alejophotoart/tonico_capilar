@@ -14,7 +14,7 @@ use App\Http\Controllers\StateController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CalendarController;
-use App\Http\Controllers\PDFController;
+// use App\Http\Controllers\PDFController;
 use App\Http\Controllers\ProductWarehouseController;
 use App\Http\Controllers\ResumeController;
 use App\Http\Controllers\WarehouseController;
@@ -35,7 +35,11 @@ Route::get('/', function () { //valida si el usuario esta auth,
 Route::middleware(['auth'])->group(function () {
     Route::group (['middleware' => 'firewall.all'], function () {
     //Rutas de inicio
-        Route::get('/home', [HomeController::class, 'index'])->name('home');//Entrea a Home pagina principal
+        // Route::get('/home', function () {
+        //     $pdf = App::make('dompdf.wrapper');
+        //     $pdf->loadView('home');
+        //     return $pdf->stream();
+        // });//Entrea a Home pagina principal
     // Rutas de empleado
         Route::group(['middleware' => 'role'], function () {
         Route::get('/empleados', [UserController::class, 'index'])->name('employees.index');//llama a la vista de empleado
@@ -58,11 +62,10 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/calendar/create_event', [CalendarController::class, 'store']);//llama a la vista calendario
     // Rutas para el resumen
         Route::get('/resumen', [ResumeController::class, 'index'])->name('resume.index');//llama a la vista resumen
-        Route::get('/resumen/sales', [ResumeController::class, 'salesTable']); //carga la info de la tablas apenas inicia la pagina
         Route::get('/resumen/{date}/filterDate', [ResumeController::class, 'filter']); //filtra la tabla de resumen segun la fecha indicada
-        Route::get('/resumen/PDF/products', [PDFController::class, 'pdfProducts'])->name('pdf.products');
-        Route::get('/resumen/PDF/messagesWhatsapp', [PDFController::class, 'pdfMessagesWhatsapp'])->name('pdf.messagesWhatsapp');
-        Route::get('/resumen/PDF/salesToday', [PDFController::class, 'pdfSalesToday'])->name('pdf.salesToday');
+        // Route::get('/resumen/PDF/products', [PDFController::class, 'pdfProducts'])->name('pdf.products');
+        // Route::get('/resumen/PDF/messagesWhatsapp', [PDFController::class, 'pdfMessagesWhatsapp'])->name('pdf.messagesWhatsapp');
+        // Route::get('/resumen/PDF/salesToday', [PDFController::class, 'pdfSalesToday'])->name('pdf.salesToday');
     //Rutas de pedido
         Route::get('/pedidos/{id}/editar', [OrderController::class, 'edit'])->name('orders.edit');//crea un pedido nuevo
         Route::put('/pedidos/editar/{id}', [OrderController::class, 'update']);//Actualiza los pedidos o reagenda
@@ -92,6 +95,8 @@ Route::middleware(['auth'])->group(function () {
     //Rutas productos x bodega
             Route::get('/productos-bodega', [ProductWarehouseController::class, 'index'])->name('product_warehouses.index');
         });
+    //Ruta se resumen es necesaria que todos tengan acceso ya que muestra las cantidades de los pedidos
+        Route::get('/resumen/sales', [ResumeController::class, 'salesTable']); //carga la info de la tablas apenas inicia la pagina
     // Rutas para actualizar perfil
         Route::get('/profile/{id}', [UserController::class, 'editProfile']);//Muestra modal de actualizar perfil
         Route::put('/profile/{id}/update', [UserController::class, 'updateProfile']);//actualiza perfil

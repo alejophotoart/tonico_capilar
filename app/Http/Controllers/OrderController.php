@@ -34,11 +34,12 @@ class OrderController extends Controller
     public function index() //vista de pedidos nuevos
     {
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2 || Auth::user()->role_id == 3){
-            $orders = Order::where([['state_order_id','<>',2],['state_order_id','<>',3],['state_order_id','<>',4],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-            return view('admin.orders.index')->with('orders', $orders);
+            return view('admin.orders.index', [
+                'orders' => Order::where([['state_order_id','<>',2],['state_order_id','<>',3],['state_order_id','<>',4],['state_order_id','<>',5],['active', 1]])->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->orderBy('id', 'desc')->get()
+            ]);
         }else{
             if(Auth::user()->role_id == 4){
-                $orders = Order::where([['user_id',auth::user()->id],['state_order_id','<>',2],['state_order_id','<>',3],['state_order_id','<>',4],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
+                $orders = Order::where([['user_id',auth::user()->id],['state_order_id','<>',2],['state_order_id','<>',3],['state_order_id','<>',4],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->latest()->get();
                 return view('admin.orders.index')->with('orders', $orders);
             }
         }
@@ -522,7 +523,7 @@ class OrderController extends Controller
             }
                 if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
                 'delivery_date'=> $request['delivery_date'],
-                // 'reason'            => $request['reason'],
+                'reason'            => $request['reason'],
                 'delivery_price'    => 10000,
                 'total'             => $request['total'],
                 'notes'             => $request['notes'],
@@ -538,7 +539,7 @@ class OrderController extends Controller
                 }else{
                     if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date','<>',$request['delivery_date']]])->update([
                     'delivery_date'     => $request['delivery_date'],
-                    // 'reason'            => $request['reason'],
+                    'reason'            => $request['reason'],
                     'delivery_price'    => 10000,
                     'total'             => $request['total'],
                     'notes'             => $request['notes'],
@@ -554,7 +555,7 @@ class OrderController extends Controller
                 }else{
                     if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date', $request['delivery_date']]])->first()->update([
                         'delivery_date'=> $request['delivery_date'],
-                        // 'reason'            => $request['reason'],
+                        'reason'            => $request['reason'],
                         'delivery_price'    => 10000,
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
@@ -567,23 +568,6 @@ class OrderController extends Controller
                         'active'            => 1,
                     ])){
 
-                    }else{
-                        if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date','<>',$request['delivery_date']]])->update([
-                            'delivery_date'     => $request['delivery_date'],
-                            // 'reason'            => $request['reason'],
-                            'delivery_price'    => 10000,
-                            'total'             => $request['total'],
-                            'notes'             => $request['notes'],
-                            'payment_type_id'   => $request['payment_type_id'],
-                            'state_order_id'    => 5,
-                            'client_id'         => $request['client_id'],
-                            'user_id'           => $request['user_id'],
-                            'address_id'        => $request['address_id'],
-                            'city_id'           => $request['city_id'],
-                            'active'            => 1,
-                        ])){
-
-                        }
                     }
                 }
             }

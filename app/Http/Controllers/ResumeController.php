@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\City;
 use App\Models\Country;
-use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Order;
 use Carbon\Carbon;
-use PDF;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ResumeController extends Controller
 {
@@ -56,9 +56,6 @@ class ResumeController extends Controller
         }
         $clave = array_diff_key($chats, $replik);
         $totalChats = count($clave);
-
-        // dd($data['messages']);
-        // echo "Chats hoy: ".count($chats). "\nTotal: ".$totalChats;
         /**
          *$sum = Order::where("state_order_id", 3)->select(Order::raw("(delivery_price + total) as total, id"))->get();
          *->with('total', $sum);
@@ -76,7 +73,6 @@ class ResumeController extends Controller
         $products = Product::where('active', 1)->get();
         $countries = Country::where('active', 1)->get();
         $orders = Order::where([['state_order_id','<>', 4],['created_at','>=',$date1],['created_at','<=',$date2],['active', 1]])->with('city')->get(['id', 'delivery_price', 'total', 'city_id', 'created_at']);
-        // dd($orders);
 
         for ($i=0; $i < count($countries); $i++) {
             for ($e=0; $e < count($orders); $e++) {
@@ -101,20 +97,16 @@ class ResumeController extends Controller
             $cant = 0;
             $neto = 0;
         }
-        // $json = json_encode($countryXOrdes);
-        // dd($countryXOrdes);
 
         foreach ($orders as $o) {
             $subtotal = $subtotal + $o->total;
             $delivery = $delivery + $o->delivery_price;
         }
-        // dd($subtotal, $delivery);
 
         for ($i=0; $i < count($orders); $i++) {
             $cant++;
         }
         $neto = $subtotal - $delivery;
-        // dd($neto);
 
         return view('admin.resume.index')
         ->with('products', $products)
@@ -130,9 +122,11 @@ class ResumeController extends Controller
     public function salesTable()
     {
         $orders = Order::where('active', 1)->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-        $orders_date = Order::where('created_at','>=',now()->subDay(7))->get([('created_at as fecha'), 'total', 'state_order_id']);
+        $orders_date = Order::where('state_order_id', 3)->where('created_at','>=',now()->subDay(7))->get([('created_at as fecha'), 'total', 'state_order_id']);
         $products = Product::where('active', 1)->get();
-        return response(array('status' => 200, 'orders' => $orders, 'dates' => $orders_date, 'products' => $products));
+        $rolUser = Auth::user()->role_id;
+        $idUser = Auth::user()->id;
+        return response(array('status' => 200, 'orders' => $orders, 'dates' => $orders_date, 'products' => $products, 'rolUser' => $rolUser, 'idUser' => $idUser));
     }
 
     public function filter($date)
@@ -173,20 +167,16 @@ class ResumeController extends Controller
             $cant = 0;
             $neto = 0;
         }
-        // $json = json_encode($countryXOrdes);
-        // dd($countryXOrdes);
 
         foreach ($orders as $o) {
             $subtotal = $subtotal + $o->total;
             $delivery = $delivery + $o->delivery_price;
         }
-        // dd($subtotal, $delivery);
 
         for ($i=0; $i < count($orders); $i++) {
             $cant++;
         }
         $neto = $subtotal - $delivery;
-        // dd($neto);
 
         return response(array('status' => 200, 'countryXOrdes' => $countryXOrdes, 'orders' => $orders, 'countries' => $countries, 'subtotal' => $subtotal,
             'delivery' => $delivery, 'neto' => $neto, 'cant' => $cant));

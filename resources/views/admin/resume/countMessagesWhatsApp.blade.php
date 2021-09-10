@@ -1,11 +1,6 @@
 <div class="card">
     <div class="card-header border-0" style="padding: 10px 20px 0px !important;">
         <h3 class="card-title">Mensajes de WhatsApp</h3>
-        <div class="card-tools">
-            <a href="{{ route('pdf.messagesWhatsapp') }}" class="btn btn-tool btn-sm m-1">
-                <i class="fas fa-download"></i>
-            </a>
-        </div>
     </div>
     <div class="card-body table-responsive p-0"  style="padding: 20px !important;">
         <table id="tableResume" class="table table-bordered table-valign-middle tablesDates">

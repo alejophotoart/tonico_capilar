@@ -6,6 +6,7 @@ use App\Models\Country;
 use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use PDF;
 
 class PDFController extends Controller

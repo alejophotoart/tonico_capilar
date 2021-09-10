@@ -1,11 +1,6 @@
 <div class="card">
     <div class="card-header border-0">
         <h3 class="card-title">Ventas totales</h3>
-        <div class="card-tools">
-            <a href="{{ route('pdf.salesToday') }}" class="btn btn-tool btn-sm m-1">
-                <i class="fas fa-download"></i>
-            </a>
-        </div>
             <div class="input-group mb-3 d-grid d-md-flex justify-content-md-end">
               <input
                   type="text"

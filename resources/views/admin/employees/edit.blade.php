@@ -274,7 +274,6 @@ var country_code_value = '{{ old("country_id") }}' || "{{ $user->city->state->co
                         }
                         $("#state_id").prop("disabled", false);
                         $("#state_id option").remove();
-                        $("#city_id option").remove();
                         $("#state_id").append('<option value="0" selected>---Seleccione estado---</option>');
                         for (var i = 0; i < r.d.states.length; i++) {
                             if (state_id == r.d.states[i].id ) {

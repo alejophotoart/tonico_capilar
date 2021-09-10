@@ -1,4 +1,1 @@
-var editor;
-document.addEventListener("DOMContentLoaded", function() {
-    $("#tableProductWarehouses").DataTable();
-});
+var editor;document.addEventListener("DOMContentLoaded",function(){$("#tableProductWarehouses").DataTable()});

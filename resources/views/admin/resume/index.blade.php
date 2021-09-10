@@ -78,7 +78,7 @@ __('Resumen')) @section('content')
                         <div class="d-flex">
                             <p class="d-flex flex-column">
                                 <span class="text-bold text-lg" id="quantity_sales"></span>
-                                <span>Pedidos registrados totales</span>
+                                <span>Ventas entregadas confirmadas</span>
                             </p>
                             <p class="ml-auto d-flex flex-column text-right">
                                 <span class="percentage">
@@ -132,8 +132,8 @@ __('Resumen')) @section('content')
     <!-- /.container-fluid -->
 </div>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="/adminlte/js/pages/dashboard3.js"></script>
-<script src="/adminlte/js/resumen/filterForDate.js"></script>
+<script src="{{ asset('/adminlte/js/pages/dashboard3.js') }}" defer></script>
+<script src="{{ asset('/adminlte/js/resumen/filterForDate.js') }}" defer></script>
 <script>
     $( function() {
         var date = new Date();

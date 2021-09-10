@@ -10,7 +10,7 @@ __('Warehouses')) @section('explorer')
             <h1 class="card-title">{{ __("Lista de bodegas") }}</h1>
             @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
             <div class="float-end">
-                <a onclick="ShowCreateWarehouse()">
+                <a onclick="ShowModalCreateWarehouse()">
                     <button class="btn btn-dark" type="button">
                         <i class="fas fa-plus"></i></button
                 ></a>

@@ -20,7 +20,7 @@ __('Employees')) @section('explorer')
         </div>
         <div class="card-body darkMode-bbg">
             <table
-                class="table table-responsive-xl"
+                class="table table-responsive-sm"
                 style="width:100%"
                 id="tableEmployee"
             >
