@@ -263,7 +263,7 @@ __('Orders')) @section('explorer')
                                 </td>
                                 <td class="darkMode-fill" style="padding: 5px 5px 5px 0px;">
                                     @if(auth()->user()->role_id == 1 ||
-                                    auth()->user()->role_id == 2)
+                                    auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
                                     <a class="mg-10"
                                     href="{{ route('orders.edit', $o->id) }}">
                                         <i

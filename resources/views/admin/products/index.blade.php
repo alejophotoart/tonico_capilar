@@ -92,7 +92,21 @@ __('Products')) @section('explorer')
                             {{ number_format($p->price, 0, ',', '.') }}
                         </td>
                         <td class="darkMode-fill" id="content-quantity">
-                            {{ $p->quantity }}
+                            @if($p->quantity <= 0)
+                                <p class="text-danger">{{ $p->quantity }}<br>
+                                    No hay unidades disponibles
+                                </p>
+                            @else
+                                @if($p->quantity <= 50)
+                                    <p class="text-warning">{{ $p->quantity }}<br>
+                                        Quedan pocas unidades
+                                    </p>
+                                @else
+                                    <p class="text-success">{{ $p->quantity }}<br>
+                                        Unidades
+                                    </p>
+                                @endif
+                            @endif
                         </td>
                         <td class="darkMode-fill">
                             @foreach ($product_warehouses as $pw)

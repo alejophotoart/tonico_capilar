@@ -14,7 +14,7 @@ __('Productos x Bodega')) @section('explorer')
         </div>
         <div class="card-body darkMode-bbg">
             <table
-                class="table table-responsive-xl"
+                class="table table-responsive-sm"
                 style="width:100%"
                 id="tableProductWarehouses"
             >
@@ -27,10 +27,10 @@ __('Productos x Bodega')) @section('explorer')
                             ></i>
                         </th>
                         <th>
-                            {{ __("Product") }}
+                            {{ __("Producto") }}
                         </th>
                         <th>
-                            {{ __("Warehouse") }}
+                            {{ __("Bodega") }}
                         </th>
                         <th>
                             {{ __("Quantity") }}
@@ -47,32 +47,37 @@ __('Productos x Bodega')) @section('explorer')
                     </tr>
                 </thead>
                 <tbody>
+                    {{-- {{dd($product_warehouses)}} --}}
                     @foreach ($product_warehouses as $pw)
                     <tr>
                         <td class="darkMode-fill">
                             {{ $pw->id }}
                         </td>
-                        @foreach ($pw->products as $pwp)
-                            @if($pwp->id == $pw->product_id)
-                                <td class="darkMode-fill">
-                                    {{ $pwp->name }} <br />
-                                </td>
-                            @endif
 
                         <td class="darkMode-fill">
-                            @foreach ($pw->warehouses as $pww)
-                                @if($pww->id == $pw->warehouse_id)
-                                    {{$pww->name}} <br />
-                                @endif
-
+                            @foreach ($pw->products as $pwp)
+                            {{ $pwp->name }}
                         </td>
                         <td class="darkMode-fill">
-                            @if ($pw->quantity <= 10)
-                                <p class="text-danger">{{ $pw->quantity }} <br> Quedan pocas unidades</p>
+                            @foreach ($pw->warehouses as $pww)
+                            {{$pww->name}}
+                        </td>
+                        <td class="darkMode-fill">
+                            @if($pw->quantity <= 0)
+                                <p class="text-danger">{{ $pw->quantity }}<br>
+                                    No hay unidades disponibles
+                                </p>
+                            @else
+                                @if($pw->quantity <= 10)
+                                    <p class="text-warning">{{ $pw->quantity }}<br>
+                                        Quedan pocas unidades
+                                    </p>
                                 @else
-                                {{ $pw->quantity }}
+                                <p class="text-success">{{ $pw->quantity }}<br>
+                                    Unidades
+                                </p>
+                                @endif
                             @endif
-
                         </td>
                         <td class="darkMode-fill">
                             <p style="opacity: 0.6; font-size: 0.8em;">
@@ -84,14 +89,18 @@ __('Productos x Bodega')) @section('explorer')
                         auth()->user()->role_id == 2)
                         <td class="darkMode-fill">
                             <a
-                                onclick="editProductWarehouse({{ $pw->id }})"
+                                onclick="editProductWarehouse({{ $pw->id }}, {{ $pww->id }})"
                                 class="mg-10"
                             >
-                                <i id="IconE" class="fas fa-pencil-alt darkMode-icon"></i>
+                                @if($pw->quantity <= 0)
+                                    <i id="IconE" class="fas fa-pencil-alt darkMode-icon"></i>
+                                @else
+                                    <i id="IconE" class="fas fa-plus darkMode-icon"></i>
+                                @endif
                             </a>
                             <a
                                 class="mg-10"
-                                onclick="deleteProductWarehouse('{{$pw->id}}', '{{$pww->name}}', '{{ $pwp->name }}')"
+                                onclick="deleteProductWarehouse('{{$pw->id}}', '{{$pww->name}}', '{{ $pwp->name }}', '{{ $pwp->id }}')"
                             >
                                 <i id="IconD" class="fas fa-trash-alt darkMode-icon"></i>
                             </a>

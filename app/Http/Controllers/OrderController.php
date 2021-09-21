@@ -117,7 +117,7 @@ class OrderController extends Controller
                 return view('admin.orders.tables.deposit')->with('orders', $orders);
             }else{
                 if(Auth::user()->role_id == 4){
-                    $orders = Order::where([['user_id',auth::user()->id],['state_order_id', 7],['payment_type_id', 2],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
+                    $orders = Order::where([['user_id',auth::user()->id],['state_order_id','<>',1],['state_order_id','<>', 2],['state_order_id','<>', 3],['state_order_id','<>', 4],['state_order_id','<>', 5],['payment_type_id', 2],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
                     return view('admin.orders.tables.deposit')->with('orders', $orders);
                 }
             }
@@ -182,24 +182,34 @@ class OrderController extends Controller
 
             for ($e=0; $e < $product_quan; $e++) {
                 $product = Product::where('id', $request['prod_quan'][1][$e])->first();
-                if(Warehouse::where('city_id', $request['city_id'])->first()){
-                    if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
-                        $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
-                        if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
-                            $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
-                            $product_warehouse->update();
-                        }else{
-                            if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
-                                return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                if($request['payment_type_id'] == 1 ){
+                    if(Warehouse::where('city_id', $request['city_id'])->first()){
+                        if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
+                            $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
+                            if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
+                                $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
+                                $product_warehouse->update();
+                            }else{
+                                if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
+                                    return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                                }
                             }
+                        }else{
+                            return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
                         }
                     }else{
-                        return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                        return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
                     }
                 }else{
-                    return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                    if($product->quantity > $request['prod_quan'][0][$e]){
+                        $product->quantity = $product->quantity - $request['prod_quan'][0][$e];
+                        $product->update();
+                    }else{
+                        if($product->quantity <= $request['prod_quan'][0][$e]){
+                            return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                        }
+                    }
                 }
-
             }
             $client = Client::where('id', $request['client_id'])->update([
                 'identification'    => $request['identification'],
@@ -262,24 +272,34 @@ class OrderController extends Controller
 
             for ($e=0; $e < $product_quan; $e++) {
                 $product = Product::where('id', $request['prod_quan'][1][$e])->first();
-                if(Warehouse::where('city_id', $request['city_id'])->first()){
-                    if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
-                        $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
-                        if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
-                            $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
-                            $product_warehouse->update();
-                        }else{
-                            if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
-                                return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                if($request['payment_type_id'] == 1 ){
+                    if(Warehouse::where('city_id', $request['city_id'])->first()){
+                        if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
+                            $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
+                            if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
+                                $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
+                                $product_warehouse->update();
+                            }else{
+                                if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
+                                    return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                                }
                             }
+                        }else{
+                            return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
                         }
                     }else{
-                        return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                        return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
                     }
                 }else{
-                    return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                    if($product->quantity > $request['prod_quan'][0][$e]){
+                        $product->quantity = $product->quantity - $request['prod_quan'][0][$e];
+                        $product->update();
+                    }else{
+                        if($product->quantity < $request['prod_quan'][0][$e]){
+                                return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                        }
+                    }
                 }
-
             }
             $client = Client::create([
                 'identification'    => $request['identification'],
@@ -493,24 +513,71 @@ class OrderController extends Controller
 
             for ($e=0; $e < $product_quan; $e++) {
                 $product = Product::where('id', $request['prod_quan'][1][$e])->first();
-                if(Warehouse::where('city_id', $request['city_id'])->first()){
-                    if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
-                        $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
-                        if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
-                            $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
-                            $product_warehouse->update();
+                if($order_items = OrderItem::where('product_id', $request['prod_quan'][1][$e])->where('order_id', $id)->first()){
+                    if($request['payment_type_id'] == 1 ){
+                        if(Warehouse::where('city_id', $request['city_id'])->first()){
+                            if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
+                                $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
+                                $product_warehouse->quantity = $product_warehouse->quantity + $order_items->quantity;
+                                $product_warehouse->update();
+                                if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
+                                    $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
+                                    $product_warehouse->update();
+                                }else{
+                                    if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
+                                        return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                                    }
+                                }
+                            }else{
+                                return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                            }
                         }else{
-                            if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
+                            return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                        }
+                    }else{
+                        $product->quantity = $product->quantity + $order_items->quantity;
+                        $product->update();
+                        if($product->quantity > $request['prod_quan'][0][$e]){
+                            $product->quantity = $product->quantity - $request['prod_quan'][0][$e];
+                            $product->update();
+                        }else{
+                            if($product->quantity < $request['prod_quan'][0][$e]){
                                 return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
                             }
                         }
-                    }else{
-                        return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
                     }
                 }else{
-                    return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                    if($request['payment_type_id'] == 1 ){
+                        if(Warehouse::where('city_id', $request['city_id'])->first()){
+                            if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
+                                $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
+                                $product_warehouse->quantity = $product_warehouse->quantity + $order_items->quantity;
+                                $product_warehouse->update();
+                                if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
+                                    $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
+                                    $product_warehouse->update();
+                                }else{
+                                    if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
+                                        return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                                    }
+                                }
+                            }else{
+                                return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                            }
+                        }else{
+                            return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                        }
+                    }else{
+                        if($product->quantity > $request['prod_quan'][0][$e]){
+                            $product->quantity = $product->quantity - $request['prod_quan'][0][$e];
+                            $product->update();
+                        }else{
+                            if($product->quantity < $request['prod_quan'][0][$e]){
+                                return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                            }
+                        }
+                    }
                 }
-
             }
 
             OrderItem::where('order_id', $id)->delete();
@@ -521,6 +588,7 @@ class OrderController extends Controller
                 $order_i->order_id   = $id;
                 $order_i->save();
             }
+
                 if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
                 'delivery_date'=> $request['delivery_date'],
                 'reason'            => $request['reason'],
@@ -645,9 +713,9 @@ class OrderController extends Controller
         $quantities = [];
         $products = [];
 
-        $order_city = Order::where('id', $id)->first();
+        $order = Order::where('id', $id)->first();
         $order_items = OrderItem::where('order_id', $id)->get();
-        $warehouse = Warehouse::where('city_id', $order_city->city_id)->first();
+        $warehouse = Warehouse::where('city_id', $order->city_id)->first();
 
         for ($i=0; $i < count($order_items); $i++) {
             array_push($quantities, $order_items[$i]->quantity);
@@ -659,9 +727,15 @@ class OrderController extends Controller
         $product_quan = count($prod_quan[1]);
 
         for ($e=0; $e < $product_quan; $e++) {
-            $product_warehouse = ProductWarehouse::where('product_id', $prod_quan[1][$e])->where('warehouse_id', $warehouse->id)->first();
-            $product_warehouse->quantity = $product_warehouse->quantity + $prod_quan[0][$e];
-            $product_warehouse->update();
+            if($order->payment_type_id == 1){
+                $product_warehouse = ProductWarehouse::where('product_id', $prod_quan[1][$e])->where('warehouse_id', $warehouse->id)->first();
+                $product_warehouse->quantity = $product_warehouse->quantity + $prod_quan[0][$e];
+                $product_warehouse->update();
+            }else{
+                $product = Product::where('id', $prod_quan[1][$e])->first();
+                $product->quantity = $product->quantity + $prod_quan[0][$e];
+                $product->update();
+            }
         }
 
         $order = Order::where('id', $id)->update([

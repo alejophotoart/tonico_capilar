@@ -52,7 +52,7 @@ __('Orders')) @section('explorer')
                     @else
                         <span id="DeliveredOrdersSales" class="badge badge-danger"
                         ></span>
-                    @endif                    
+                    @endif
                     </a
                 >
             </li>
@@ -69,8 +69,8 @@ __('Orders')) @section('explorer')
                     @else
                         <span id="CancelOrdersSales" class="badge badge-danger"
                         ></span>
-                    @endif 
-                    
+                    @endif
+
                     </a
                 >
             </li>
@@ -127,8 +127,8 @@ __('Orders')) @section('explorer')
                     @else
                          <span id="PendingOrdersSales" class="badge badge-danger"
                         ></span>
-                    @endif 
-                                       
+                    @endif
+
                 </a>
             </li>
         </ul>
@@ -179,6 +179,9 @@ __('Orders')) @section('explorer')
                                     {{ __("Fecha entrega") }}
                                 </th>
                                 <th>
+                                    {{ __("Tipo de Pedido") }}
+                                </th>
+                                <th>
                                     {{ __("Total") }}
                                 </th>
                                 <th>
@@ -191,6 +194,8 @@ __('Orders')) @section('explorer')
                             </tr>
                         </thead>
                         <tbody>
+
+                        {{-- {{ dd($orders) }} --}}
                             @foreach($orders as $o)
                             <tr>
                                 <td class="darkMode-fill">{{ $o->id }}</td>
@@ -211,13 +216,16 @@ __('Orders')) @section('explorer')
                                     {{ $o->client->name }}
                                 </td>
                                 <td class="darkMode-fill">{{ $o->delivery_date }}</td>
+                                @if ($o->payment_type_id == $o->payment_type->id)
+                                    <td class="darkMode-fill">{{ $o->payment_type->name }}</td>
+                                @endif
                                 <td class="darkMode-fill">
                                     {{ "$" }}
                                     {{ number_format($o->total, 0, ',', '.') }}
                                 </td>
                                 <td class="darkMode-fill">
                                     @if(auth()->user()->role_id == 1 ||
-                                    auth()->user()->role_id == 2)
+                                    auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
                                     <a type="button" class="mg-10"
                                     href="{{ route('orders.edit', $o->id) }}">
                                         <i

@@ -60,7 +60,7 @@ class ProductWarehouseController extends Controller
      */
     public function edit($id)
     {
-        return ProductWarehouse::where('id', $id)->with('warehouses')->first();
+        return ProductWarehouse::where('id', $id)->with('warehouses', 'products')->first();
     }
 
     /**
@@ -75,17 +75,17 @@ class ProductWarehouseController extends Controller
         // dd($request->all());
 
         if($request){
-            $product_warehouse = ProductWarehouse::where('id', $id)->update([
-                'quantity'  => $request['quantity']
-            ]);
-            // $quantityProduct = Product::where('id', $request['product_id_pw'])->first();
-            // dd($quantityProduct->quantity);
-            // $resul = (($quantityProduct->quantity) - floatval($request['quantity']));
-            // $toDiscountProduct = Product::where('id', $request['product_id_pw'])->update([
-            //     'quantity'  => (($quantityProduct->quantity) - ($resul))
-            // ]);
-            // dd($toDiscountProduct);
-            return response(array('status' => 200, 'd' => array('id' => $id),'title' => 'Cantidad actualizada' ,'message' => 'Actualizaste la cantidad del producto en la bodega', 'space' => ' ','name' => $request->name, 'icon' => "success"));
+            $product = Product::where('id', $request['product_id_pw'])->first();
+            $product_warehouse = ProductWarehouse::where('product_id', $request['product_id_pw'])->where('warehouse_id', $request['warehouse_id_pw'])->first();
+            if( $product->quantity >= intval($request['quantity'])){
+                $product->quantity = $product->quantity - intval($request['quantity']);
+                $product->update();
+                $product_warehouse->quantity = $product_warehouse->quantity + intval($request['quantity']);
+                $product_warehouse->update();
+                return response(array('status' => 200, 'd' => array('id' => $id),'title' => 'Cantidad actualizada' ,'message' => 'Actualizaste la cantidad del producto en la bodega', 'space' => ' ','name' => $request->name, 'icon' => "success"));
+            }else{
+                return response(array('status' => 400, 'title' => __('Unidades Insuficientes') ,'message' => __('Las unidades asignadas a esta bodega superan las unidades disponibles del producto'), 'icon' => "error"));
+            }
         } else {
             return response(array('status' => 100, 'title' => __('Ops...') ,'message' => __('Ocurrio un error inesperado, intentalo de mas tarde'), 'icon' => "warning"));
         }
@@ -98,11 +98,16 @@ class ProductWarehouseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id, $name, $name2)
+    public function destroy($id, $name, $name2, $product_id)
     {
         $product_warehouse = ProductWarehouse::where('id', $id)->first();
+
+        $product = Product::where('id', $product_id)->first();
+        $product->quantity = $product->quantity + $product_warehouse->quantity;
+        $product->update();
+
         $product_warehouse->delete();
 
-        return array('status' => 200, 'title' => 'Item eliminado' ,'message' => 'Elimiaste el producto', 'space' => ' ' ,'name' => $name, 'space' => ' ','message2' => 'de la bodega', 'space' => ' ','name2' => $name2,'icon' => "success");
+        return array('status' => 200, 'title' => 'Producto eliminado' ,'message' => 'Elimiaste el producto', 'space' => ' ' ,'name' => $name, 'space' => ' ','message2' => 'de la bodega', 'space' => ' ','name2' => $name2,'icon' => "success");
     }
 }

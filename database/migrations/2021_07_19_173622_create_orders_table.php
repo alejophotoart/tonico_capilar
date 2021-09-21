@@ -24,7 +24,7 @@ class CreateOrdersTable extends Migration
             $table->string('notes',250)->nullable();
             $table->string('reason',250)->nullable();
 
-            $table->bigInteger('state_order_id')->unsigned()->default(1);;
+            $table->bigInteger('state_order_id')->unsigned()->default(1);
             $table->foreign('state_order_id')->references('id')->on('state_orders');
 
             $table->integer('payment_type_id')->unsigned()->nullable();

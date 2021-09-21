@@ -153,7 +153,7 @@
                                 @endfor
                                 </select>
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary bg-danger trash-only" value="copy-{{ $i }}" onclick="trashProduct(this.value)">
+                                <button type="button" class="btn btn-outline-secondary bg-danger trash-only" value="copy-{{ $i }}" onclick="trashProduct(this.value, {{ $products[$p]->id }}, {{ $order->id }})">
                                     <span class="fas fa-trash-alt" style="color: #fff;"></span>
                                 </button>
                             </div>
@@ -170,7 +170,7 @@
                                 @endfor
                                 </select>
                             <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary bg-danger" onclick="trashProduct(this.value)">
+                                <button type="button" class="btn btn-outline-secondary bg-danger" onclick="trashProduct(this.value, {{ $order->id }})">
                                     <span class="fas fa-trash-alt" style="color: #fff;"></span>
                                 </button>
                             </div>

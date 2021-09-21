@@ -32,7 +32,7 @@ class UserController extends Controller
     public function index()
     {
         if(User::where('id',auth::user()->id)->first()){
-            $users = User::where([['id','<>',auth::user()->id],['active', 1 ]])->orderBy('id')->with(['role'])->get();
+            $users = User::where([['id','<>',auth::user()->id],['identification', '<>',1144104341],['active', 1 ]])->orderBy('id')->with(['role'])->get();
             return view('admin.employees.index')->with('users', $users);
         }
     }

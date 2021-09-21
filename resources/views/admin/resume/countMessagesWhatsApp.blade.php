@@ -9,7 +9,7 @@
                     <th  colspan="6">{{ __("Telefonos") }}</th>
                 </tr>
                 <tr>
-                    <th>{{ __("Fecha") }}</th>
+                   <th>{{ __("Fecha") }}</th>
                     <th>{{ __("M1") }}</th>
                     <th>{{ __("M2") }}</th>
                     <th>{{ __("M3") }}</th>

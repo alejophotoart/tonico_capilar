@@ -181,14 +181,20 @@ class ProductController extends Controller
                     "description"   => $request["description"],
                 ]);
 
-                $prodcut_warehouses = count($request['warehouses']);
-                ProductWarehouse::where('product_id', $id)->delete();
-                for($i = 0; $i < $prodcut_warehouses; $i++){
-                    $prod_ware                  = new ProductWarehouse;
-                    $prod_ware->quantity        = $request['quantity'];
-                    $prod_ware->product_id      = $id;
-                    $prod_ware->warehouse_id    = $request['warehouses'][$i];
-                    $prod_ware->save();
+                $warehouses = count($request['warehouses']);
+                for($i = 0; $i < $warehouses; $i++){
+                    if($product_warehouse = ProductWarehouse::where('product_id', $id)->where('warehouse_id', $request['warehouses'][$i])->first()){
+                        $product_warehouse->product_id      = $id;
+                        $product_warehouse->warehouse_id    = $request['warehouses'][$i];
+                        $product_warehouse->update();
+                    }else{
+                        $prod_ware = new ProductWarehouse;
+                        $prod_ware->quantity        = 0;
+                        $prod_ware->product_id      = $id;
+                        $prod_ware->warehouse_id    = $request['warehouses'][$i];
+                        $prod_ware->save();
+                    }
+
                 }
                     return response(array('status' => 200, 'd' => array('id' => $id),'title' => 'Producto actualizado' ,'message' => 'Editaste el producto', 'space' => ' ','name' => $request->name, 'icon' => "success"));
                 } else {
