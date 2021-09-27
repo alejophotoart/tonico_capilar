@@ -34,12 +34,6 @@ Route::get('/', function () { //valida si el usuario esta auth,
 
 Route::middleware(['auth'])->group(function () {
     Route::group (['middleware' => 'firewall.all'], function () {
-    //Rutas de inicio
-        // Route::get('/home', function () {
-        //     $pdf = App::make('dompdf.wrapper');
-        //     $pdf->loadView('home');
-        //     return $pdf->stream();
-        // });//Entrea a Home pagina principal
     // Rutas de empleado
         Route::group(['middleware' => 'admin'], function () {
         Route::get('/empleados', [UserController::class, 'index'])->name('employees.index');//llama a la vista de empleado

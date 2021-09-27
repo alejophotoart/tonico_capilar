@@ -16,7 +16,7 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
@@ -28,7 +28,7 @@ class LoginController extends Controller
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
 
-                return redirect()->intended('/home');
+                return redirect()->intended('/');
                 }
             }
 
@@ -44,7 +44,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    //protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
