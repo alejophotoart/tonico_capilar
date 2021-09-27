@@ -56,7 +56,7 @@
                 <div class="input-group mb-3">
                     <input
                         class="form-control __format_currency__"
-                        placeholder="Precio $$"
+                        placeholder="Precio Coste C/U $"
                         id="price"
                         name="price"
                         onkeypress="return validePrice(event);"

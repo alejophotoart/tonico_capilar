@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-
+use Carbon\Carbon;
 
 class OrderController extends Controller
 {
@@ -174,6 +174,12 @@ class OrderController extends Controller
     }
     public function store(Request $request)
     {
+        $date = new Carbon('today');
+        $date1 = $date->format('Y-m-d 00:00:00');
+        $date2 = $date->format('Y-m-d 23:59:59');
+        $deliveryD = new Carbon($request['delivery_date']);
+        $delivery_date = $deliveryD->format("Y-m-d H:i:s");
+
         if(Client::where('id', $request['client_id'])->first())
         {
             $warehouse = Warehouse::where('city_id', $request['city_id'])->first();
@@ -223,14 +229,15 @@ class OrderController extends Controller
                 'client_id'         => $request['client_id'],
                 'city_id'           => $request['city_id'],
             ]);
-            if($request['payment_type_id'] == 1){
+
+            if($delivery_date >= $date1 && $delivery_date <= $date2 && $request['payment_type_id'] == 1){
                 $order = Order::create([
                     'delivery_date'     => $request['delivery_date'],
                     'delivery_price'    => 10000,
                     'total'             => $request['total'],
                     'notes'             => $request['notes'],
                     'payment_type_id'   => $request['payment_type_id'],
-                    'state_order_id'    => 1,
+                    'state_order_id'    => 2,
                     'client_id'         => $request['client_id'],
                     'user_id'           => $request['id'],
                     'address_id'        => $address['id'],
@@ -238,20 +245,36 @@ class OrderController extends Controller
                     'active'            => 1,
                 ]);
             }else{
-                if($request['payment_type_id'] == 2){
+                if($request['payment_type_id'] == 1){
                     $order = Order::create([
                         'delivery_date'     => $request['delivery_date'],
                         'delivery_price'    => 10000,
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
-                        'state_order_id'    => 7,
+                        'state_order_id'    => 1,
                         'client_id'         => $request['client_id'],
                         'user_id'           => $request['id'],
                         'address_id'        => $address['id'],
                         'city_id'           => $request['city_id'],
                         'active'            => 1,
                     ]);
+                }else{
+                    if($request['payment_type_id'] == 2){
+                        $order = Order::create([
+                            'delivery_date'     => $request['delivery_date'],
+                            'delivery_price'    => 10000,
+                            'total'             => $request['total'],
+                            'notes'             => $request['notes'],
+                            'payment_type_id'   => $request['payment_type_id'],
+                            'state_order_id'    => 7,
+                            'client_id'         => $request['client_id'],
+                            'user_id'           => $request['id'],
+                            'address_id'        => $address['id'],
+                            'city_id'           => $request['city_id'],
+                            'active'            => 1,
+                        ]);
+                    }
                 }
             }
 
@@ -314,14 +337,14 @@ class OrderController extends Controller
                 'city_id'           => $request['city_id'],
             ]);
 
-            if($request['payment_type_id'] == 1){
+            if($delivery_date >= $date1 && $delivery_date <= $date2 && $request['payment_type_id'] == 1){
                 $order = Order::create([
                     'delivery_date'     => $request['delivery_date'],
                     'delivery_price'    => 10000,
                     'total'             => $request['total'],
                     'notes'             => $request['notes'],
                     'payment_type_id'   => $request['payment_type_id'],
-                    'state_order_id'    => 1,
+                    'state_order_id'    => 2,
                     'client_id'         => $client['id'],
                     'user_id'           => $request['id'],
                     'address_id'        => $address['id'],
@@ -329,20 +352,36 @@ class OrderController extends Controller
                     'active'            => 1,
                 ]);
             }else{
-                if($request['payment_type_id'] == 2){
+                if($request['payment_type_id'] == 1){
                     $order = Order::create([
                         'delivery_date'     => $request['delivery_date'],
                         'delivery_price'    => 10000,
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
-                        'state_order_id'    => 7,
+                        'state_order_id'    => 1,
                         'client_id'         => $client['id'],
                         'user_id'           => $request['id'],
                         'address_id'        => $address['id'],
                         'city_id'           => $request['city_id'],
                         'active'            => 1,
                     ]);
+                }else{
+                    if($request['payment_type_id'] == 2){
+                        $order = Order::create([
+                            'delivery_date'     => $request['delivery_date'],
+                            'delivery_price'    => 10000,
+                            'total'             => $request['total'],
+                            'notes'             => $request['notes'],
+                            'payment_type_id'   => $request['payment_type_id'],
+                            'state_order_id'    => 7,
+                            'client_id'         => $client['id'],
+                            'user_id'           => $request['id'],
+                            'address_id'        => $address['id'],
+                            'city_id'           => $request['city_id'],
+                            'active'            => 1,
+                        ]);
+                    }
                 }
             }
 
@@ -353,7 +392,7 @@ class OrderController extends Controller
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
-            $this->sendMessage($request, $order['id']);
+            // $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }
 
@@ -505,8 +544,12 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->all());
         if(Order::where('id', $id)->first()){
+            $date = new Carbon('today');
+            $date1 = $date->format('Y-m-d 00:00:00');
+            $date2 = $date->format('Y-m-d 23:59:59');
+            $deliveryD = new Carbon($request['delivery_date']);
+            $delivery_date = $deliveryD->format("Y-m-d H:i:s");
             $warehouse = Warehouse::where('city_id', $request['city_id'])->first();
             $city = City::where('id', $request['city_id'])->first();
             $product_quan = count($request['prod_quan'][1]);
@@ -588,15 +631,14 @@ class OrderController extends Controller
                 $order_i->order_id   = $id;
                 $order_i->save();
             }
-
-                if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
+            if($delivery_date >= $date1 && $delivery_date <= $date2 && Order::where([['id', $id],['payment_type_id', 1]])->update([
                 'delivery_date'=> $request['delivery_date'],
                 'reason'            => $request['reason'],
                 'delivery_price'    => 10000,
                 'total'             => $request['total'],
                 'notes'             => $request['notes'],
                 'payment_type_id'   => $request['payment_type_id'],
-                'state_order_id'    => 1,
+                'state_order_id'    => 2,
                 'client_id'         => $request['client_id'],
                 'user_id'           => $request['user_id'],
                 'address_id'        => $request['address_id'],
@@ -604,15 +646,15 @@ class OrderController extends Controller
                 'active'            => 1,
             ])){
 
-                }else{
-                    if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date','<>',$request['delivery_date']]])->update([
-                    'delivery_date'     => $request['delivery_date'],
+            }else{
+                if($delivery_date >= $date1 && $delivery_date <= $date2 && Order::where([['id', $id],['payment_type_id', 2]])->update([
+                    'delivery_date'=> $request['delivery_date'],
                     'reason'            => $request['reason'],
                     'delivery_price'    => 10000,
                     'total'             => $request['total'],
                     'notes'             => $request['notes'],
                     'payment_type_id'   => $request['payment_type_id'],
-                    'state_order_id'    => 5,
+                    'state_order_id'    => 2,
                     'client_id'         => $request['client_id'],
                     'user_id'           => $request['user_id'],
                     'address_id'        => $request['address_id'],
@@ -621,14 +663,14 @@ class OrderController extends Controller
                 ])){
 
                 }else{
-                    if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date', $request['delivery_date']]])->first()->update([
+                    if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
                         'delivery_date'=> $request['delivery_date'],
                         'reason'            => $request['reason'],
                         'delivery_price'    => 10000,
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
-                        'state_order_id'    => 7,
+                        'state_order_id'    => 1,
                         'client_id'         => $request['client_id'],
                         'user_id'           => $request['user_id'],
                         'address_id'        => $request['address_id'],
@@ -636,26 +678,76 @@ class OrderController extends Controller
                         'active'            => 1,
                     ])){
 
+                        }else{
+                            if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date','<>',$request['delivery_date']]])->update([
+                            'delivery_date'     => $request['delivery_date'],
+                            'reason'            => $request['reason'],
+                            'delivery_price'    => 10000,
+                            'total'             => $request['total'],
+                            'notes'             => $request['notes'],
+                            'payment_type_id'   => $request['payment_type_id'],
+                            'state_order_id'    => 5,
+                            'client_id'         => $request['client_id'],
+                            'user_id'           => $request['user_id'],
+                            'address_id'        => $request['address_id'],
+                            'city_id'           => $request['city_id'],
+                            'active'            => 1,
+                        ])){
+
+                        }else{
+                            if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date', $request['delivery_date']]])->update([
+                                'delivery_date'     => $request['delivery_date'],
+                                'reason'            => $request['reason'],
+                                'delivery_price'    => 10000,
+                                'total'             => $request['total'],
+                                'notes'             => $request['notes'],
+                                'payment_type_id'   => $request['payment_type_id'],
+                                'state_order_id'    => 7,
+                                'client_id'         => $request['client_id'],
+                                'user_id'           => $request['user_id'],
+                                'address_id'        => $request['address_id'],
+                                'city_id'           => $request['city_id'],
+                                'active'            => 1,
+                            ])){
+
+                            }else{
+                                if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date','<>', $request['delivery_date']]])->update([
+                                    'delivery_date'=> $request['delivery_date'],
+                                    'reason'            => $request['reason'],
+                                    'delivery_price'    => 10000,
+                                    'total'             => $request['total'],
+                                    'notes'             => $request['notes'],
+                                    'payment_type_id'   => $request['payment_type_id'],
+                                    'state_order_id'    => 5,
+                                    'client_id'         => $request['client_id'],
+                                    'user_id'           => $request['user_id'],
+                                    'address_id'        => $request['address_id'],
+                                    'city_id'           => $request['city_id'],
+                                    'active'            => 1,
+                                ])){
+
+                                }
+                            }
+                        }
                     }
                 }
             }
-
         }
 
-            $client = Client::where('id', $request->client_id)->update([
-                'identification'    => $request['identification'],
-                'name'              => $request['name'],
-                'phone'             => $request['phone'],
-                'whatsapp'          => $request['whatsapp'],
-            ]);
+        $client = Client::where('id', $request->client_id)->update([
+            'identification'    => $request['identification'],
+            'name'              => $request['name'],
+            'phone'             => $request['phone'],
+            'whatsapp'          => $request['whatsapp'],
+        ]);
 
-            $address = Address::where('id', $request->address_id)->update([
-                'address'           => $request['address'],
-                'neighborhood'      => $request['neighborhood'],
-                'client_id'         => $request['client_id'],
-                'city_id'           => $request['city_id'],
-            ]);
-            return response(array('status' => 200, 'id' => $id,'title' => 'Pedido Actualizado' ,'message' => 'Actualizaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
+        $address = Address::where('id', $request->address_id)->update([
+            'address'           => $request['address'],
+            'neighborhood'      => $request['neighborhood'],
+            'client_id'         => $request['client_id'],
+            'city_id'           => $request['city_id'],
+        ]);
+        return response(array('status' => 200, 'id' => $id,'title' => 'Pedido Actualizado' ,'message' => 'Actualizaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
 
     }
 

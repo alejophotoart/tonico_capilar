@@ -90,7 +90,7 @@ function editQuantity() {
                                     confirmButtonColor: "#343a40",
                                     showConfirmButton: true
                                 }).then(val => {
-                                var url = "http://127.0.0.1:8000";
+                                var url = "https://gdseclatam.com";
                                 if (val.value) {
                                     $(location).attr(
                                         "href",

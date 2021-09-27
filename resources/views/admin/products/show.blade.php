@@ -46,7 +46,7 @@
 
                 <div class="mb-3 row">
                     <label for="" class="col-sm-2 col-form-label">{{
-                        __("Price")
+                        __("Precio de Coste")
                     }}</label>
                     <div
                         class="col-sm-10 heigh-text
