@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body">
             <label for="inputQuantity" class="form-label">{{
-                __("Agregar Cantindad")
+                __("Cuanta Cantidad Agregaras ?")
             }}</label>
             <div class="input-group mb-3">
                 <input

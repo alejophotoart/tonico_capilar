@@ -430,6 +430,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 All rights reserved.
             </footer>-->
         </div>
+        {{-- TooltipTex --}}
+        <script src="/adminlte/js/tooltip/tooltipTex.js"></script>
         <!-- DarkMode -->
         <script src="/adminlte/js/darkMode/darkMode.js"></script>
         <!-- jQuery -->

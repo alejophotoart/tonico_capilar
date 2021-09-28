@@ -107,6 +107,8 @@ __('Employees')) @section('explorer')
                         == 3)
                         <td class="darkMode-fill" id="actions">
                             <a
+                                data-toggle="tooltip"
+                                title="Editar"
                                 href="{{ route('employees.edit', $user) }}"
                                 class="mg-10"
                             >
@@ -114,11 +116,15 @@ __('Employees')) @section('explorer')
                             </a>
                             <a
                                 class="mg-10"
+                                data-toggle="tooltip"
+                                title="Eliminar"
                                 onclick="DeleteUser('{{$user->id}}', '{{$user->name}}')"
                             >
                                 <i id="IconD" class="fas fa-trash-alt darkMode-icon"></i>
                             </a>
                             <a
+                                data-toggle="tooltip"
+                                title="Mostra informacion"
                                 onclick="ShowInfoUser('{{$user->id}}')"
                                 data-bs-toggle="modal"
                                 data-bs-whatever="@fat"
@@ -135,7 +141,6 @@ __('Employees')) @section('explorer')
         </div>
     </div>
 </div>
-
 <script src="/adminlte/js/employees/ShowUser.js"></script>
 <script src="/adminlte/js/employees/DeleteUser.js"></script>
 @include('admin.employees.show') @endsection

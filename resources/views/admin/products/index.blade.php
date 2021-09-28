@@ -121,18 +121,24 @@ __('Products')) @section('explorer')
                             @if(auth()->user()->role_id == 1 ||
                             auth()->user()->role_id == 2)
                             <a
+                                data-toggle="tooltip"
+                                title="Editar"
                                 href="{{ route('products.edit', $p) }}"
                                 class="mg-10"
                             >
                                 <i id="IconE" class="fas fa-pencil-alt darkMode-icon"></i>
                             </a>
                             <a
+                                data-toggle="tooltip"
+                                title="Eliminar"
                                 class="mg-10"
                                 onclick="DeleteProduct('{{$p->id}}', '{{$p->name}}')"
                             >
                                 <i id="IconD" class="fas fa-trash-alt darkMode-icon"></i>
                             </a>
                             <a
+                                data-toggle="tooltip"
+                                title="Mostra informacion"
                                 onclick="ShowInfoProduct('{{$p->id}}')"
                                 data-bs-toggle="modal"
                                 data-bs-whatever="@fat"
@@ -142,6 +148,8 @@ __('Products')) @section('explorer')
                             </a>
                             @else
                             <a
+                                data-toggle="tooltip"
+                                title="Mostra informacion"
                                 onclick="ShowInfoProduct('{{$p->id}}')"
                                 data-bs-toggle="modal"
                                 data-bs-whatever="@fat"

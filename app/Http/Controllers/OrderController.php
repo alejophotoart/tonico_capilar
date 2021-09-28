@@ -663,14 +663,14 @@ class OrderController extends Controller
                 ])){
 
                 }else{
-                    if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
+                    if($request['payment_type_id'] == 1 && Order::where([['id', $id],['payment_type_id', 2],['delivery_date', $request['delivery_date']]])->update([
                         'delivery_date'=> $request['delivery_date'],
                         'reason'            => $request['reason'],
                         'delivery_price'    => 10000,
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
-                        'state_order_id'    => 1,
+                        'state_order_id'    => 5,
                         'client_id'         => $request['client_id'],
                         'user_id'           => $request['user_id'],
                         'address_id'        => $request['address_id'],
@@ -695,7 +695,7 @@ class OrderController extends Controller
                         ])){
 
                         }else{
-                            if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date', $request['delivery_date']]])->update([
+                            if($request['payment_type_id'] == 2 && Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
                                 'delivery_date'     => $request['delivery_date'],
                                 'reason'            => $request['reason'],
                                 'delivery_price'    => 10000,

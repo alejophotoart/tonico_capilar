@@ -227,7 +227,9 @@ __('Orders')) @section('explorer')
                                     @if(auth()->user()->role_id == 1 ||
                                     auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
                                     <a type="button" class="mg-10"
-                                    href="{{ route('orders.edit', $o->id) }}">
+                                        data-toggle="tooltip"
+                                        title="Editar"
+                                        href="{{ route('orders.edit', $o->id) }}">
                                         <i
                                             id="IconE"
                                             class="fas fa-pencil-alt darkMode-icon"
@@ -235,12 +237,16 @@ __('Orders')) @section('explorer')
                                         ></i>
                                     </a>
                                     <a
+                                        data-toggle="tooltip"
+                                        title="Cancelar"
                                         class="mg-10-0"
                                         onclick="CancelOrder('{{$o->id}}')"
                                     >
                                         <i id="IconD" class="fas fa-ban darkMode-icon"></i>
                                     </a>
                                     <a
+                                        data-toggle="tooltip"
+                                        title="Mostra informacion"
                                         onclick="ShowOrderModal( '{{ $o->id }}' )"
                                         data-bs-toggle="modal"
                                         data-bs-whatever="@fat"
@@ -250,6 +256,8 @@ __('Orders')) @section('explorer')
                                     </a>
                                     @else
                                     <a
+                                        data-toggle="tooltip"
+                                        title="Mostra informacion"
                                         onclick="ShowOrderModal( '{{ $o->id }}' )"
                                         data-bs-toggle="modal"
                                         data-bs-whatever="@fat"

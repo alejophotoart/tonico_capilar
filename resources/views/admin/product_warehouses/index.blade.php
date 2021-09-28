@@ -89,6 +89,8 @@ __('Productos x Bodega')) @section('explorer')
                         auth()->user()->role_id == 2)
                         <td class="darkMode-fill">
                             <a
+                                data-toggle="tooltip"
+                                title="Agregar cantidad"
                                 onclick="editProductWarehouse({{ $pw->id }}, {{ $pww->id }})"
                                 class="mg-10"
                             >
@@ -99,6 +101,8 @@ __('Productos x Bodega')) @section('explorer')
                                 @endif
                             </a>
                             <a
+                                data-toggle="tooltip"
+                                title="Eliminar"
                                 class="mg-10"
                                 onclick="deleteProductWarehouse('{{$pw->id}}', '{{$pww->name}}', '{{ $pwp->name }}', '{{ $pwp->id }}')"
                             >

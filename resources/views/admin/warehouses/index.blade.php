@@ -78,12 +78,16 @@ __('Warehouses')) @section('explorer')
                             auth()->user()->role_id == 2)
                         <td class="darkMode-fill" id="actions">
                             <a
+                                data-toggle="tooltip"
+                                title="Editar"
                                 onclick="editWarehouses( {{ $w->id }}, {{ $w->state_warehouse_id }}, {{ $w->city->state->country->id }}, {{$w->city->id}}, {{ $w->city->state->id }})"
                                 class="mg-10"
                             >
                                 <i id="IconE" class="fas fa-pencil-alt darkMode-icon"></i>
                             </a>
                             <a
+                                data-toggle="tooltip"
+                                title="Eliminar"
                                 class="mg-10"
                                 onclick="deleteWarehouse('{{$w->id}}', '{{$w->name}}')"
                             >
