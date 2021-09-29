@@ -68,20 +68,29 @@ class OrderController extends Controller
     {
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2  || Auth::user()->role_id == 3){
             $orders = Order::where([['state_order_id', 3],['active', 1]])->orderBy('id', 'desc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-            $products = Product::get();
-            $sum = Order::where("state_order_id", 3)->select(Order::raw("(delivery_price + total) as total, id"))->get();
+            $sum = Order::where("state_order_id", 3)->select(Order::raw("(total - delivery_price) as subtotal, id"))->get();
+            // $total = [];
+            $neto = 0;
+            // foreach ($orders as $o) {
+            //     for ($i=0; $i < count($o->order_items); $i++) {
+            //         for ($p=0; $p < count($o->order_items[$i]->product); $p++) {
+            //             $subtotal = $o->order_items[$i]->quantity * $o->order_items[$i]->product[$p]->price;
+            //             $neto = ($o->total - $o->delivery_price) - $subtotal;
+            //         }
+            //     }
+            // }
+
+
             return view('admin.orders.tables.delivered')
             ->with('orders', $orders)
-            ->with('products', $products)
-            ->with('total', $sum);
+            ->with('subtotal', $sum)
+            ->with($neto);
         }else{
             if(Auth::user()->role_id == 4){
                 $orders = Order::where([['user_id',auth::user()->id],['state_order_id', 3],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-                $products = Product::get();
                 $sum = Order::where("state_order_id", 3)->select(Order::raw("(delivery_price + total) as total, id"))->get();
                 return view('admin.orders.tables.delivered')
                 ->with('orders', $orders)
-                ->with('products', $products)
                 ->with('total', $sum);
             }
         }
@@ -91,17 +100,13 @@ class OrderController extends Controller
     {
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2 || Auth::user()->role_id == 3){
             $orders = Order::where([['state_order_id', 4],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-            $products = Product::get();
             return view('admin.orders.tables.canceled')
-            ->with('orders', $orders)
-            ->with('products', $products);
+            ->with('orders', $orders);
         }else{
             if(Auth::user()->role_id == 4){
                 $orders = Order::where([['user_id',auth::user()->id],['state_order_id', 4],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-                $products = Product::get();
                 return view('admin.orders.tables.canceled')
-                ->with('orders', $orders)
-                ->with('products', $products);
+                ->with('orders', $orders);
             }
         }
     }

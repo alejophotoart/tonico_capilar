@@ -254,7 +254,7 @@ __('Orders')) @section('explorer')
                                 </td>
 
                                 <td class="darkMode-fill">
-                                @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
+                                @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
                                     <a class="mg-10"
                                     data-toggle="tooltip"
                                     title="Editar"
@@ -283,6 +283,27 @@ __('Orders')) @section('explorer')
                                         <i id="IconS" class="fas fa-eye darkMode-icon"></i>
                                     </a>
                                 @else
+                                    @if (auth()->user()->role_id == 3)
+                                    <a class="mg-10"
+                                        data-toggle="tooltip"
+                                        title="Editar"
+                                        href="{{ route('orders.edit', $o->id) }}">
+                                            <i
+                                                id="IconE"
+                                                class="fas fa-pencil-alt darkMode-icon"
+                                            ></i>
+                                        </a>
+                                        <a
+                                            data-toggle="tooltip"
+                                            title="Mostra informacion"
+                                            onclick="ShowOrderModal( '{{ $o->id }}' )"
+                                            data-bs-toggle="modal"
+                                            data-bs-whatever="@fat"
+                                            class="mg-10-1"
+                                        >
+                                            <i id="IconS" class="fas fa-eye darkMode-icon"></i>
+                                        </a>
+                                    @else
                                     <a
                                         data-toggle="tooltip"
                                         title="Mostra informacion"
@@ -294,6 +315,7 @@ __('Orders')) @section('explorer')
                                         <i id="IconS" class="fas fa-eye darkMode-icon"></i>
                                     </a>
                                     @endif
+                                @endif
                                 </td>
                             </tr>
                             @endforeach

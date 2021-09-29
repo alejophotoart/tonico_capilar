@@ -18,11 +18,11 @@ class OrderItem extends Model
 
     public function product()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'id', 'product_id');
     }
 
     public function orders()
     {
-        return $this->hasOne(Order::class);
+        return $this->hasOne(Order::class, 'id', 'order_id');
     }
 }

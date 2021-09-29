@@ -180,7 +180,10 @@ __('Orders')) @section('explorer')
                                     {{ __("Domicilio") }}
                                 </th>
                                 <th>
-                                    {{ __("SubTotal") }}
+                                    {{ __("Venta") }}
+                                </th>
+                                <th>
+                                    {{ __("Subtotal") }}
                                 </th>
                                 <th>
                                     {{ __("Total") }}
@@ -210,11 +213,9 @@ __('Orders')) @section('explorer')
                                 <td class="darkMode-fill">{{ $o->delivery_date }}</td>
                                 <td class="darkMode-fill">
                                     @for($i = 0; $i < count($o->order_items); $i++)
-                                        @for($p = 0; $p < count($products); $p++)
-                                            @if($o->order_items[$i]->product_id == $products[$p]->id)
-                                                {{ $o->order_items[$i]->quantity }} -
-                                                {{ $products[$p]->name }} <br />
-                                            @endif
+                                        @for($p = 0; $p < count($o->order_items[$i]->product); $p++)
+                                            {{ $o->order_items[$i]->quantity }} -
+                                            {{ $o->order_items[$i]->product[$p]->name }} <br />
                                         @endfor
                                     @endfor
                                 </td>
@@ -226,14 +227,24 @@ __('Orders')) @section('explorer')
                                     {{ "$" }}
                                     {{ number_format($o->total, 0, ',', '.') }}
                                 </td>
-                                @foreach($total as $t)
-                                    @if($o->id == $t->id)
+                                <td class="darkMode-fill">
+                                    @for($r=0; $r < count($subtotal); $r++)
+                                        @if($subtotal[$r]->id == $o->id)
+                                            {{ "$" }}
+                                            {{ number_format($subtotal[$r]->subtotal, 0, ',', '.') }}
+                                        @endif
+                                    @endfor
+                                </td>
+                                @for($i=0; $i < count($o->order_items); $i++){
+                                    @for($p=0; $p < count($o->order_items[$i]->product); $p++){
+                                        {{$subtotal1 = $o->order_items[$i]->quantity * $o->order_items[$i]->product[$p]->price;}}
+                                        {{$neto = ($o->total - $o->delivery_price) - $subtotal1}}
                                         <td class="darkMode-fill">
                                             {{ "$" }}
-                                            {{ number_format($t->total, 0, ',', '.') }}
+                                            {{ number_format($neto, 0, ',', '.') }}
                                         </td>
-                                    @endif
-                                @endforeach
+                                    @endfor
+                                @endfor
                             </tr>
                             @endforeach
                         </tbody>

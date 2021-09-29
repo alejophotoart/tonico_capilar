@@ -225,7 +225,7 @@ __('Orders')) @section('explorer')
                                 </td>
                                 <td class="darkMode-fill">
                                     @if(auth()->user()->role_id == 1 ||
-                                    auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
+                                    auth()->user()->role_id == 2)
                                     <a type="button" class="mg-10"
                                         data-toggle="tooltip"
                                         title="Editar"
@@ -255,16 +255,39 @@ __('Orders')) @section('explorer')
                                         <i id="IconS" class="fas fa-eye darkMode-icon"></i>
                                     </a>
                                     @else
-                                    <a
-                                        data-toggle="tooltip"
-                                        title="Mostra informacion"
-                                        onclick="ShowOrderModal( '{{ $o->id }}' )"
-                                        data-bs-toggle="modal"
-                                        data-bs-whatever="@fat"
-                                        class="mg-10-1"
-                                    >
-                                        <i id="IconS" class="fas fa-eye darkMode-icon"></i>
-                                    </a>
+                                        @if (auth()->user()->role_id == 3)
+                                        <a type="button" class="mg-10"
+                                            data-toggle="tooltip"
+                                            title="Editar"
+                                            href="{{ route('orders.edit', $o->id) }}">
+                                            <i
+                                                id="IconE"
+                                                class="fas fa-pencil-alt darkMode-icon"
+                                                style="left: 1px;"
+                                            ></i>
+                                        </a>
+                                        <a
+                                            data-toggle="tooltip"
+                                            title="Mostra informacion"
+                                            onclick="ShowOrderModal( '{{ $o->id }}' )"
+                                            data-bs-toggle="modal"
+                                            data-bs-whatever="@fat"
+                                            class="mg-10-1"
+                                        >
+                                            <i id="IconS" class="fas fa-eye darkMode-icon"></i>
+                                        </a>
+                                        @else
+                                        <a
+                                            data-toggle="tooltip"
+                                            title="Mostra informacion"
+                                            onclick="ShowOrderModal( '{{ $o->id }}' )"
+                                            data-bs-toggle="modal"
+                                            data-bs-whatever="@fat"
+                                            class="mg-10-1"
+                                        >
+                                            <i id="IconS" class="fas fa-eye darkMode-icon"></i>
+                                        </a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>

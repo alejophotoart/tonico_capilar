@@ -263,11 +263,11 @@ __('Orders')) @section('explorer')
                                 </td>
                                 <td class="darkMode-fill" style="padding: 5px 5px 5px 0px;">
                                     @if(auth()->user()->role_id == 1 ||
-                                    auth()->user()->role_id == 2 || auth()->user()->role_id == 3)
+                                    auth()->user()->role_id == 2)
                                     <a class="mg-10"
-                                    data-toggle="tooltip"
-                                    title="Editar"
-                                    href="{{ route('orders.edit', $o->id) }}">
+                                        data-toggle="tooltip"
+                                        title="Editar"
+                                        href="{{ route('orders.edit', $o->id) }}">
                                         <i
                                             id="IconE"
                                             class="fas fa-pencil-alt darkMode-icon"
@@ -306,30 +306,66 @@ __('Orders')) @section('explorer')
                                         <i id="IconI" class="fas fa-image darkMode-icon"></i>
                                     </a>
                                     @else
-                                    <a
-                                        data-toggle="tooltip"
-                                        title="Mostra informacion"
-                                        onclick="ShowOrderModal( '{{ $o->id }}' )"
-                                        data-bs-toggle="modal"
-                                        data-bs-whatever="@fat"
-                                        class="mg-10-1"
-                                        style="padding: 7px 5px 7px 5px !important;"
-                                    >
-                                        <i
-                                            id="IconS"
-                                            class="fas fa-eye darkMode-icon"
-                                            style="position: relative; right: -2px;"
-                                        ></i>
-                                    </a>
-                                    <a
-                                        data-toggle="tooltip"
-                                        title="Ver deposito"
-                                        onclick="showVoucherCheck( '{{ $o->id }}' )"
-                                        type="button"
-                                        class="mg-10-1"
-                                    >
-                                        <i id="IconI" class="fas fa-image darkMode-icon"></i>
-                                    </a>
+                                        @if (auth()->user()->role_id == 3)
+                                        <a class="mg-10"
+                                            data-toggle="tooltip"
+                                            title="Editar"
+                                            href="{{ route('orders.edit', $o->id) }}">
+                                            <i
+                                                id="IconE"
+                                                class="fas fa-pencil-alt darkMode-icon"
+                                            ></i>
+                                        </a>
+                                        <a
+                                            data-toggle="tooltip"
+                                            title="Mostra informacion"
+                                            onclick="ShowOrderModal( '{{ $o->id }}' )"
+                                            data-bs-toggle="modal"
+                                            data-bs-whatever="@fat"
+                                            class="mg-10-1"
+                                            style="padding: 7px 5px 7px 5px !important;"
+                                        >
+                                            <i
+                                                id="IconS"
+                                                class="fas fa-eye darkMode-icon"
+                                                style="position: relative; right: -2px;"
+                                            ></i>
+                                        </a>
+                                        <a
+                                            data-toggle="tooltip"
+                                            title="Ver deposito"
+                                            onclick="showVoucherCheck( '{{ $o->id }}' )"
+                                            type="button"
+                                            class="mg-10-1"
+                                        >
+                                            <i id="IconI" class="fas fa-image darkMode-icon"></i>
+                                        </a>
+                                        @else
+                                        <a
+                                            data-toggle="tooltip"
+                                            title="Mostra informacion"
+                                            onclick="ShowOrderModal( '{{ $o->id }}' )"
+                                            data-bs-toggle="modal"
+                                            data-bs-whatever="@fat"
+                                            class="mg-10-1"
+                                            style="padding: 7px 5px 7px 5px !important;"
+                                        >
+                                            <i
+                                                id="IconS"
+                                                class="fas fa-eye darkMode-icon"
+                                                style="position: relative; right: -2px;"
+                                            ></i>
+                                        </a>
+                                        <a
+                                            data-toggle="tooltip"
+                                            title="Ver deposito"
+                                            onclick="showVoucherCheck( '{{ $o->id }}' )"
+                                            type="button"
+                                            class="mg-10-1"
+                                        >
+                                            <i id="IconI" class="fas fa-image darkMode-icon"></i>
+                                        </a>
+                                        @endif
                                     @endif
                                 </td>
                             </tr>

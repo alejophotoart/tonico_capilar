@@ -9,181 +9,181 @@
 @endsection @section('content')
 <form class="row g-3" method="PUT" enctype="multipart/form-data" style="display: flex; justify-content: center">
     <div class="col-auto" style="width: 500px">
-            <div class="card card-outline card-primary">
-                <div class="card-header darkMode-bbg text-center" style="height: 60px;">
-                    <b
-                        ><span
-                            class="fas fa-clipboard-list"
-                            style="margin-right: 5px;"
-                        ></span>
-                        {{ __("Pedido") }} - {{ $order->id }}</b> <br>
-                        <p>{{ __("Datos del cliente") }}</p>
-                </div>
-                <div class="card-body darkMode-bbg">
-                        @method('patch') @csrf
-                        <div class="input-group mb-3">
-                            <input
-                                type="number"
-                                class="form-control"
-                                id="identification"
-                                name="identification"
-                                value="{{ $order->client->identification }}"
-                            />
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="far fa-id-card"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-group mb-3">
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Nombre del cliente"
-                                id="name"
-                                name="name"
-                                value="{{ $order->client->name }}"
-                            />
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-user"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-group mb-3">
-                        @for($i = 0; $i < count($address);$i++)
-                            @if($address[$i]->id == $order->id)
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Direccion"
-                                id="address"
-                                name="address"
-                                value="{{ $address[$i]->address }}"
-                            />
-                            @endif
-                        @endfor
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-home"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-group mb-3">
-                        @for($i = 0; $i < count($address);$i++)
-                            @if($address[$i]->id == $order->id)
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Barrio"
-                                id="neighborhood"
-                                name="neighborhood"
-                                value="{{ $address[$i]->neighborhood }}"
-                            />
-                            @endif
-                        @endfor
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-map-marker-alt"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-group mb-3">
-                        <input type="text" class="form-control" style="max-width: 55px;" value="+57" name="phonecode" id="phonecode" disabled>
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="Telefono"
-                                id="phone"
-                                name="phone"
-                                value="{{ $order->client->phone }}"
-                            />
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fas fa-mobile-alt"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="input-group mb-3">
-                            <input
-                                type="text"
-                                class="form-control"
-                                placeholder="WhatsApp"
-                                id="whatsapp"
-                                name="whatsapp"
-                                value="{{ $order->client->whatsapp }}"
-                            />
-                            <div class="input-group-append">
-                                <div class="input-group-text">
-                                    <span class="fab fa-whatsapp"></span>
-                                </div>
-                            </div>
-                        </div>
-                </div>
-                <!-- /.form-box -->
+        <div class="card card-outline card-primary">
+            <div class="card-header darkMode-bbg text-center" style="height: 60px;">
+                <b
+                    ><span
+                        class="fas fa-clipboard-list"
+                        style="margin-right: 5px;"
+                    ></span>
+                    {{ __("Pedido") }} - {{ $order->id }}</b> <br>
+                    <p>{{ __("Datos del cliente") }}</p>
             </div>
-            <!-- /.card -->
-            <div class="card card-outline card-primary">
-                <div class="card-header text-center darkMode-bbg" style="height: 60px;">
-                    <button type="button" class="btn btn-outline-success bg-success" id="addProduct"
-                     style="position: absolute; display: block; left: 425px;">
-                        <span class="fas fa-plus" style="color: #fff;"></span>
-                    </button>
-                    <b
-                        ><span
-                            class="fas fa-clipboard-list"
-                            style="margin-right: 5px;"
-                        ></span>
-                        {{ __("Pedido") }} - {{ $order->id }}</b> <br>
-                        <p>{{ __("Lista de items") }}</p>
-
-
-                </div>
-                <div class="card-body darkMode-bbg">
-                    <div class="form-group fieldGroupCopy">
-                    @for($i = 0; $i < count($order->order_items);$i++)
-                        @for($p = 0; $p < count($products);$p++)
-                            @if($order->order_items[$i]->product_id == $products[$p]->id)
-                        <div class="input-group mb-3 contentAdd copy-{{ $i }}">
-                            <input type="number" class="form-control copy_quantity" style="max-width: 60px;" value="{{ $order->order_items[$i]->quantity }}" name="quantity">
-                                <select class="form-control col-md-11 custom-select copy" name="product" {{ old('product') }}>
-                                    <option value="{{ $products[$p]->id }}" selected>{{$products[$p]->name}}</option>
-                                @for($r = 0; $r < count($products); $r++)
-                                    <option value="{{ $products[$r]->id }}">{{$products[$r]->name}}</option>
-                                @endfor
-                                </select>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary bg-danger trash-only" value="copy-{{ $i }}" onclick="trashProduct(this.value, {{ $products[$p]->id }}, {{ $order->id }})">
-                                    <span class="fas fa-trash-alt" style="color: #fff;"></span>
-                                </button>
+            <div class="card-body darkMode-bbg">
+                    @method('patch') @csrf
+                    <div class="input-group mb-3">
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="identification"
+                            name="identification"
+                            value="{{ $order->client->identification }}"
+                        />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="far fa-id-card"></span>
                             </div>
                         </div>
-                            @endif
-                        @endfor
+                    </div>
+                    <div class="input-group mb-3">
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Nombre del cliente"
+                            id="name"
+                            name="name"
+                            value="{{ $order->client->name }}"
+                        />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                    @for($i = 0; $i < count($address);$i++)
+                        @if($address[$i]->id == $order->id)
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Direccion"
+                            id="address"
+                            name="address"
+                            value="{{ $address[$i]->address }}"
+                        />
+                        @endif
                     @endfor
-                        <div class="input-group mb-3" id="ShowMoreProduct" style="display: none;">
-                            <input type="number" class="form-control" style="max-width: 60px;" value="1" name="quantity_copy">
-                                <select class="form-control col-md-11 custom-select product_copy" name="product_copy"
-                                {{ old('product_copy') }}>
-                                @for($r = 0; $r < count($products); $r++)
-                                    <option value="{{ $products[$r]->id }}">{{$products[$r]->name}}</option>
-                                @endfor
-                                </select>
-                            <div class="input-group-append">
-                                <button type="button" class="btn btn-outline-secondary bg-danger" onclick="trashProduct(this.value, {{ $order->id }})">
-                                    <span class="fas fa-trash-alt" style="color: #fff;"></span>
-                                </button>
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-home"></span>
                             </div>
                         </div>
-                      </div>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text">$</span>
-                                <input value="{{ $order->total }}" class="form-control __format_currency__" name="total" id="total" placeholder="Valor de venta">
-                            <span class="input-group-text">.00</span>
+                    </div>
+                    <div class="input-group mb-3">
+                    @for($i = 0; $i < count($address);$i++)
+                        @if($address[$i]->id == $order->id)
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Barrio"
+                            id="neighborhood"
+                            name="neighborhood"
+                            value="{{ $address[$i]->neighborhood }}"
+                        />
+                        @endif
+                    @endfor
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-map-marker-alt"></span>
+                            </div>
                         </div>
+                    </div>
+                    <div class="input-group mb-3">
+                    <input type="text" class="form-control" style="max-width: 55px;" value="+57" name="phonecode" id="phonecode" disabled>
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="Telefono"
+                            id="phone"
+                            name="phone"
+                            value="{{ $order->client->phone }}"
+                        />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-mobile-alt"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="WhatsApp"
+                            id="whatsapp"
+                            name="whatsapp"
+                            value="{{ $order->client->whatsapp }}"
+                        />
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fab fa-whatsapp"></span>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <!-- /.form-box -->
+        </div>
+        <!-- /.card -->
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center darkMode-bbg" style="height: 60px;">
+                <button type="button" class="btn btn-outline-success bg-success" id="addProduct"
+                 style="position: absolute; display: block; left: 425px;">
+                    <span class="fas fa-plus" style="color: #fff;"></span>
+                </button>
+                <b
+                    ><span
+                        class="fas fa-clipboard-list"
+                        style="margin-right: 5px;"
+                    ></span>
+                    {{ __("Pedido") }} - {{ $order->id }}</b> <br>
+                    <p>{{ __("Lista de items") }}</p>
+
+
+            </div>
+            <div class="card-body darkMode-bbg">
+                <div class="form-group fieldGroupCopy">
+                @for($i = 0; $i < count($order->order_items);$i++)
+                    @for($p = 0; $p < count($products);$p++)
+                        @if($order->order_items[$i]->product_id == $products[$p]->id)
+                    <div class="input-group mb-3 contentAdd copy-{{ $i }}">
+                        <input type="number" class="form-control copy_quantity" style="max-width: 60px;" value="{{ $order->order_items[$i]->quantity }}" name="quantity">
+                            <select class="form-control col-md-11 custom-select copy" name="product" {{ old('product') }}>
+                                <option value="{{ $products[$p]->id }}" selected>{{$products[$p]->name}}</option>
+                            @for($r = 0; $r < count($products); $r++)
+                                <option value="{{ $products[$r]->id }}">{{$products[$r]->name}}</option>
+                            @endfor
+                            </select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary bg-danger trash-only" value="copy-{{ $i }}" onclick="trashProduct(this.value, {{ $products[$p]->id }}, {{ $order->id }})">
+                                <span class="fas fa-trash-alt" style="color: #fff;"></span>
+                            </button>
+                        </div>
+                    </div>
+                        @endif
+                    @endfor
+                @endfor
+                    <div class="input-group mb-3" id="ShowMoreProduct" style="display: none;">
+                        <input type="number" class="form-control" style="max-width: 60px;" value="1" name="quantity_copy">
+                            <select class="form-control col-md-11 custom-select product_copy" name="product_copy"
+                            {{ old('product_copy') }}>
+                            @for($r = 0; $r < count($products); $r++)
+                                <option value="{{ $products[$r]->id }}">{{$products[$r]->name}}</option>
+                            @endfor
+                            </select>
+                        <div class="input-group-append">
+                            <button type="button" class="btn btn-outline-secondary bg-danger" onclick="trashProduct(this.value, {{ $order->id }})">
+                                <span class="fas fa-trash-alt" style="color: #fff;"></span>
+                            </button>
+                        </div>
+                    </div>
+                  </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">$</span>
+                            <input value="{{ $order->total }}" class="form-control __format_currency__" name="total" id="total" placeholder="Valor de venta">
+                        <span class="input-group-text">.00</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
 
     <div class="col-auto" style="width: 500px">
             <div class="card card-outline card-primary">

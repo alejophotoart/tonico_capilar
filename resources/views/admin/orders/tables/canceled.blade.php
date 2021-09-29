@@ -213,11 +213,9 @@ __('Orders')) @section('explorer')
                                 <td class="darkMode-fill">{{ $o->reason }}</td>
                                 <td class="darkMode-fill">
                                     @for($i = 0; $i < count($o->order_items); $i++)
-                                        @for($p = 0; $p < count($products); $p++)
-                                            @if($o->order_items[$i]->product_id == $products[$p]->id)
-                                                {{ $o->order_items[$i]->quantity }} -
-                                                {{ $products[$p]->name }} <br />
-                                            @endif
+                                        @for($p = 0; $p < count($o->order_items[$i]->product); $p++)
+                                            {{ $o->order_items[$i]->quantity }} -
+                                            {{ $o->order_items[$i]->product[$p]->name }} <br />
                                         @endfor
                                     @endfor
                                 </td>
