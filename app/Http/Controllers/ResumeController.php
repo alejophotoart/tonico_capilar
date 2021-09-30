@@ -64,6 +64,9 @@ class ResumeController extends Controller
         $delivery = 0;
         $neto = 0;
         $cant = 0;
+        $cantProd = 0;
+        $prodCosto = 0;
+        $totalCosto = 0;
         $countryXOrdes = [];
 
         $date = new Carbon('today');
@@ -72,30 +75,41 @@ class ResumeController extends Controller
 
         $products = Product::where('active', 1)->get();
         $countries = Country::where('active', 1)->get();
-        $orders = Order::where([['state_order_id','<>', 4],['created_at','>=',$date1],['created_at','<=',$date2],['active', 1]])->with('city')->get(['id', 'delivery_price', 'total', 'city_id', 'created_at']);
+        $orders = Order::where([['state_order_id', 3],['created_at','>=',$date1],['created_at','<=',$date2],['active', 1]])->with(['city', 'order_items'])->get(['id', 'delivery_price', 'total', 'city_id', 'created_at']);
 
         for ($i=0; $i < count($countries); $i++) {
             for ($e=0; $e < count($orders); $e++) {
                 if($countries[$i]->id == $orders[$e]->city->state->country->id){
-                    $countryXOrdes[$i]['pais'] = $countries[$i]->name;
+                        $countryXOrdes[$i]['pais'] = $countries[$i]->name;
 
-                    $subtotal = $subtotal + $orders[$e]->total;
-                    $countryXOrdes[$i]['subtotal'] = $subtotal;
+                        $subtotal = $subtotal + $orders[$e]->total;
+                        $countryXOrdes[$i]['subtotal'] = $subtotal;
 
-                    $delivery = $delivery + $orders[$e]->delivery_price;
-                    $countryXOrdes[$i]['delivery'] = $delivery;
+                        $cant++;
+                        $countryXOrdes[$i]['sales'] = $cant;
 
-                    $cant++;
-                    $countryXOrdes[$i]['sales'] = $cant;
+                        $delivery = $delivery + $orders[$e]->delivery_price;
+                        $countryXOrdes[$i]['delivery'] = $delivery;
 
-                    $neto = $subtotal - $delivery;
-                    $countryXOrdes[$i]['neto'] = $neto;
+                        for ($o=0; $o < count($orders[$e]->order_items); $o++) {
+                            $cantProd = $cantProd + $orders[$e]->order_items[$o]->quantity;
+                            $countryXOrdes[$i]['salesProd'] = $cantProd;
+
+                            for ($c=0; $c < count($orders[$e]->order_items[$o]->product); $c++) {
+                                $prodCosto = $prodCosto + ($orders[$e]->order_items[$o]->quantity * $orders[$e]->order_items[$o]->product[$c]->price);
+                                $countryXOrdes[$i]['prodCosto'] = $prodCosto;
+                            }
+                        }
+                        $neto = ($subtotal - $delivery) - $prodCosto;
+                        $countryXOrdes[$i]['neto'] = $neto;
+                    }
                 }
-            }
             $subtotal = 0;
             $delivery = 0;
             $cant = 0;
             $neto = 0;
+            $cantProd = 0;
+            $prodCosto = 0;
         }
 
         foreach ($orders as $o) {
@@ -103,10 +117,11 @@ class ResumeController extends Controller
             $delivery = $delivery + $o->delivery_price;
         }
 
-        for ($i=0; $i < count($orders); $i++) {
-            $cant++;
+        for ($p=0; $p < count($countryXOrdes); $p++) {
+            $totalCosto = $totalCosto + $countryXOrdes[$p]['prodCosto'];
         }
-        $neto = $subtotal - $delivery;
+
+        $totalNeto = ($subtotal - $delivery) - $totalCosto;
 
         return view('admin.resume.index')
         ->with('products', $products)
@@ -114,7 +129,8 @@ class ResumeController extends Controller
         ->with('orders', $orders)
         ->with('subtotal', $subtotal)
         ->with('delivery', $delivery)
-        ->with('neto', $neto)
+        ->with('totalCosto', $totalCosto)
+        ->with('totalNeto', $totalNeto)
         ->with('clave', $clave)
         ->with('totalChats', $totalChats);
     }
@@ -135,6 +151,9 @@ class ResumeController extends Controller
         $delivery = 0;
         $neto = 0;
         $cant = 0;
+        $cantProd = 0;
+        $prodCosto = 0;
+        $totalCosto = 0;
         $countryXOrdes = [];
 
         $dt = new Carbon($date);
@@ -142,44 +161,63 @@ class ResumeController extends Controller
         $date2 = $dt->format('Y-m-d 23:59:59');
 
         $countries = Country::where('active', 1)->get();
-        $orders = Order::where([['state_order_id','<>', 4],['created_at','>=',$date1],['created_at','<=',$date2],['active', 1]])->with('city')->get(['id', 'delivery_price', 'total', 'city_id', 'created_at']);
+        $orders = Order::where([['state_order_id', 3],['created_at','>=',$date1],['created_at','<=',$date2],['active', 1]])->with(['city', 'order_items'])->get(['id', 'delivery_price', 'total', 'city_id', 'created_at']);
 
+        // dd($orders);
         for ($i=0; $i < count($countries); $i++) {
             for ($e=0; $e < count($orders); $e++) {
                 if($countries[$i]->id == $orders[$e]->city->state->country->id){
-                    $countryXOrdes[$i]['pais'] = $countries[$i]->name;
+                        $countryXOrdes[$i]['pais'] = $countries[$i]->name;
 
-                    $subtotal = $subtotal + $orders[$e]->total;
-                    $countryXOrdes[$i]['subtotal'] = $subtotal;
+                        $subtotal = $subtotal + $orders[$e]->total;
+                        $countryXOrdes[$i]['subtotal'] = $subtotal;
 
-                    $delivery = $delivery + $orders[$e]->delivery_price;
-                    $countryXOrdes[$i]['delivery'] = $delivery;
+                        $cant++;
+                        $countryXOrdes[$i]['sales'] = $cant;
 
-                    $cant++;
-                    $countryXOrdes[$i]['sales'] = $cant;
+                        $delivery = $delivery + $orders[$e]->delivery_price;
+                        $countryXOrdes[$i]['delivery'] = $delivery;
 
-                    $neto = $subtotal - $delivery;
-                    $countryXOrdes[$i]['neto'] = $neto;
+                        for ($o=0; $o < count($orders[$e]->order_items); $o++) {
+                            $cantProd = $cantProd + $orders[$e]->order_items[$o]->quantity;
+                            $countryXOrdes[$i]['salesProd'] = $cantProd;
+
+                            for ($c=0; $c < count($orders[$e]->order_items[$o]->product); $c++) {
+                                $prodCosto = $prodCosto + ($orders[$e]->order_items[$o]->quantity * $orders[$e]->order_items[$o]->product[$c]->price);
+                                $countryXOrdes[$i]['prodCosto'] = $prodCosto;
+                            }
+                        }
+                        $neto = ($subtotal - $delivery) - $prodCosto;
+                        $countryXOrdes[$i]['neto'] = $neto;
+                    }
                 }
-            }
             $subtotal = 0;
             $delivery = 0;
             $cant = 0;
             $neto = 0;
+            $cantProd = 0;
+            $prodCosto = 0;
         }
 
         foreach ($orders as $o) {
             $subtotal = $subtotal + $o->total;
             $delivery = $delivery + $o->delivery_price;
         }
-
-        for ($i=0; $i < count($orders); $i++) {
-            $cant++;
+        for ($p=0; $p < count($countryXOrdes); $p++) {
+            $totalCosto = $totalCosto + $countryXOrdes[$p]['prodCosto'];
         }
-        $neto = $subtotal - $delivery;
 
-        return response(array('status' => 200, 'countryXOrdes' => $countryXOrdes, 'orders' => $orders, 'countries' => $countries, 'subtotal' => $subtotal,
-            'delivery' => $delivery, 'neto' => $neto, 'cant' => $cant));
+        $totalNeto = ($subtotal - $delivery) - $totalCosto;
+
+        return response(array(
+            'status' => 200,
+            'countryXOrdes' => $countryXOrdes,
+            'orders' => $orders,
+            'subtotal' => $subtotal,
+            'delivery' => $delivery,
+            'totalCosto' => $totalCosto,
+            'totalNeto' => $totalNeto
+        ));
 
     }
 }

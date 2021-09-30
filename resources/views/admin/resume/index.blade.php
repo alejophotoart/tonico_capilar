@@ -66,6 +66,9 @@ __('Resumen')) @section('content')
 <div class="content">
     <div class="container-fluid">
         <div class="row">
+            {{-- Tabla de ventas que indica el total vendido el dia de hoy y anteriores dias --}}
+            @include('admin.resume.percentSalesToday')
+
             <div class="col-lg-6">
                 {{-- Grafico de ventas a lo largo de la semana que indica si se vendio mas que ayer--}}
                 <div class="card">
@@ -116,8 +119,6 @@ __('Resumen')) @section('content')
             </div>
             <!-- /.col-md-6 -->
             <div class="col-lg-6">
-                {{-- Tabla de ventas que indica el total vendido el dia de hoy y anteriores dias --}}
-                @include('admin.resume.percentSalesToday')
                 <!-- /.card -->
                 {{-- Tabla de mensajes de whatsApp publicidad --}}
                 @include('admin.resume.countMessagesWhatsApp')

@@ -21,10 +21,12 @@
             <thead>
                 <tr>
                     <th>{{ __("Paises") }}</th>
-                    <th>{{ __("Ventas") }}</th>
-                    <th>{{ __("Cant.") }}</th>
-                    <th>{{ __("Domicilios") }}</th>
-                    <th>{{ __("Total") }}</th>
+                    <th>{{ __("Total Entrega") }}</th>
+                    <th>{{ __("Cant. Pedidos") }}</th>
+                    <th>{{ __("Total Domicilios") }}</th>
+                    <th>{{ __("Cant. Productos") }}</th>
+                    <th>{{ __("Total Costo") }}</th>
+                    <th>{{ __("Total Utilidad") }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,26 +36,32 @@
                         <td>{{"$0"}}</td>
                         <td>{{ "0" }}</td>
                         <td>{{"$0"}}</td>
+                        <td>{{ "0" }}</td>
+                        <td>{{"$0"}}</td>
                         <td>{{"$0"}}</td>
                     </tr>
                 @else
-                    @for($i=0; $i < count($countryXOrdes); $i++)
+                    @for($j=0; $j < count($countryXOrdes); $j++)
                         <tr>
-                            <td>{{ $countryXOrdes[$i]['pais'] }}</td>
+                            <td>{{ $countryXOrdes[$j]['pais'] }}</td>
 
                             <td>
                                 {{"$"}}
-                                {{ number_format($countryXOrdes[$i]['subtotal'], 0, ',', '.') }}</td>
+                                {{ number_format($countryXOrdes[$j]['subtotal'], 0, ',', '.') }}</td>
 
-                            <td>{{ $countryXOrdes[$i]['sales'] }}</td>
+                            <td>{{ $countryXOrdes[$j]['sales'] }}</td>
+                            <td>
+                                {{"$"}}
+                                {{ number_format($countryXOrdes[$j]['delivery'], 0, ',', '.') }}</td>
+
+                            <td>{{ $countryXOrdes[$j]['salesProd'] }}</td>
+                            <td>
+                                {{"$"}}
+                                {{ number_format($countryXOrdes[$j]['prodCosto'], 0, ',', '.') }}</td>
 
                             <td>
                                 {{"$"}}
-                                {{ number_format($countryXOrdes[$i]['delivery'], 0, ',', '.') }}</td>
-
-                            <td>
-                                {{"$"}}
-                                {{ number_format($countryXOrdes[$i]['neto'], 0, ',', '.') }}</td>
+                                {{ number_format($countryXOrdes[$j]['neto'], 0, ',', '.') }}</td>
                         </tr>
                     @endfor
                 @endif
@@ -69,9 +77,13 @@
                         {{ "$" }}
                         {{ number_format($delivery, 0, ',', '.') }}
                     </td>
+                    <td colspan="2">
+                        {{ "$" }}
+                        {{ number_format($totalCosto, 0, ',', '.') }}
+                    </td>
                     <td id="totalNeto">
                         {{ "$" }}
-                        {{ number_format($neto, 0, ',', '.') }}
+                        {{ number_format($totalNeto, 0, ',', '.') }}
                     </td>
                 </tr>
             </tfoot>
