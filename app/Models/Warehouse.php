@@ -19,7 +19,7 @@ class Warehouse extends Model
     {
         return $this->belongsTo(City::class)->with("state");
     }
-//
+
     public function product_warehouses()
     {
         return $this->hasMany(ProductWarehouse::class)->with("products");

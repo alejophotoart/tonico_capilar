@@ -64,22 +64,12 @@ class OrderController extends Controller
         }
     }
 
-    public function delivered()
+    public function delivered() //vista de pedidos entregados
     {
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2  || Auth::user()->role_id == 3){
             $orders = Order::where([['state_order_id', 3],['active', 1]])->orderBy('id', 'desc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
             $sum = Order::where("state_order_id", 3)->select(Order::raw("(total - delivery_price) as subtotal, id"))->get();
-            // $total = [];
             $neto = 0;
-            // foreach ($orders as $o) {
-            //     for ($i=0; $i < count($o->order_items); $i++) {
-            //         for ($p=0; $p < count($o->order_items[$i]->product); $p++) {
-            //             $subtotal = $o->order_items[$i]->quantity * $o->order_items[$i]->product[$p]->price;
-            //             $neto = ($o->total - $o->delivery_price) - $subtotal;
-            //         }
-            //     }
-            // }
-
 
             return view('admin.orders.tables.delivered')
             ->with('orders', $orders)
@@ -96,7 +86,7 @@ class OrderController extends Controller
         }
     }
 
-    public function canceled()
+    public function canceled() //vista de pedidos cancelados
     {
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2 || Auth::user()->role_id == 3){
             $orders = Order::where([['state_order_id', 4],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
@@ -111,7 +101,7 @@ class OrderController extends Controller
         }
     }
 
-    public function deposit()
+    public function deposit() // vista de pedidos con depositos
     {
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2){
             $orders = Order::where([['state_order_id', 7],['payment_type_id', 2],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
@@ -130,7 +120,7 @@ class OrderController extends Controller
         }
     }
 
-    public function pending()
+    public function pending() //vista de pedidos pendientes
     {
         if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2 || Auth::user()->role_id == 3){
             $orders = Order::where([['state_order_id', 5],['active', 1]])->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
@@ -187,14 +177,15 @@ class OrderController extends Controller
 
         if(Client::where('id', $request['client_id'])->first())
         {
-            $warehouse = Warehouse::where('city_id', $request['city_id'])->first();
-            $city = City::where('id', $request['city_id'])->first();
+            $state = $request['state_id'];
+            $warehouse = Warehouse::where('state_id', $state)->with('city')->first();
+            $states = State::where('id', $request['state_id'])->first();
             $product_quan = count($request['prod_quan'][1]);
 
             for ($e=0; $e < $product_quan; $e++) {
                 $product = Product::where('id', $request['prod_quan'][1][$e])->first();
                 if($request['payment_type_id'] == 1 ){
-                    if(Warehouse::where('city_id', $request['city_id'])->first()){
+                    if(Warehouse::where('state_id', $state)->first()){
                         if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
                             $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
                             if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
@@ -206,10 +197,10 @@ class OrderController extends Controller
                                 }
                             }
                         }else{
-                            return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                            return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en ninguna ciudad de este departamento', 'space' => ' ','name' => $product->name,'icon' => "error"));
                         }
                     }else{
-                        return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                        return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Debes crear una bodega con este departamento', 'space' => ' ','name' => $states->name,'icon' => "error"));
                     }
                 }else{
                     if($product->quantity > $request['prod_quan'][0][$e]){
@@ -294,16 +285,16 @@ class OrderController extends Controller
             $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }else{
-            $warehouse = Warehouse::where('city_id', $request['city_id'])->first();
-            $city = City::where('id', $request['city_id'])->first();
+            $state = $request['state_id'];
+            $warehouse = Warehouse::where('state_id', $state)->with('city')->first();
+            $states = State::where('id', $request['state_id'])->first();
             $product_quan = count($request['prod_quan'][1]);
 
             for ($e=0; $e < $product_quan; $e++) {
                 $product = Product::where('id', $request['prod_quan'][1][$e])->first();
-                if($request['payment_type_id'] == 1 ){
-                    if(Warehouse::where('city_id', $request['city_id'])->first()){
-                        if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
-                            $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
+                if($request['payment_type_id'] == 1 ){ // si el pago es contraentrega
+                    if(Warehouse::where('state_id', $state)->first()){
+                        if($product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
                             if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
                                 $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
                                 $product_warehouse->update();
@@ -313,18 +304,18 @@ class OrderController extends Controller
                                 }
                             }
                         }else{
-                            return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                            return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en ninguna ciudad de este departamento', 'space' => ' ','name' => $product->name,'icon' => "error"));
                         }
                     }else{
-                        return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                        return response(array('status' => 400,'title' => 'No existe bodega' ,'message' => 'Debes crear una bodega con este departamento', 'space' => ' ','name' => $states->name,'icon' => "error"));
                     }
-                }else{
+                }else{ //si el pago es deposito
                     if($product->quantity > $request['prod_quan'][0][$e]){
                         $product->quantity = $product->quantity - $request['prod_quan'][0][$e];
                         $product->update();
                     }else{
                         if($product->quantity < $request['prod_quan'][0][$e]){
-                                return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                            return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
                         }
                     }
                 }
@@ -397,7 +388,7 @@ class OrderController extends Controller
                 $order_item->order_id   = $order['id'];
                 $order_item->save();
             }
-            // $this->sendMessage($request, $order['id']);
+            $this->sendMessage($request, $order['id']);
             return response(array('status' => 200, 'd' => array('id' => $order->id),'title' => 'Pedido creado' ,'message' => 'Creaste el pedido de', 'space' => ' ','name' => $request->name, 'icon' => "success"));
         }
 
@@ -412,7 +403,6 @@ class OrderController extends Controller
      */
     public function sendMessage($request, $order_id)
     {
-        // dd($order_id);
         $city = City::where('active', 1)->with('state')->get();
         $state = 0;
         $country = 0;
@@ -549,38 +539,42 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         if(Order::where('id', $id)->first()){
             $date = new Carbon('today');
             $date1 = $date->format('Y-m-d 00:00:00');
             $date2 = $date->format('Y-m-d 23:59:59');
             $deliveryD = new Carbon($request['delivery_date']);
             $delivery_date = $deliveryD->format("Y-m-d H:i:s");
-            $warehouse = Warehouse::where('city_id', $request['city_id'])->first();
-            $city = City::where('id', $request['city_id'])->first();
+
+            $state = $request['state_id'];
+            $warehouse = Warehouse::where('state_id', $state)->with('city')->first();
+            $states = State::where('id', $request['state_id'])->first();
             $product_quan = count($request['prod_quan'][1]);
+
+
 
             for ($e=0; $e < $product_quan; $e++) {
                 $product = Product::where('id', $request['prod_quan'][1][$e])->first();
                 if($order_items = OrderItem::where('product_id', $request['prod_quan'][1][$e])->where('order_id', $id)->first()){
                     if($request['payment_type_id'] == 1 ){
-                        if(Warehouse::where('city_id', $request['city_id'])->first()){
-                            if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
-                                $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
+                        if(Warehouse::where('state_id', $state)->first()){
+                            if($product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
                                 $product_warehouse->quantity = $product_warehouse->quantity + $order_items->quantity;
                                 $product_warehouse->update();
                                 if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
                                     $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
                                     $product_warehouse->update();
                                 }else{
-                                    if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
+                                    if($product_warehouse->quantity < $request['prod_quan'][0][$e]){
                                         return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
                                     }
                                 }
                             }else{
-                                return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                                return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en ninguna ciudad de este departamento', 'space' => ' ','name' => $product->name,'icon' => "error"));
                             }
                         }else{
-                            return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                            return response(array('status' => 400,'title' => 'No existe bodega' ,'message' => 'Debes crear una bodega con este departamento', 'space' => ' ','name' => $states->name,'icon' => "error"));
                         }
                     }else{
                         $product->quantity = $product->quantity + $order_items->quantity;
@@ -596,24 +590,21 @@ class OrderController extends Controller
                     }
                 }else{
                     if($request['payment_type_id'] == 1 ){
-                        if(Warehouse::where('city_id', $request['city_id'])->first()){
-                            if(ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
-                                $product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first();
-                                $product_warehouse->quantity = $product_warehouse->quantity + $order_items->quantity;
-                                $product_warehouse->update();
+                        if(Warehouse::where('state_id', $state)->first()){
+                            if($product_warehouse = ProductWarehouse::where('product_id', $request['prod_quan'][1][$e])->where('warehouse_id', $warehouse->id)->first()){
                                 if($product_warehouse->quantity > $request['prod_quan'][0][$e]){
                                     $product_warehouse->quantity = $product_warehouse->quantity - $request['prod_quan'][0][$e];
                                     $product_warehouse->update();
                                 }else{
-                                    if($product_warehouse->quantity <= $request['prod_quan'][0][$e]){
-                                        return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                                    if($product_warehouse->quantity < $request['prod_quan'][0][$e]){
+                                            return response(array('status' => 500,'title' => 'No hay suficientes cantidades' ,'message' => 'No hay suficientes cantidades en stock', 'space' => ' ','name' => $product->name,'icon' => "error"));
                                     }
                                 }
                             }else{
-                                return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en esta ciudad de destino', 'space' => ' ','name' => $product->name,'icon' => "error"));
+                                return response(array('status' => 404,'title' => 'Producto no encontrado' ,'message' => 'Este producto no se encuentra en ninguna ciudad de este departamento', 'space' => ' ','name' => $product->name,'icon' => "error"));
                             }
                         }else{
-                            return response(array('status' => 400,'title' => 'Ciudad no tiene bodega' ,'message' => 'Esta ciudad no tiene una bodega asignada', 'space' => ' ','name' => $city->name,'icon' => "error"));
+                            return response(array('status' => 400,'title' => 'No existe bodega' ,'message' => 'Debes crear una bodega con este departamento', 'space' => ' ','name' => $states->name,'icon' => "error"));
                         }
                     }else{
                         if($product->quantity > $request['prod_quan'][0][$e]){
@@ -631,13 +622,29 @@ class OrderController extends Controller
             OrderItem::where('order_id', $id)->delete();
             for($i = 0; $i < $product_quan; $i++){
                 $order_i       = new OrderItem;
-                $order_i->quantity   = $request['prod_quan'][0][$i]; //porder_isicion de las cantidades
+                $order_i->quantity   = $request['prod_quan'][0][$i]; //posicion de las cantidades
                 $order_i->product_id = $request['prod_quan'][1][$i]; //posicion de los id del producto
                 $order_i->order_id   = $id;
                 $order_i->save();
             }
-            if($delivery_date >= $date1 && $delivery_date <= $date2 && Order::where([['id', $id],['payment_type_id', 1]])->update([
-                'delivery_date'=> $request['delivery_date'],
+            if($request['payment_type_id'] == 2 && $delivery_date >= $date1 && $delivery_date <= $date2 && Order::where([['id', $id],['payment_type_id', 1]])->update([ //Si soy tipo de pago 1 y la fecha es la actual
+                'delivery_date'     => $request['delivery_date'],
+                'reason'            => $request['reason'],
+                'delivery_price'    => 10000,
+                'total'             => $request['total'],
+                'notes'             => $request['notes'],
+                'payment_type_id'   => $request['payment_type_id'],
+                'state_order_id'    => 7,
+                'client_id'         => $request['client_id'],
+                'user_id'           => $request['user_id'],
+                'address_id'        => $request['address_id'],
+                'city_id'           => $request['city_id'],
+                'active'            => 1,
+            ])){
+
+            }else{
+            if($delivery_date >= $date1 && $delivery_date <= $date2 && Order::where([['id', $id],['payment_type_id', 1]])->update([ //Si soy tipo de pago 1 y la fecha es la actual
+                'delivery_date'     => $request['delivery_date'],
                 'reason'            => $request['reason'],
                 'delivery_price'    => 10000,
                 'total'             => $request['total'],
@@ -652,30 +659,14 @@ class OrderController extends Controller
             ])){
 
             }else{
-                if($delivery_date >= $date1 && $delivery_date <= $date2 && Order::where([['id', $id],['payment_type_id', 2]])->update([
-                    'delivery_date'=> $request['delivery_date'],
-                    'reason'            => $request['reason'],
-                    'delivery_price'    => 10000,
-                    'total'             => $request['total'],
-                    'notes'             => $request['notes'],
-                    'payment_type_id'   => $request['payment_type_id'],
-                    'state_order_id'    => 2,
-                    'client_id'         => $request['client_id'],
-                    'user_id'           => $request['user_id'],
-                    'address_id'        => $request['address_id'],
-                    'city_id'           => $request['city_id'],
-                    'active'            => 1,
-                ])){
-
-                }else{
-                    if($request['payment_type_id'] == 1 && Order::where([['id', $id],['payment_type_id', 2],['delivery_date', $request['delivery_date']]])->update([
-                        'delivery_date'=> $request['delivery_date'],
+                    if(Order::where([['id', $id],['payment_type_id', $request['payment_type_id']],['delivery_date', $request['delivery_date']],['state_order_id', 1]])->update([//si estoy en proceso y mi pago sigue siendo el mismo y la fecha sigue siendo la misma y solo cambio datos basicos y me estan editando desde en proceso
+                        'delivery_date'     => $request['delivery_date'],
                         'reason'            => $request['reason'],
                         'delivery_price'    => 10000,
                         'total'             => $request['total'],
                         'notes'             => $request['notes'],
                         'payment_type_id'   => $request['payment_type_id'],
-                        'state_order_id'    => 5,
+                        'state_order_id'    => 1,
                         'client_id'         => $request['client_id'],
                         'user_id'           => $request['user_id'],
                         'address_id'        => $request['address_id'],
@@ -683,15 +674,15 @@ class OrderController extends Controller
                         'active'            => 1,
                     ])){
 
-                        }else{
-                            if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date','<>',$request['delivery_date']]])->update([
+                    }else{
+                        if(Order::where([['id', $id],['payment_type_id', 1],['delivery_date', $request['delivery_date']],['state_order_id', 2]])->update([//si estoy en proceso y mi pago sigue siendo el mismo y la fecha sigue siendo la misma y solo cambio datos basicos y me estan editando desde en proceso
                             'delivery_date'     => $request['delivery_date'],
                             'reason'            => $request['reason'],
                             'delivery_price'    => 10000,
                             'total'             => $request['total'],
                             'notes'             => $request['notes'],
                             'payment_type_id'   => $request['payment_type_id'],
-                            'state_order_id'    => 5,
+                            'state_order_id'    => 2,
                             'client_id'         => $request['client_id'],
                             'user_id'           => $request['user_id'],
                             'address_id'        => $request['address_id'],
@@ -700,14 +691,14 @@ class OrderController extends Controller
                         ])){
 
                         }else{
-                            if($request['payment_type_id'] == 2 && Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
+                            if(Order::where([['id', $id],['payment_type_id', $request['payment_type_id']],['delivery_date', $request['delivery_date']],['state_order_id', 5]])->update([//si estoy en proceso y mi pago sigue siendo el mismo y la fecha sigue siendo la misma y solo cambio datos basicos y me estan editando desde reagendados
                                 'delivery_date'     => $request['delivery_date'],
                                 'reason'            => $request['reason'],
                                 'delivery_price'    => 10000,
                                 'total'             => $request['total'],
                                 'notes'             => $request['notes'],
                                 'payment_type_id'   => $request['payment_type_id'],
-                                'state_order_id'    => 7,
+                                'state_order_id'    => 5,
                                 'client_id'         => $request['client_id'],
                                 'user_id'           => $request['user_id'],
                                 'address_id'        => $request['address_id'],
@@ -716,25 +707,93 @@ class OrderController extends Controller
                             ])){
 
                             }else{
-                                if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date','<>', $request['delivery_date']]])->update([
-                                    'delivery_date'=> $request['delivery_date'],
-                                    'reason'            => $request['reason'],
-                                    'delivery_price'    => 10000,
-                                    'total'             => $request['total'],
-                                    'notes'             => $request['notes'],
-                                    'payment_type_id'   => $request['payment_type_id'],
-                                    'state_order_id'    => 5,
-                                    'client_id'         => $request['client_id'],
-                                    'user_id'           => $request['user_id'],
-                                    'address_id'        => $request['address_id'],
-                                    'city_id'           => $request['city_id'],
-                                    'active'            => 1,
-                                ])){
+                                    if(Order::where([['id', $id],['payment_type_id', $request['payment_type_id']],['delivery_date', $request['delivery_date']],['state_order_id', 7]])->update([//si estoy en proceso y mi pago sigue siendo el mismo y la fecha sigue siendo la misma y solo cambio datos basicos y me estan editando desde en depositos
+                                        'delivery_date'     => $request['delivery_date'],
+                                        'reason'            => $request['reason'],
+                                        'delivery_price'    => 10000,
+                                        'total'             => $request['total'],
+                                        'notes'             => $request['notes'],
+                                        'payment_type_id'   => $request['payment_type_id'],
+                                        'state_order_id'    => 7,
+                                        'client_id'         => $request['client_id'],
+                                        'user_id'           => $request['user_id'],
+                                        'address_id'        => $request['address_id'],
+                                        'city_id'           => $request['city_id'],
+                                        'active'            => 1,
+                                    ])){
 
+                                    }else{
+
+                                        if($request['payment_type_id'] == 1 && Order::where([['id', $id],['payment_type_id', 2],['delivery_date', $request['delivery_date']]])->update([
+                                            'delivery_date'     => $request['delivery_date'],
+                                            'reason'            => $request['reason'],
+                                            'delivery_price'    => 10000,
+                                            'total'             => $request['total'],
+                                            'notes'             => $request['notes'],
+                                            'payment_type_id'   => $request['payment_type_id'],
+                                            'state_order_id'    => 1,
+                                            'client_id'         => $request['client_id'],
+                                            'user_id'           => $request['user_id'],
+                                            'address_id'        => $request['address_id'],
+                                            'city_id'           => $request['city_id'],
+                                            'active'            => 1,
+                                        ])){
+                                        }else{
+                                            if($request['payment_type_id'] == 2 && Order::where([['id', $id],['payment_type_id', 1], ['delivery_date', $request['delivery_date']]])->update([
+                                                'delivery_date'     => $request['delivery_date'],
+                                                'reason'            => $request['reason'],
+                                                'delivery_price'    => 10000,
+                                                'total'             => $request['total'],
+                                                'notes'             => $request['notes'],
+                                                'payment_type_id'   => $request['payment_type_id'],
+                                                'state_order_id'    => 7,
+                                                'client_id'         => $request['client_id'],
+                                                'user_id'           => $request['user_id'],
+                                                'address_id'        => $request['address_id'],
+                                                'city_id'           => $request['city_id'],
+                                                'active'            => 1,
+                                            ])){
+
+                                                }else{
+                                                    if(Order::where([['id', $id],['payment_type_id', 1], ['delivery_date','<>',$request['delivery_date']]])->update([
+                                                        'delivery_date'     => $request['delivery_date'],
+                                                        'reason'            => $request['reason'],
+                                                        'delivery_price'    => 10000,
+                                                        'total'             => $request['total'],
+                                                        'notes'             => $request['notes'],
+                                                        'payment_type_id'   => $request['payment_type_id'],
+                                                        'state_order_id'    => 5,
+                                                        'client_id'         => $request['client_id'],
+                                                        'user_id'           => $request['user_id'],
+                                                        'address_id'        => $request['address_id'],
+                                                        'city_id'           => $request['city_id'],
+                                                        'active'            => 1,
+                                                    ])){
+
+                                                    }else{
+                                                        if(Order::where([['id', $id],['payment_type_id', 2], ['delivery_date','<>', $request['delivery_date']]])->update([
+                                                            'delivery_date'     => $request['delivery_date'],
+                                                            'reason'            => $request['reason'],
+                                                            'delivery_price'    => 10000,
+                                                            'total'             => $request['total'],
+                                                            'notes'             => $request['notes'],
+                                                            'payment_type_id'   => $request['payment_type_id'],
+                                                            'state_order_id'    => 5,
+                                                            'client_id'         => $request['client_id'],
+                                                            'user_id'           => $request['user_id'],
+                                                            'address_id'        => $request['address_id'],
+                                                            'city_id'           => $request['city_id'],
+                                                            'active'            => 1,
+                                                        ])){
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         }
-                    }
+
                 }
             }
         }

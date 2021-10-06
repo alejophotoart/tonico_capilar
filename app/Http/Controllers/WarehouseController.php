@@ -46,6 +46,7 @@ class WarehouseController extends Controller
         if ($request) {
             $warehouse = Warehouse::create([
                 'name'      => $request['name'],
+                'state_id'   => $request['state_id'],
                 'city_id'   => $request['city_id']
             ]);
             return response(array('status' => 200, 'title' => 'Bodega creada' ,'message' => 'Creaste la bodega', 'space' => ' ','name' => $request->name, 'icon' => "success"));

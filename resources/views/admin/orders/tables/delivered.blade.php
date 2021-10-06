@@ -235,16 +235,19 @@ __('Orders')) @section('explorer')
                                         @endif
                                     @endfor
                                 </td>
-                                @for($i=0; $i < count($o->order_items); $i++){
-                                    @for($p=0; $p < count($o->order_items[$i]->product); $p++){
-                                        {{$subtotal1 = $o->order_items[$i]->quantity * $o->order_items[$i]->product[$p]->price;}}
-                                        {{$neto = ($o->total - $o->delivery_price) - $subtotal1}}
+                                        @php
+                                        for($i=0; $i < count($o->order_items); $i++){
+                                            for($p=0; $p < count($o->order_items[$i]->product); $p++){
+                                                $subtotal1 = $o->order_items[$i]->quantity * $o->order_items[$i]->product[$p]->price;
+                                                $neto = ($o->total - $o->delivery_price) - $subtotal1;
+                                            }
+                                        }
+                                        @endphp
                                         <td class="darkMode-fill">
                                             {{ "$" }}
                                             {{ number_format($neto, 0, ',', '.') }}
                                         </td>
-                                    @endfor
-                                @endfor
+
                             </tr>
                             @endforeach
                         </tbody>

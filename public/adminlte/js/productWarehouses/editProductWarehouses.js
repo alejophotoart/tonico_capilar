@@ -90,11 +90,10 @@ function editQuantity() {
                                     confirmButtonColor: "#343a40",
                                     showConfirmButton: true
                                 }).then(val => {
-                                var url = "https://gdseclatam.com";
                                 if (val.value) {
                                     $(location).attr(
                                         "href",
-                                        url + "/productos-bodega"
+                                        "/productos-bodega"
                                     );
                                 }
                             });
