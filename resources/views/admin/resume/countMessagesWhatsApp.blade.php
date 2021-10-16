@@ -18,6 +18,10 @@
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $clave = [];
+                    $totalChats = 0;
+                @endphp
                 @if(count($clave) === 0)
                     <tr>
                         <td>{{ date('D, d-M-Y') }} <br> {{ date('H:i:s A') }}</td>

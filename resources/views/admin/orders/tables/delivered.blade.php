@@ -182,12 +182,11 @@ __('Orders')) @section('explorer')
                                 <th>
                                     {{ __("Venta") }}
                                 </th>
-                                <th>
-                                    {{ __("Subtotal") }}
-                                </th>
-                                <th>
-                                    {{ __("Total") }}
-                                </th>
+                                @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
+                                    <th>
+                                        {{ __("Utilidad") }}
+                                    </th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -227,27 +226,20 @@ __('Orders')) @section('explorer')
                                     {{ "$" }}
                                     {{ number_format($o->total, 0, ',', '.') }}
                                 </td>
-                                <td class="darkMode-fill">
-                                    @for($r=0; $r < count($subtotal); $r++)
-                                        @if($subtotal[$r]->id == $o->id)
-                                            {{ "$" }}
-                                            {{ number_format($subtotal[$r]->subtotal, 0, ',', '.') }}
-                                        @endif
-                                    @endfor
-                                </td>
-                                        @php
+                                @if(auth()->user()->role_id == 1 || auth()->user()->role_id == 2)
+                                    @php
                                         for($i=0; $i < count($o->order_items); $i++){
                                             for($p=0; $p < count($o->order_items[$i]->product); $p++){
                                                 $subtotal1 = $o->order_items[$i]->quantity * $o->order_items[$i]->product[$p]->price;
                                                 $neto = ($o->total - $o->delivery_price) - $subtotal1;
                                             }
                                         }
-                                        @endphp
-                                        <td class="darkMode-fill">
-                                            {{ "$" }}
-                                            {{ number_format($neto, 0, ',', '.') }}
-                                        </td>
-
+                                    @endphp
+                                    <td class="darkMode-fill">
+                                        {{ "$" }}
+                                        {{ number_format($neto, 0, ',', '.') }}
+                                    </td>
+                                @endif
                             </tr>
                             @endforeach
                         </tbody>

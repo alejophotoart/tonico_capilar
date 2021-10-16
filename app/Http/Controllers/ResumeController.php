@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Product;
 use App\Models\Order;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,39 +24,40 @@ class ResumeController extends Controller
         $fromDate = strtotime('-2 month', $yesterday2);
         $token = 'c2zbqxn2i3oo3gj6';
         $instanceId = '312945';
-        $url = 'https://api.chat-api.com/instance'.$instanceId.'/messages?token='.$token.'&limit=0&min_time='.$timestamp;
-        $url2 = 'https://api.chat-api.com/instance'.$instanceId.'/messages?token='.$token.'&limit=0&min_time='.$fromDate.'&max_time='.$yesterday2;
-        $result = file_get_contents($url); // Send a request
-        $result2 = file_get_contents($url2);
-        $data = json_decode($result, 1); // Parse JSON
-        $data2 = json_decode($result2, 1); // Parse JSON
+        // $url = 'https://api.chat-api.com/instance'.$instanceId.'/messages?token='.$token.'&limit=0&min_time='.$timestamp;
+        // $url2 = 'https://api.chat-api.com/instance'.$instanceId.'/messages?token='.$token.'&limit=0&min_time='.$fromDate.'&max_time='.$yesterday2;
+        // $result = file_get_contents($url); // Send a request
+        // $result2 = file_get_contents($url2);
+        // $data = json_decode($result, 1); // Parse JSON
+        // $data2 = json_decode($result2, 1); // Parse JSON
 
-        for($i = 0; $i < count($data['messages']); $i++){
-            $chatname = $data['messages'][$i]['chatName'];
-            $text_section = substr($chatname, 1, 30);
-            $with_space =str_replace(' ', '', $text_section);
-            $chatName = $with_space."@c.us"; //change format chatName
-            if($data['messages'][$i]['fromMe'] === false && $data['messages'][$i]['author'] == $data['messages'][$i]['chatId'] && $data['messages'][$i]['author'] == $chatName){
-                for($e = 0; $e < count($data2['messages']); $e++){
+        // for($i = 0; $i < count($data['messages']); $i++){
+        //     $chatname = $data['messages'][$i]['chatName'];
+        //     $text_section = substr($chatname, 1, 30);
+        //     $with_space =str_replace(' ', '', $text_section);
+        //     $chatName = $with_space."@c.us"; //change format chatName
+        //     if($data['messages'][$i]['fromMe'] === false && $data['messages'][$i]['author'] == $data['messages'][$i]['chatId'] && $data['messages'][$i]['author'] == $chatName){
+        //         for($e = 0; $e < count($data2['messages']); $e++){
 
-                    if($data2['messages'][$e]['author'] == $data['messages'][$i]['author']){
+        //             if($data2['messages'][$e]['author'] == $data['messages'][$i]['author']){
 
-                        $replik[$data['messages'][$i]['author']] = $data['messages'][$i]['author'];
-                    }
-                }
+        //                 $replik[$data['messages'][$i]['author']] = $data['messages'][$i]['author'];
+        //             }
+        //         }
 
-                if(isset($chats[$data['messages'][$i]['author']]))
-                {
-                    $chats[$data['messages'][$i]['author']]+=1;
+        //         if(isset($chats[$data['messages'][$i]['author']]))
+        //         {
+        //             $chats[$data['messages'][$i]['author']]+=1;
 
-                }else
-                {
-                    $chats[$data['messages'][$i]['author']]=1;
-                }
-            }
-        }
-        $clave = array_diff_key($chats, $replik);
-        $totalChats = count($clave);
+        //         }else
+        //         {
+        //             $chats[$data['messages'][$i]['author']]=1;
+        //         }
+        //     }
+        // }
+        // $clave = array_diff_key($chats, $replik);
+        // $totalChats = count($clave);
+
         /**
          *$sum = Order::where("state_order_id", 3)->select(Order::raw("(delivery_price + total) as total, id"))->get();
          *->with('total', $sum);
@@ -130,9 +132,9 @@ class ResumeController extends Controller
         ->with('subtotal', $subtotal)
         ->with('delivery', $delivery)
         ->with('totalCosto', $totalCosto)
-        ->with('totalNeto', $totalNeto)
-        ->with('clave', $clave)
-        ->with('totalChats', $totalChats);
+        ->with('totalNeto', $totalNeto);
+        // ->with('clave', $clave)
+        // ->with('totalChats', $totalChats);
     }
 
     public function salesTable()
