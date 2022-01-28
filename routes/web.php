@@ -57,6 +57,7 @@ Route::middleware(['auth'])->group(function () {
     // Rutas para el resumen
         Route::get('/resumen', [ResumeController::class, 'index'])->name('resume.index');//llama a la vista resumen
         Route::get('/resumen/{date}/filterDate', [ResumeController::class, 'filter']); //filtra la tabla de resumen segun la fecha indicada
+        Route::get('/resumen/{startDate}/{endDate}/filterDate', [ResumeController::class, 'filterRangeDate']); //filtra la tabla de resumen segun el rango de fechas
         // Route::get('/resumen/PDF/products', [PDFController::class, 'pdfProducts'])->name('pdf.products');
         // Route::get('/resumen/PDF/messagesWhatsapp', [PDFController::class, 'pdfMessagesWhatsapp'])->name('pdf.messagesWhatsapp');
         // Route::get('/resumen/PDF/salesToday', [PDFController::class, 'pdfSalesToday'])->name('pdf.salesToday');

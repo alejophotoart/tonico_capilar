@@ -43,6 +43,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <link rel="stylesheet" href="{{ asset('/adminlte/css/Products.css') }}" />
         <link rel="stylesheet" href="{{ asset('/adminlte/css/body.css') }}" />
         {{-- datePicker --}}
+        <link rel="stylesheet" href="{{ asset('/adminlte/css/multidatepicker/mobiscroll.javascript.min.css') }}" />
+        <!-- <link rel="stylesheet" href="{{ asset('/adminlte/css/jquery-ui.multidatespicker.css') }}" /> -->
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
         {{-- <link rel="stylesheet" href="/resources/demos/style.css"> --}}
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -273,6 +275,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                             </li>
                                             <li class="nav-item">
                                                 <a
+                                                    href="{{ route('warehouses.index') }}"
+                                                    class="nav-link" style="padding-left: 35px;">
+                                                    <i
+                                                        class="fas fa-warehouse"
+                                                        style="margin: 5px;"
+                                                    ></i>
+                                                    <p>{{ __("Bodegas") }}</p>
+                                                </a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a
                                                 href="{{ route('product_warehouses.index') }}"
                                                 class="nav-link" style="padding-left: 35px;">
                                                     <i
@@ -280,17 +293,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
                                                         style="margin: 5px;"
                                                     ></i>
                                                     <p>{{ __("Productos x Bodega") }}</p>
-                                                </a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a
-                                                href="{{ route('warehouses.index') }}"
-                                                class="nav-link" style="padding-left: 35px;">
-                                                    <i
-                                                        class="fas fa-warehouse"
-                                                        style="margin: 5px;"
-                                                    ></i>
-                                                    <p>{{ __("Bodegas") }}</p>
                                                 </a>
                                             </li>
                                         </ul>
@@ -388,6 +390,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             class="form-check-input"
                             type="checkbox"
                             id="darkMode"
+                            onclick="darkMode( this )"
                         />
                         <label
                             class="form-check-label"
@@ -417,18 +420,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 @csrf
             </form>
             <!-- Main Footer -->
-            <!--<footer class="main-footer">
+            <footer class="main-footer" style="text-align: center;">
 
-                <div class="float-right d-none d-sm-inline">
-                    Anything you want
+                <div class="float-left d-none d-sm-inline">
+                    <small>
+                        All rights reserved 
+                    </small>
+                    &copy;
                 </div>
 
-                <strong
-                    >Copyright &copy; 2021
-                    <a href="https://adminlte.io">AdminLTE.io</a>.</strong
-                >
-                All rights reserved.
-            </footer>-->
+                <div class="float-right d-none d-sm-inline">
+                    &reg;                      
+                    <small> 
+                        <strong>By</strong>
+                         Jose Alejandro Calderón
+                    </small>
+                </div>
+
+                <img src="/adminlte/img/GDSEC-logo.ico" alt="Logo GDSEC" style="width: 35px;">
+                <div class="d-none d-sm-inline" style="font-size: 16px;">
+                    <strong> GDSEC </strong>Latam 2022 &copy;
+                </div>
+            </footer>
         </div>
         {{-- TooltipTex --}}
         <script src="/adminlte/js/tooltip/tooltipTex.js"></script>
@@ -457,6 +470,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
         ></script>
         <script src="/js/DataTables-1.10.25/js/dataTables.bootstrap5.min.js"></script>
         <script src="//cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+        <!-- Multi date picker -->
+        <script src="{{ asset('/adminlte/js/multidatepicker/mobiscroll.javascript.min.js') }}" defer></script>
+        <!-- <script src="{{ asset('/adminlte/js/jquery-ui.multidatespicker.js') }}" defer></script> -->
+
     </body>
 </html>
 @endauth

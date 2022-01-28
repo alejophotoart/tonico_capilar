@@ -133,6 +133,11 @@ __('Resumen')) @section('content')
     <!-- /.container-fluid -->
 </div>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<style>
+  .set{
+
+  }
+</style>
 <script src="{{ asset('/adminlte/js/pages/dashboard3.js') }}" defer></script>
 <script src="{{ asset('/adminlte/js/resumen/filterForDate.js') }}" defer></script>
 <script>
@@ -140,31 +145,55 @@ __('Resumen')) @section('content')
         var date = new Date();
         var year = date.getFullYear();
         let finalDate = date.getFullYear()+'-'+ (date.getMonth()+1) +'-'+date.getDate();
+        let startDate = date.getFullYear()-5 +'-'+ (date.getMonth()+1) +'-'+date.getDate();
         let dateFormat = date.getFullYear()+'-'+ (date.getMonth()+1) +'-'+date.getDate();
         document.getElementById("datepicker").value = dateFormat;
 
-        var start = new Date();
-        start.setFullYear(start.getFullYear()-5);
-        var startf = start.toISOString().slice(0,10).replace(/-/g,"/");
+        // var start = new Date();
+        // start.setFullYear(start.getFullYear()-5);
+        // var startf = start.toISOString().slice(0,10).replace(/-/g,"/");
 
-        $( "#datepicker" ).datepicker({
-            firstDay: 1,
-            dateFormat: 'yy-mm-dd',
-            dayNamesMin: [ "Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab" ],
-            dayNames: [ "Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado" ],
-            showOtherMonths: true,
-            monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ],
-            showAnim: "fold",
-            showButtonPanel: true,
-            changeMonth: true,
-            changeYear: true,
-            gotoCurrent: true,
-            currentText: "Hoy",
-            closeText: "Cerrar",
-            monthNamesShort: [ "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" ],
-            yearRange: startf + ":" + year,
-            maxDate: new Date(finalDate),
+        mobiscroll.datepicker('#datepicker', {
+          firstDay: 1,
+          dateFormat: 'YYYY-MM-DD',
+          controls: ['calendar'],
+          select: 'range',
+          rangeHighlight: true,
+          showRangeLabels: true,
+          dayNamesMin: [ "Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab" ],
+          animation: 'slide-down',
+          buttons: [
+            'cancel'
+          ],
+          calendarScroll: 'vertical',
+          focusOnClose: true,
+          max: new Date(finalDate),
+          min: new Date(startDate),
+          theme: 'ios',
+          themeVariant: 'auto',
+          touchUi: 'auto',
+          locale: mobiscroll.localeEs,
         });
+        
+
+        // $('#datepicker').multiDatesPicker({
+        //   firstDay: 1,
+        //   dateFormat: 'yy-mm-dd',
+        //   dayNamesMin: [ "Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab" ],
+        //   dayNames: [ "Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado" ],
+        //   showOtherMonths: true,
+        //   monthNames: [ "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre" ],
+        //   showAnim: "fold",
+        //   showButtonPanel: true,
+        //   changeMonth: true,
+        //   changeYear: true,
+        //   gotoCurrent: true,
+        //   currentText: "Hoy",
+        //   closeText: "Cerrar",
+        //   monthNamesShort: [ "Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic" ],
+        //   yearRange: startf + ":" + year,
+        //   maxDate: new Date(finalDate),
+        // });
     });
 </script>
 @endsection

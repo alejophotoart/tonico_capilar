@@ -7,7 +7,7 @@
                   class="form-control"
                   id="datepicker"
                   name="datepicker"
-                  style="max-width: 150px;"
+                  placeholder="Por favor seleccionar"
               />
             <div class="input-group-append">
                 <button onclick="filterForDate()" class="input-group-text">

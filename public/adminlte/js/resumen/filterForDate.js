@@ -1,5 +1,20 @@
 function filterForDate() {
+
     var date = document.getElementById("datepicker").value;
+     
+    if( date.length > 10 ){
+
+        var startDate = date.slice(0,10);
+        var endDate = date.slice(13, 23);
+
+        var url = "/resumen/" + startDate + "/" + endDate + "/filterDate"
+
+    } else {
+
+        var url = "/resumen/" + date + "/filterDate"
+
+    }
+
 
     // var myTable = $('#tableResume').DataTable();
     // myTable.row( 'tbody tr' ).remove().draw();
@@ -15,7 +30,8 @@ function filterForDate() {
     document.getElementById("tableResume").deleteTFoot();
 
     $.ajax({
-        url: "/resumen/" + date + "/filterDate",
+        
+        url: url,
         type: "GET",
         contentType: "application/json",
         headers: {

@@ -552,6 +552,9 @@ class OrderController extends Controller
             $states = State::where('id', $request['state_id'])->first();
             $product_quan = count($request['prod_quan'][1]);
 
+            if( isset($request['reason']) && $request['reason'] == null ){
+                return response(array('status' => 400,'title' => 'Motivo de reagendamiento' ,'message' => 'Para reagendar este pedido se debe poner un motivo', 'space' => ' ','name' => '','icon' => "error"));
+            }
 
 
             for ($e=0; $e < $product_quan; $e++) {
@@ -866,12 +869,20 @@ class OrderController extends Controller
      */
     public function destroy($id, $note)
     {
+
         $quantities = [];
         $products = [];
 
-        $order = Order::where('id', $id)->first();
+        $order = Order::where('id', $id)->with(['city'])->first();
+
         $order_items = OrderItem::where('order_id', $id)->get();
-        $warehouse = Warehouse::where('city_id', $order->city_id)->first();
+        
+        $state_id = $order->city->state->id;
+        
+        $warehouse = Warehouse::where('state_id', $state_id)->first();
+
+        // dd($warehouse);
+
 
         for ($i=0; $i < count($order_items); $i++) {
             array_push($quantities, $order_items[$i]->quantity);
@@ -896,7 +907,7 @@ class OrderController extends Controller
 
         $order = Order::where('id', $id)->update([
             'state_order_id'    => 4,
-            'reason'             => $note
+            'reason'            => $note
         ]);
         return array('status' => 200, 'title' => 'Pedido cancelado' ,'message' => 'Cancelaste el pedido', 'space' => ' ' ,'id' => $id, 'icon' => "success");
     }

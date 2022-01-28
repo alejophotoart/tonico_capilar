@@ -140,11 +140,60 @@ class ResumeController extends Controller
     public function salesTable()
     {
         $orders = Order::where('active', 1)->orderBy('id', 'asc')->with(['payment_type', 'user', 'client', 'state_order', 'order_items', 'city'])->get();
-        $orders_date = Order::where('state_order_id', 3)->where('created_at','>=',now()->subDay(7))->get([('created_at as fecha'), 'total', 'state_order_id']);
+        $orders_date = Order::where('state_order_id', 3)->where('created_at','>=',now()->subDay(7))->with(['order_items'])->get([('created_at as fecha'), 'total', 'state_order_id', 'id']);
+
+        // dd($orders);
+        $totalCosto = 0;
+        $totalCan = 0;
+        $totalUtilidad = 0;
+        $delivery = 0;
+        $totalNeto = [];
+
+        for ( $i=0; $i < count($orders_date); $i++ ) { 
+            for ( $e=0; $e < count($orders); $e++ ) { 
+                if( $orders_date[$i]->id == $orders[$e]->id ){
+                    $delivery = intval($orders[$e]->delivery_price);
+
+                    $totalNeto[$i]['fecha'] = $orders_date[$i]->fecha;
+                    $totalNeto[$i]['state_order_id'] = $orders_date[$i]->state_order_id;
+
+                    for ( $o=0; $o < count($orders[$e]->order_items); $o++ ) {
+                        $totalCan = intval($orders[$e]->order_items[$o]->quantity);
+                        
+                        for ($p=0; $p < count($orders[$e]->order_items[$o]->product); $p++) { 
+                           $totalCosto = $totalCan * intval($orders[$e]->order_items[$o]->product[$p]->price);
+                        }
+
+                        $totalUtilidad = intval($orders_date[$i]->total) - $totalCosto - $delivery;
+                        $totalNeto[$i]['total'] = $totalUtilidad;
+                    }
+                }
+                $totalCosto = 0;
+                $totalCan = 0;
+                $delivery = 0;
+                $totalUtilidad = 0;
+            }
+        }
+
+        // dd($totalNeto);
+
+    //    $hoy = strtotime('today');
+    //     $a = 0;
+    //     $e = [];
+
+    //     do {
+    //         $yesterday = strtotime('-1 day', $hoy);
+    //         array_push( $e, $yesterday );
+    //         $hoy = $yesterday;
+    //         $a++;
+    //     } while ($a < 7);
+
+    //    return print_r($e);
+
         $products = Product::where('active', 1)->get();
         $rolUser = Auth::user()->role_id;
         $idUser = Auth::user()->id;
-        return response(array('status' => 200, 'orders' => $orders, 'dates' => $orders_date, 'products' => $products, 'rolUser' => $rolUser, 'idUser' => $idUser));
+        return response(array('status' => 200, 'orders' => $orders, 'dates' => $totalNeto, 'products' => $products, 'rolUser' => $rolUser, 'idUser' => $idUser));
     }
 
     public function filter($date)
@@ -165,7 +214,82 @@ class ResumeController extends Controller
         $countries = Country::where('active', 1)->get();
         $orders = Order::where([['state_order_id', 3],['created_at','>=',$date1],['created_at','<=',$date2],['active', 1]])->with(['city', 'order_items'])->get(['id', 'delivery_price', 'total', 'city_id', 'created_at']);
 
-        // dd($orders);
+        for ($i=0; $i < count($countries); $i++) {
+            for ($e=0; $e < count($orders); $e++) {
+                if($countries[$i]->id == $orders[$e]->city->state->country->id){
+                        $countryXOrdes[$i]['pais'] = $countries[$i]->name;
+
+                        $subtotal = $subtotal + $orders[$e]->total;
+                        $countryXOrdes[$i]['subtotal'] = $subtotal;
+
+                        $cant++;
+                        $countryXOrdes[$i]['sales'] = $cant;
+
+                        $delivery = $delivery + $orders[$e]->delivery_price;
+                        $countryXOrdes[$i]['delivery'] = $delivery;
+
+                        for ($o=0; $o < count($orders[$e]->order_items); $o++) {
+                            $cantProd = $cantProd + $orders[$e]->order_items[$o]->quantity;
+                            $countryXOrdes[$i]['salesProd'] = $cantProd;
+
+                            for ($c=0; $c < count($orders[$e]->order_items[$o]->product); $c++) {
+                                $prodCosto = $prodCosto + ($orders[$e]->order_items[$o]->quantity * $orders[$e]->order_items[$o]->product[$c]->price);
+                                $countryXOrdes[$i]['prodCosto'] = $prodCosto;
+                            }
+                        }
+                        $neto = ($subtotal - $delivery) - $prodCosto;
+                        $countryXOrdes[$i]['neto'] = $neto;
+                    }
+                }
+            $subtotal = 0;
+            $delivery = 0;
+            $cant = 0;
+            $neto = 0;
+            $cantProd = 0;
+            $prodCosto = 0;
+        }
+
+        foreach ($orders as $o) {
+            $subtotal = $subtotal + $o->total;
+            $delivery = $delivery + $o->delivery_price;
+        }
+        for ($p=0; $p < count($countryXOrdes); $p++) {
+            $totalCosto = $totalCosto + $countryXOrdes[$p]['prodCosto'];
+        }
+
+        $totalNeto = ($subtotal - $delivery) - $totalCosto;
+
+        return response(array(
+            'status' => 200,
+            'countryXOrdes' => $countryXOrdes,
+            'orders' => $orders,
+            'subtotal' => $subtotal,
+            'delivery' => $delivery,
+            'totalCosto' => $totalCosto,
+            'totalNeto' => $totalNeto
+        ));
+
+    }
+
+    public function filterRangeDate( $startDate, $endDate ){
+
+        $subtotal =0;
+        $delivery = 0;
+        $neto = 0;
+        $cant = 0;
+        $cantProd = 0;
+        $prodCosto = 0;
+        $totalCosto = 0;
+        $countryXOrdes = [];
+
+        $startD = new Carbon($startDate);
+        $endD = new Carbon( $endDate );
+        $date1 = $startD->format('Y-m-d 00:00:00');
+        $date2 = $endD->format('Y-m-d 23:59:59');
+
+        $countries = Country::where('active', 1)->get();
+        $orders = Order::where([['state_order_id', 3],['created_at','>=',$date1],['created_at','<=',$date2],['active', 1]])->with(['city', 'order_items'])->get(['id', 'delivery_price', 'total', 'city_id', 'created_at']);
+
         for ($i=0; $i < count($countries); $i++) {
             for ($e=0; $e < count($orders); $e++) {
                 if($countries[$i]->id == $orders[$e]->city->state->country->id){
