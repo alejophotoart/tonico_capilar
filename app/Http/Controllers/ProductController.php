@@ -51,7 +51,7 @@ class ProductController extends Controller
     {
         // dd($request->all());
         if($request['description'] > 400){
-            return response(array('status' => 500, 'title' => 'Descripcion del producto' ,'message' => __('la descripcion es muy larga, intenta con algo mas corto'), 'icon' => "error"));
+            return response(array('status' => 500, 'title' => 'Descripcion del productooo' ,'message' => __('la descripcion es muy larga, intenta con algo mas corto'), 'icon' => "error"));
                 }else{
                 if(Product::where('code', $request["code"])->first()){
                     return response(array('status' => 400, 'title' => 'Codigo del producto' ,'message' => __('Ya existe un producto con ese codigo'), 'icon' => "error"));
